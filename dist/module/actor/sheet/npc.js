@@ -1,3 +1,4 @@
+import ActorSheetPF2e from './base.js';
 
 class ActorSheetPF2eNPC extends ActorSheetPF2e {
   static get defaultOptions() {
@@ -305,8 +306,4 @@ class ActorSheetPF2eNPC extends ActorSheetPF2e {
   } */
 }
 
-// Register NPC Sheet
-Actors.registerSheet('pf2e', ActorSheetPF2eNPC, {
-  types: ['npc'],
-  makeDefault: false,
-});
+export default ActorSheetPF2eNPC;

@@ -4,23 +4,25 @@
  */
 
 // import { monsterAbilities } from './monsterAbilities.js';
+import ActorSheetPF2eCharacter from './character.js';
 
- class UpdatedNPCActorPF2ESheet extends ActorSheetPF2eNPC {
+ class ActorSheetPF2eCharacterReadOnly extends ActorSheetPF2eCharacter {
 
  	get template() {
  		const path = "systems/pf2e/templates/actors/";
  		
-    if(this.actor.getFlag('pf2e','editNPC.value'))
-      return path + "npc-sheet.html";
+    if(this.actor.getFlag('pf2e','editSheet.value'))
+      return path + "actor-sheet.html";
     else
-      return path + 'npc-sheet-no-edit.html';
+      return path + 'character-sheet-read-only.html';
 
+    //return path + 'character-sheet-read-only.html';
  	}  
 
  	static get defaultOptions() {
  		const options = super.defaultOptions;
  		mergeObject(options, {
-      		classes: options.classes.concat(["pf2e", "actor", "npc-sheet", "updatedNPCSheet"]),
+      		classes: options.classes.concat(["pf2e", "actor", /* "npc-sheet", */ "updatedNPCSheet"]),
 			width: 650,
     		height: 680,
       		showUnpreparedSpells: true
@@ -43,10 +45,14 @@
       if(sheetData.flags.pf2e_updatednpcsheet.allSaveDetail === undefined)
         sheetData.flags.pf2e_updatednpcsheet.allSaveDetail = {value: ""};
 
+      sheetData.readonlySheet = true;
       //size
       sheetData.actorSize = sheetData.actorSizes[sheetData.data.traits.size.value];
       sheetData.actorTraits = (sheetData.data.traits.traits || {}).value;
       sheetData.actorAlignment = sheetData.data.details.alignment.value;
+      sheetData.actorAncestory = sheetData.data.details.ancestry.value;
+      sheetData.actorClass = sheetData.data.details.class.value;
+      sheetData.actorBackground = sheetData.data.details.background.value;
       //languages
       sheetData.hasLanguages = false;
       if(sheetData.data.traits.languages.value && Array.isArray(sheetData.data.traits.languages.value) && sheetData.actor.data.traits.languages.value.length > 0){
@@ -85,7 +91,7 @@
       sheetData.hasSpells = sheetData.actor.spellcastingEntries.length ? sheetData.actor.spellcastingEntries : false;
       //sheetData.spellAttackBonus = sheetData.data.attributes.spelldc.value;
 
-      const equipment = [];
+/*       const equipment = [];
       const reorgActions = {
         interaction: {
           label: "Interaction Actions",
@@ -115,22 +121,29 @@
           }
         }
       };
-      sheetData.hasInteractionActions = false;
-      sheetData.hasDefensiveActions = false;
-      sheetData.hasOffensiveActions = false;
-      sheetData.hasEquipment = false;
-      for ( let i of sheetData.actor.items ){
+
+      const attacks = {
+        melee: { label: 'NPC Melee Attack', items: [], type: 'melee' },
+        ranged: { label: 'NPC Ranged Attack', items: [], type: 'melee' },
+        weapon: { label: 'Compendium Weapon', items: [], type: 'weapon' },
+      }; */
+
+      //sheetData.hasInteractionActions = false;
+      //sheetData.hasDefensiveActions = false;
+      //sheetData.hasOffensiveActions = false;
+      //sheetData.hasEquipment = false;
+      //for ( let i of sheetData.actor.items ){
 
         //Equipment
-        if(i.type === 'weapon' || i.type === 'armor' || i.type === 'equipment' || i.type === 'consumable'){
+        /* if(i.type === 'armor' || i.type === 'equipment' || i.type === 'consumable' || i.type === 'backpack'){
           equipment.push(i);
           sheetData.hasEquipment = true;
-        }
+        } */
         //Actions
-        else if(i.type === 'action'){
+        /* else if(i.type === 'action'){
           let actionType = i.data.actionType.value || "action";
-          if(i.flags && i.flags.pf2e_updatednpcsheet && i.flags.pf2e_updatednpcsheet.npcActionType && i.flags.pf2e_updatednpcsheet.npcActionType.value){
-            switch(i.flags.pf2e_updatednpcsheet.npcActionType.value){
+          if(i.data.category && i.data.category.value) {
+            switch(i.data.category.value){
               case 'interaction':
                 reorgActions.interaction.actions[actionType].actions.push(i);
                 sheetData.hasInteractionActions = true;
@@ -149,15 +162,37 @@
             reorgActions.offensive.actions[actionType].actions.push(i);
             sheetData.hasOffensiveActions = true;
           }
-        }
+        } */
         //Give Melee/Ranged an img
-        else if(i.type === 'melee' || i.type === 'ranged'){
+        /* else if(i.type === 'melee' || i.type === 'ranged'){
           let actionImg = 1;
           i.img = this._getActionImg(actionImg);
-        }
-      }
-      sheetData.actor.reorgActions = reorgActions;
-      sheetData.actor.equipment = equipment;
+        } */
+        /* else if (i.type === 'weapon') {
+          const weaponType = (i.data.weaponType || {}).value || 'melee';
+          const isAgile = (i.data.traits.value || []).includes('agile');
+          i.data.bonus.total = (parseInt(i.data.bonus.value) || 0) + sheetData.actor.data.martial.simple.value;
+          i.data.isAgile = isAgile;
+  
+          // get formated traits for read-only npc sheet
+          let traits = [];
+          if ((i.data.traits.value || []).length != 0) {
+            for (let j = 0; j < i.data.traits.value.length; j++) {
+              const traitsObject = {
+                label: CONFIG.PF2E.weaponTraits[i.data.traits.value[j]] || (i.data.traits.value[j].charAt(0).toUpperCase() + i.data.traits.value[j].slice(1)),
+                description: CONFIG.PF2E.traitsDescriptions[i.data.traits.value[j]] || '',
+              };
+              traits.push(traitsObject);
+            }
+          }
+          i.traits = traits.filter((p) => !!p);
+  
+          attacks["weapon"].items.push(i);
+        } */
+      //}
+      //sheetData.actor.attacks = attacks;
+      //sheetData.actor.reorgActions = reorgActions;
+      //sheetData.actor.equipment = equipment;
 
 	    // Return data for rendering
 		return sheetData;
@@ -177,7 +212,7 @@
         //abl = itemData.ability.value || "str",
         // abl = "str",
         parts = [weaponDamage],
-        dtype = CONFIG.PF2E.damageTypes[damageRoll.damageType];
+        dtype = game.i18n.localize(CONFIG.PF2E.damageTypes[damageRoll.damageType]);
 
     // Append damage type to title
     let title = `${item.name} - Damage`;
@@ -207,7 +242,7 @@
    expandAttackEffect(attackEffectName, event, triggerItem){
     let actionList = $(event.currentTarget).parents('form').find('.item.action-item');
     let toggledAnything = false;
-    let mAbilities = CONFIG.PF2E.monsterAbilities()
+    let mAbilities = monsterAbilities()
     console.log("mAbilities: ", mAbilities);
     actionList.each(function (index){
       //'this' = element found
@@ -319,7 +354,7 @@
       ev.preventDefault();
       ev.stopPropagation();
 
-      let itemId = $(ev.currentTarget).parents(".item").attr("data-item-id"),
+      let itemId = Number($(ev.currentTarget).parents(".item").attr("data-item-id")),
           drId = Number($(ev.currentTarget).attr("data-dmgRoll")),
           //item = this.actor.items.find(i => { return i.id === itemId });
           item = this.actor.getOwnedItem(itemId),
@@ -335,11 +370,11 @@
       ev.preventDefault();
       ev.stopPropagation();
 
-      let itemId = $(ev.currentTarget).parents(".item").attr("data-item-id"),
+      let itemId = Number($(ev.currentTarget).parents(".item").attr("data-item-id")),
           aId = Number($(ev.currentTarget).attr("data-attackEffect")),
           //item = this.actor.items.find(i => { return i.id === itemId });
           item = this.actor.getOwnedItem(itemId),
-          attackEffect = item.data.data.attackEffects[aId];
+          attackEffect = item.data.flags.pf2e_updatednpcsheet.attackEffects[aId];
       console.log("clicked an attackEffect:", attackEffect, ev);
 
       // which function gets called depends on the type of button stored in the dataset attribute action
@@ -430,9 +465,4 @@ Handlebars.registerHelper('strip_tags', function(value, options) {
   return strip_tags(String(value));
 });
 
-// Register NPC Sheet
-Actors.registerSheet("pf2e", UpdatedNPCActorPF2ESheet, {
-  types: ["npc"],
-  makeDefault: true
-});
-
+export default ActorSheetPF2eCharacterReadOnly;

@@ -2,6 +2,9 @@
  * Extend the basic ActorSheet class to do all the PF2e things!
  * This sheet is an Abstract layer which is not used.
  */
+
+import SkillModifierManager from '../skillModifierManager.js';
+
 class ActorSheetPF2e extends ActorSheet {
   /**
    * Return the type of the current Actor
@@ -9,6 +12,13 @@ class ActorSheetPF2e extends ActorSheet {
    */
   get actorType() {
 	  return this.actor.data.type;
+  }
+
+  get skillModifierManager() {
+    if (!this._skillModifierManager) {
+      this._skillModifierManager = new SkillModifierManager(this);
+    }
+    return this._skillModifierManager;
   }
 
   /* -------------------------------------------- */
@@ -456,6 +466,8 @@ class ActorSheetPF2e extends ActorSheet {
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
+
+    this.skillModifierManager.bindEvents(html);
 
     /* -------------------------------------------- */
     /*  Attributes, Skills, Saves and Traits
@@ -1512,4 +1524,4 @@ class ActorSheetPF2e extends ActorSheet {
   }
 }
 
-Actors.unregisterSheet('core', ActorSheet);
+export default ActorSheetPF2e;
