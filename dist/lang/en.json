@@ -50,6 +50,7 @@
   "PF2E.ArmorClassLabel": "Armor Class",
   "PF2E.ArmorClassShortLabel": "AC",
   "PF2E.HitPointsHeader": "Hit Points",
+  "PF2E.StatModifierHeader": "Modifiers",
   "PF2E.TempHitPointsShortLabel": "Temp HP",
   "PF2E.TempHPTitle": "The amount of temporary hit points you have",
   "PF2E.CurrentHitPointsShortLabel": "Current HP",

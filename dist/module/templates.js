@@ -8,6 +8,7 @@ export default function () {
     'systems/pf2e/templates/actors/main/actor-initiative.html',
     'systems/pf2e/templates/actors/main/actor-saves.html',
     'systems/pf2e/templates/actors/main/actor-ability-scores.html',
+    'systems/pf2e/templates/actors/main/actor-stat-modifiers.html',
     // Actor Sheet Partials (Tabs)
     'systems/pf2e/templates/actors/tabs/actor-actions.html',
     'systems/pf2e/templates/actors/tabs/actor-biography.html',

@@ -1,0 +1,44 @@
+%section {
+  grid-row-start: auto;
+  align-self: center;
+  display: grid;
+  grid: "score name rank item" 32px / 30px auto 52px 52px;
+  background: var(--secondary-background);
+  margin-right: 4px;
+}
+%stat-header {
+  grid-area: auto;
+  margin: 0;
+  background: var(--secondary-background);
+  color: white;
+  align-self: center;
+  font-size: 15px;
+}
+%item-control {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 11px;
+  color: #666;
+  width: 22px;
+}
+.stat-modifiers {
+  h3 {
+    a.item-control {
+      @extend %item-control;
+      color: white;
+    }
+    position: relative;
+  }
+  h4 {
+    @extend %stat-header;
+  }
+  li {
+    @extend %section;
+    grid: "enable name multiplier edit" 32px/30px auto 52px 20px;
+    .item-control {
+      margin: auto;
+      color: white;
+    }
+  }
+}
