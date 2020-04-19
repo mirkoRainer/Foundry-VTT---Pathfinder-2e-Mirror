@@ -400,7 +400,8 @@
           "spell11": {
             "max": 0
           }
-        }
+        },
+        "statModifiers": []
       }
     },
     "character": {
