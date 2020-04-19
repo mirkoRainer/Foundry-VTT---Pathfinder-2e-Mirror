@@ -465,7 +465,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "melee", "armor", "equipment", "consumable", "lore", "martial", "spell", "spellcastingEntry", "feat", "action", "backpack"],
+    "types": ["weapon", "melee", "armor", "equipment", "consumable", "lore", "martial", "spell", "spellcastingEntry", "feat", "action", "backpack", "statModifier"],
     "templates": {
       "itemDescription": {
         "description": {
@@ -725,6 +725,13 @@
       "item": {
         "value": 0
       }
+    },
+    "statModifier": {
+      "templates": [],
+      "enabled": false,
+      "label": "",
+      "multiplier": 1,
+      "modifiers": []
     },
     "martial": {
       "templates": ["itemDescription"],
