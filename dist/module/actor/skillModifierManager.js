@@ -9,15 +9,14 @@ class SkillModifierManager {
     data.statModifiers = [];
     for (const [idx, statModifier] of data.items.entries()) {
       if (statModifier.type === 'statModifier') {
-        data.statModifiers.push(statModifier);
+        data.statModifiers.push(new SkillModifier(statModifier));
       }
     }
   }
 
   createStatModifier(ev) {
     ev.preventDefault();
-    const modifier = new SkillModifier();
-    this.actor.createEmbeddedEntity('OwnedItem', modifier.toItem());
+    this.actor.createEmbeddedEntity('OwnedItem', SkillModifier.defaults);
   }
 
   editModifier(ev) {
@@ -30,14 +29,14 @@ class SkillModifierManager {
     ev.preventDefault();
     const itemId = this.fetchId(ev);
     const { target: { value: multiplier } } = ev;
-    this.actor.updateEmbeddedEntity('OwnedItem', { _id: itemId, data: { multiplier } });
+    new SkillModifier({ _id: itemId }, this.actor).setMultiplier(multiplier);
   }
 
   toggleEnabled(ev) {
     ev.preventDefault();
     const itemId = this.fetchId(ev);
     const { target: { checked } } = ev;
-    this.actor.updateEmbeddedEntity('OwnedItem', { _id: itemId, data: { enabled: checked } });
+    new SkillModifier({ _id: itemId }, this.actor).setEnabled(checked);
   }
 
   fetchId(ev) {

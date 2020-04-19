@@ -8,13 +8,13 @@
 
   <ol class="defense-list">
     {{#each actor.statModifiers as |statModifier idx|}}
-      <li data-item-id="{{ statModifier._id }}">
-        <input {{ checked statModifier.data.enabled }} type="checkbox" data-target="enabled"/>
-        <h4>{{ statModifier.data.label }}</h4>
+      <li data-item-id="{{ statModifier.id }}">
+        <input {{ checked statModifier.enabled }} type="checkbox" data-target="enabled"/>
+        <h4>{{ statModifier.label }}</h4>
         <div class="defense-container">
           <h4 class="defense-item pf-title">Multi</h4>
           <span class="defense-item-value pf-value" title="Multiplier">
-            <input type="text" value="{{ statModifier.data.multiplier }}"
+            <input type="text" value="{{ statModifier.multiplier }}"
                          data-target="multiplier" placeholder="1"/>
           </span>
         </div>
