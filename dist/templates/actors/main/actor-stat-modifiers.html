@@ -7,18 +7,21 @@
   </h3>
 
   <ol class="defense-list">
-    <li>
-      <input type="checkbox"/>
-      <h4>Inspire Courage</h4>
-      <div class="defense-container">
-        <h4 class="defense-item pf-title">Multi</h4>
-        <span class="defense-item-value pf-value" title="Multiplier">
-          <input type="text" value="1" data-dtype="Number" placeholder="1"/>
-        </span>
-      </div>
-      <a class="item-control edit-modifier">
-        <i class="fas fa-edit"></i>
-      </a>
-    </li>
+    {{#each actor.statModifiers as |statModifier idx|}}
+      <li data-item-id="{{ statModifier._id }}">
+        <input {{ checked statModifier.data.enabled }} type="checkbox" data-target="enabled"/>
+        <h4>{{ statModifier.data.label }}</h4>
+        <div class="defense-container">
+          <h4 class="defense-item pf-title">Multi</h4>
+          <span class="defense-item-value pf-value" title="Multiplier">
+            <input type="text" value="{{ statModifier.data.multiplier }}"
+                         data-target="multiplier" placeholder="1"/>
+          </span>
+        </div>
+        <a class="item-control edit-modifier">
+          <i class="fas fa-edit"></i>
+        </a>
+      </li>
+    {{/each}}
   </ol>
 </span>

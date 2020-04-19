@@ -27,7 +27,7 @@ class ActorSheetPF2e extends ActorSheet {
    * Add some extra data when rendering the sheet to reduce the amount of logic required within the template.
    */
   getData() {
-    const sheetData = super.getData();
+    let sheetData = super.getData();
 
     // Update martial skill labels
     for (const [s, skl] of Object.entries(sheetData.data.martial)) {
@@ -74,6 +74,10 @@ class ActorSheetPF2e extends ActorSheet {
 
     // Prepare owned items
     this._prepareItems(sheetData.actor);
+
+    // Skill Modifier Manager Setup
+    this.skillModifierManager.applyData(sheetData.actor);
+    console.log(sheetData.actor);
 
     // Return data to the sheet
     return sheetData;
