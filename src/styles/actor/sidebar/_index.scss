@@ -1,0 +1,176 @@
+aside {
+    grid-area: sidebar;
+    color: $sidebar-label;
+    font-family: $serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: url('../assets/sheet/red_sidebar.png') no-repeat top center;
+    background-size: 247px;
+    height: 770px;
+    overflow: hidden;
+    .logo {
+        margin-top: 5px;
+        border: none;
+        position: relative;
+        z-index: 10;
+    }
+    .sidebar {
+        padding: 0 30px;
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        h4,label {
+            @include micro;
+        }
+
+        &_title {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid $sidebar-title-color;
+            margin: 0.5em 0;
+            h2,
+            h4,
+            a {
+                @include micro;
+                border: none;
+                margin: 0;
+                line-height: 1.5;
+            }
+            h2 {
+                color: $sidebar-title-color;
+            }
+            h4 {
+                margin-left: auto;
+                & + h4 {
+                    margin-left: 1em;
+                }
+            }
+            a {
+                color: white;
+                text-decoration: none;
+            }
+        }
+        .dots {
+            display: flex;
+            flex-direction: column;
+        }
+        .data-value {
+            display: inline-block;
+            font-size: 0; /* Removes whitespace for inputs */
+            input[type='number'],
+            h2 {
+                width: 42px;
+                height: 26px;
+                color: $sidebar-label;
+                text-align: center;
+                font-size: 26px;
+                line-height: calc(1em + 1px);
+                font-weight: 500;
+                font-family: $serif;
+                border: none;
+            }
+            input[type='number'] {
+                -moz-appearance: textfield;
+                color: white;
+                &:focus {
+                    box-shadow: none;
+                }
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+            }
+        }
+        .stat-item {
+            input[type='number'] {
+                width: 20px;
+                color: white;
+                font-family: $serif;
+                font-weight: 500;
+                text-align: right;
+                line-height: 1;
+                height: 14px;
+                padding: 6px 0 0;
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+            }
+        }
+        a.roll-icon {
+            display: inline-flex;
+            align-items: center;
+            padding-bottom: 2px;
+            &:hover {
+                svg {
+                    filter: drop-shadow(0 0 6px white);
+                }
+            }
+        }
+        select {
+            font-family: $serif;
+            font-size: 16px;
+            color: white;
+            background-color: var(--primary);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+            padding: 4px 8px;
+            width: 100%;
+            max-width: 100%;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
+        }
+        ol {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            li {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+        
+        .plaque {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            background: url('../assets/sheet/plaque.png') no-repeat center center;
+            color: var(--primary);
+            text-transform: capitalize;
+            font-family: $serif;
+            font-size: 14px;
+            padding: 4px 0 2px;
+            border-radius: 1px;
+            border: 1px solid #9f725b;
+            /* prettier-ignore */
+            box-shadow:
+                inset 0 0 0 1px #e9d7a1,
+                inset 0 0 0 2px #c3b396;
+        }
+
+        /* prettier-ignore */
+        @import 'health',
+                'armor',
+                'stamina',
+                'initPercept',
+                'saves',
+                'classDC',
+                'resists';
+    }
+}

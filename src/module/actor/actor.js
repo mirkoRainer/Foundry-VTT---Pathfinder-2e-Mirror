@@ -3,7 +3,7 @@
  */
 import CharacterData from './character.js';
 import {
-  WISDOM,
+  DEXTERITY, WISDOM,
   AbilityModifier, ProficiencyModifier, PF2ModifierType, PF2Modifier, PF2StatisticModifier,
 } from '../modifiers.js';
 import { ConditionModifiers } from '../condition-modifiers.js';
@@ -113,7 +113,9 @@ export default class extends Actor {
       if (save.item) {
         modifiers.push(new PF2Modifier('Item Bonus', save.item, PF2ModifierType.ITEM));
       }
-      (statisticsModifiers[saveName] || []).forEach((m) => modifiers.push(m));
+      [saveName, `${save.ability}-based`, 'all'].forEach((key) => {
+        (statisticsModifiers[key] || []).forEach((m) => modifiers.push(m));
+      });
 
       // preserve backwards-compatibility
       let updated;
@@ -141,56 +143,141 @@ export default class extends Actor {
     }
 
     // Perception
-    const modifiers = [
-      WISDOM.withScore(data.abilities.wis.value),
-      ProficiencyModifier.fromLevelAndRank(data.details.level.value, data.attributes.perception.rank || 0),
-    ];
-    if (data.attributes.perception.item) {
-      modifiers.push(new PF2Modifier('Item Bonus', data.attributes.perception.item, PF2ModifierType.ITEM));
-    }
-    (statisticsModifiers.perception || []).forEach((m) => modifiers.push(m));
+    {
+      const modifiers = [
+        WISDOM.withScore(data.abilities.wis.value),
+        ProficiencyModifier.fromLevelAndRank(data.details.level.value, data.attributes.perception.rank || 0),
+      ];
+      if (data.attributes.perception.item) {
+        modifiers.push(new PF2Modifier('Item Bonus', data.attributes.perception.item, PF2ModifierType.ITEM));
+      }
+      ['perception', `wis-based`, 'all'].forEach((key) => {
+        (statisticsModifiers[key] || []).forEach((m) => modifiers.push(m));
+      });
 
-    // preserve backwards-compatibility
-    /* eslint-disable no-param-reassign */
-    if (data.attributes.perception instanceof PF2StatisticModifier) {
-      // calculate and override fields in PF2StatisticModifier, like the list of modifiers and the
-      // total modifier
-      data.attributes.perception = mergeObject(data.attributes.perception, new PF2StatisticModifier('perception', modifiers));
-    } else {
-      // ensure the perception object has the correct prototype, while retaining the original data fields
-      data.attributes.perception = mergeObject(new PF2StatisticModifier('perception', modifiers), data.attributes.perception);
+      // preserve backwards-compatibility
+      /* eslint-disable no-param-reassign */
+      if (data.attributes.perception instanceof PF2StatisticModifier) {
+        // calculate and override fields in PF2StatisticModifier, like the list of modifiers and the total modifier
+        data.attributes.perception = mergeObject(data.attributes.perception, new PF2StatisticModifier('perception', modifiers));
+      } else {
+        // ensure the perception object has the correct prototype, while retaining the original data fields
+        data.attributes.perception = mergeObject(new PF2StatisticModifier('perception', modifiers), data.attributes.perception);
+      }
+      data.attributes.perception.breakdown = data.attributes.perception.modifiers.filter((m) => m.enabled)
+        .map((m) => `${game.i18n.localize(m.name)} ${m.modifier < 0 ? '' : '+'}${m.modifier}`)
+        .join(', ');
+      data.attributes.perception.value = data.attributes.perception.totalModifier;
+      /* eslint-enable */
     }
-    data.attributes.perception.breakdown = data.attributes.perception.modifiers.filter((m) => m.enabled)
-      .map((m) => `${game.i18n.localize(m.name)} ${m.modifier < 0 ? '' : '+'}${m.modifier}`)
-      .join(', ');
-    data.attributes.perception.value = data.attributes.perception.totalModifier;
-    /* eslint-enable */
 
     // Class DC
-    data.attributes.classDC.ability = data.details.keyability.value;
-    const classDCProficiency = data.attributes.classDC.rank ? (data.attributes.classDC.rank * 2) + data.details.level.value : 0;
-    data.attributes.classDC.value = data.abilities[data.attributes.classDC.ability].mod + classDCProficiency + data.attributes.classDC.item + 10;
-    data.attributes.classDC.breakdown = `10 + ${data.attributes.classDC.ability} modifier(${data.abilities[data.attributes.classDC.ability].mod}) + proficiency(${classDCProficiency}) + item bonus(${data.attributes.classDC.item})`;
+    {
+      const modifiers = [
+        AbilityModifier.fromAbilityScore(data.details.keyability.value, data.abilities[data.details.keyability.value].value),
+        ProficiencyModifier.fromLevelAndRank(data.details.level.value, data.attributes.classDC.rank ?? 0),
+      ];
+      ['class', `${data.details.keyability.value}-based`, 'all'].forEach((key) => {
+        (statisticsModifiers[key] || []).forEach((m) => modifiers.push(m));
+      });
 
-    // TODO: seems like storing items, feats, armor, actions etc all in one array would be expensive to search? maybe adjust this data model?
-    // TODO: speed penalties are not automated
-    data.attributes.ac.value = character.ac;
-    data.attributes.ac.check = character.skillCheckPenalty;
+      // preserve backwards-compatibility
+      /* eslint-disable no-param-reassign */
+      if (data.attributes.classDC instanceof PF2StatisticModifier) {
+        // calculate and override fields in PF2StatisticModifier, like the list of modifiers and the total modifier
+        data.attributes.classDC = mergeObject(data.attributes.classDC, new PF2StatisticModifier('PF2E.ClassDCLabel', modifiers));
+      } else {
+        // ensure the perception object has the correct prototype, while retaining the original data fields
+        data.attributes.classDC = mergeObject(new PF2StatisticModifier('PF2E.ClassDCLabel', modifiers), data.attributes.classDC);
+      }
+      data.attributes.classDC.value = 10 + data.attributes.classDC.totalModifier;
+      data.attributes.classDC.ability = data.details.keyability.value;
+      data.attributes.classDC.breakdown = [game.i18n.localize('PF2E.ClassDCBase')].concat(
+        data.attributes.classDC.modifiers.filter((m) => m.enabled)
+          .map((m) => `${game.i18n.localize(m.name)} ${m.modifier < 0 ? '' : '+'}${m.modifier}`)
+      ).join(', ');
+      /* eslint-enable */
+    }
+
+    // Armor Class
+    {
+      const modifiers = [];
+      let armorCheckPenalty = 0;
+      // find equipped armor
+      const worn = this.data.items.filter((item) => item.type === 'armor')
+        .filter((armor) => armor.data.armorType.value !== 'shield')
+        .find((armor) => armor.data.equipped.value);
+      if (worn) {
+        // Dex modifier limited by armor max dex bonus
+        const dexterity = DEXTERITY.withScore(data.abilities.dex.value);
+        dexterity.modifier = Math.min(dexterity.modifier, Number(worn.data.dex.value ?? 0));
+        modifiers.push(dexterity);
+
+        // armor check penalty
+        if (data.abilities.str.value < Number(worn.data.strength.value ?? 0)) {
+          armorCheckPenalty = Number(worn.data.check.value ?? 0);
+        }
+
+        modifiers.push(ProficiencyModifier.fromLevelAndRank(data.details.level.value, data.martial[worn.data.armorType?.value]?.rank ?? 0));
+        modifiers.push(new PF2Modifier(worn.name, Number(worn.data.armor.value ?? 0), PF2ModifierType.ITEM));
+      } else {
+        modifiers.push(DEXTERITY.withScore(data.abilities.dex.value));
+        modifiers.push(ProficiencyModifier.fromLevelAndRank(data.details.level.value, data.martial.unarmored.rank));
+      }
+      // condition modifiers
+      ['ac', 'dex-based', 'all'].forEach((key) => {
+        (statisticsModifiers[key] || []).forEach((m) => modifiers.push(m));
+      });
+
+      /* eslint-disable no-param-reassign */
+      data.attributes.ac = new PF2StatisticModifier("Armor Class", modifiers);
+      // preserve backwards-compatibility
+      data.attributes.ac.value = 10 + data.attributes.ac.totalModifier;
+      data.attributes.ac.check = armorCheckPenalty;
+      data.attributes.ac.breakdown = [game.i18n.localize('PF2E.ArmorClassBase')].concat(
+        data.attributes.ac.modifiers.filter((m) => m.enabled)
+          .map((m) => `${game.i18n.localize(m.name)} ${m.modifier < 0 ? '' : '+'}${m.modifier}`)
+      ).join(', ');
+      /* eslint-enable */
+    }
 
     // Skill modifiers
-    for (const skl of Object.values(data.skills)) {
-      // skl.value = parseFloat(skl.value || 0);
-      const proficiency = skl.rank ? (skl.rank * 2) + data.details.level.value : 0;
-      skl.mod = data.abilities[skl.ability].mod;
-
-      if (skl.armor) {
-        const armorCheckPenalty = skl.armor ? (data.attributes.ac.check || 0) : 0;
-        skl.value = data.abilities[skl.ability].mod + proficiency + skl.item + armorCheckPenalty;
-        skl.breakdown = `${skl.ability} modifier(${data.abilities[skl.ability].mod}) + proficiency(${proficiency}) + item bonus(${skl.item}) + armor check penalty(${armorCheckPenalty})`;
-      } else {
-        skl.value = data.abilities[skl.ability].mod + proficiency + skl.item;
-        skl.breakdown = `${skl.ability} modifier(${data.abilities[skl.ability].mod}) + proficiency(${proficiency}) + item bonus(${skl.item})`;
+    for (const [skillName, skill] of Object.entries(data.skills)) {
+      const modifiers = [
+        AbilityModifier.fromAbilityScore(skill.ability, data.abilities[skill.ability].value),
+        ProficiencyModifier.fromLevelAndRank(data.details.level.value, skill.rank),
+      ];
+      if (skill.item) {
+        modifiers.push(new PF2Modifier('Item Bonus', skill.item, PF2ModifierType.ITEM));
       }
+      if (skill.armor && data.attributes.ac.check && data.attributes.ac.check < 0) {
+        modifiers.push(new PF2Modifier('PF2E.ArmorCheckPenalty', data.attributes.ac.check, PF2ModifierType.UNTYPED));
+      }
+
+      // workaround for the shortform skill names
+      const skillDictionary = {acr:'acrobatics',arc:'arcana',ath:'athletics',cra:'crafting',
+        dec:'deception',dip:'diplomacy',itm:'intimidate',med:'medicine',nat:'nature',occ:'occultism',
+        prf:'perform',rel:'religion',soc:'society',ste:'stealth',sur:'survival',thi:'thievery'};
+      const expandedName = skillDictionary[skillName];
+
+      [expandedName, `${skill.ability}-based`, 'all'].forEach((key) => {
+        (statisticsModifiers[key] || []).forEach((m) => modifiers.push(m));
+      });
+
+      // preserve backwards-compatibility
+      let updated;
+      if (skill instanceof PF2StatisticModifier) {
+        // calculate and override fields in PF2StatisticModifier, like the list of modifiers and the total modifier
+        updated = mergeObject(skill, new PF2StatisticModifier(expandedName, modifiers));
+      } else {
+        // ensure the individual skill objects has the correct prototype, while retaining the original data fields
+        updated = mergeObject(new PF2StatisticModifier(expandedName, modifiers), skill);
+      }
+      updated.breakdown = updated.modifiers.filter((m) => m.enabled)
+        .map((m) => `${game.i18n.localize(m.name)} ${m.modifier < 0 ? '' : '+'}${m.modifier}`)
+        .join(', ');
+      updated.value = updated.totalModifier;
+      data.skills[skillName] = updated; // eslint-disable-line no-param-reassign
     }
   }
 
@@ -248,11 +335,11 @@ export default class extends Actor {
     const dc = recoveryDc + dying;
     let result = '';
 
-    if (flatCheck.result == 20 || flatCheck.result >= (recoveryDc+10)) {
+    if (flatCheck.result == 20 || flatCheck.result >= (dc+10)) {
       result = game.i18n.localize("PF2E.CritSuccess") + ' ' + game.i18n.localize("PF2E.Recovery.critSuccess");
-    } else if (flatCheck.result == 1 || flatCheck.result <= (recoveryDc-10)) {
+    } else if (flatCheck.result == 1 || flatCheck.result <= (dc-10)) {
       result = game.i18n.localize("PF2E.CritFailure") + ' ' + game.i18n.localize("PF2E.Recovery.critFailure");
-    } else if (flatCheck.result >= recoveryDc) {
+    } else if (flatCheck.result >= dc) {
       result = game.i18n.localize("PF2E.Success") + ' ' + game.i18n.localize("PF2E.Recovery.success");
     } else {
       result = game.i18n.localize("PF2E.Failure") + ' ' + game.i18n.localize("PF2E.Recovery.failure");
@@ -271,13 +358,13 @@ export default class extends Actor {
             </section>
         </div>
         <div class="dice-total" style="padding: 0 10px; word-break: normal;">
-          <span style="font-size: 12px; font-style:oblique; font-weight: 100;">
+          <span style="font-size: 12px; font-style:oblique; font-weight: 400;">
             ${rollingPartA}  <a class="inline-roll inline-result" title="d20" data-roll="${escape(JSON.stringify(flatCheck))}" style="font-style: normal;">
             <i class="fas fa-dice-d20"></i> ${flatCheck.result}</a> ${rollingPartB} ${dc}.
           </span>
         </div>
         <div class="dice-total" style="padding: 0 10px; word-break: normal;">
-          <span style="font-size: 12px; font-weight: 100;">
+          <span style="font-size: 12px; font-weight: 400;">
             ${result}
           </span>
         </div>
@@ -432,7 +519,7 @@ export default class extends Actor {
               </div>
             </div>
             <div class="dice-total" style="padding: 0 10px; word-break: normal;">
-              <span style="font-size: 12px; font-style:oblique; font-weight: 100; line-height: 15px;">
+              <span style="font-size: 12px; font-style:oblique; font-weight: 400; line-height: 15px;">
                 ${t.name} ${shieldFlavor} ${appliedResult} ${hitpoints}.
               </span>
             </div>
@@ -489,7 +576,7 @@ export default class extends Actor {
             </div>
         </div>
         <div class="dice-total" style="padding: 0 10px; word-break: normal;">
-          <span style="font-size: 12px; font-style:oblique; font-weight: 100;">${combatant.name}'s Initiative is now ${value} !</span>
+          <span style="font-size: 12px; font-style:oblique; font-weight: 400;">${combatant.name}'s Initiative is now ${value} !</span>
         </div>
       </div>
       </div>
@@ -556,64 +643,59 @@ export default class extends Actor {
    * @return {Promise}
    */
   async modifyTokenAttribute(attribute, value, isDelta=false, isBar=true) {
-    const current = getProperty(this.data.data, attribute);
+    const hp = this.data.data.attributes.hp;
+    const sp = this.data.data.attributes.sp;
 
-    if ( attribute == 'attributes.hp' ) {
+    if ( attribute === 'attributes.shield') {
+      const shield = this.data.data.attributes.shield;
+      if (isDelta && value < 0) {
+        value = Math.min( (shield.hardness + value) , 0); //value is now a negative modifier (or zero), taking into account hardness
+        this.update({[`data.attributes.shield.value`]: Math.clamped(0, shield.value + value, shield.max)});
+        attribute = 'attributes.hp';
+      }
+    }
+
+    if (attribute === 'attributes.hp') {
       if (isDelta) {
         if (value < 0) {
-          if ((current.temp + value) >= 0) {
-            const newTempHp = current.temp + value;
-            this.update({[`data.attributes.hp.temp`]: newTempHp});
-            value = 0;
-          } else {
-            value = current.temp + value;
-            this.update({[`data.attributes.hp.temp`]: 0});
-          }
-          if (game.settings.get('pf2e', 'staminaVariant') > 0 && value < 0) {
-            const currentSP = getProperty(this.data.data, 'attributes.sp');
-
-            if ((currentSP.value + value) >= 0) {
-              const newSP = currentSP.value + value;
-              this.update({[`data.attributes.sp.value`]: newSP});
-              value = 0;
-            } else {
-              value = currentSP.value + value;
-              this.update({[`data.attributes.sp.value`]: 0});
-            }
-          }
+          value = this.calculateHealthDelta({hp, sp, delta: value})
         }
-        value = Math.clamped(0, Number(current.value) + value, current.max);
+        value = Math.clamped(0, Number(hp.value) + value, hp.max);
       }
-      value = Math.clamped(value, 0, current.max);
+      value = Math.clamped(value, 0, hp.max);
       return this.update({[`data.attributes.hp.value`]: value});
-
-    } else if ( attribute == 'attributes.shield' && isDelta ) {
-
-      if (isDelta) {
-        if (value < 0) {
-          value = Math.min( (current.hardness + value) , 0); //value is now a negative modifier (or zero), taking into account hardness
-          const hp = this.data.data.attributes.hp;
-          if (value < 0) { //substract the value from (temp)HP as well
-            if ((hp.temp + value) >= 0) {
-              const newTempHp = hp.temp + value;
-              this.update({[`data.attributes.hp.temp`]: newTempHp});
-            } else {
-              const newHp = Math.clamped( ( hp.value + hp.temp + value ), 0, hp.max);
-              this.update({[`data.attributes.hp.value`]: newHp});
-              this.update({[`data.attributes.hp.temp`]: 0});
-            }
-          }
-        }
-        value = Number(current.value) + value; //apply modifier to shield hp
-      }
-      value = Math.clamped(value, 0, current.max);
-      return this.update({[`data.attributes.shield.value`]: value});
-
     }
 
     return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
   }
 
+  /**
+   * Handle how changes to a Token attribute bar are applied to the Actor.
+   * This allows for game systems to override this behavior and deploy special logic.
+   * @param {object} args   Contains references to the hp, and sp objects.
+   */
+  calculateHealthDelta(args) {
+    let {hp, sp, delta} = args;
+    if ((hp.temp + delta) >= 0) {
+      const newTempHp = hp.temp + delta;
+      this.update({[`data.attributes.hp.temp`]: newTempHp});
+      delta = 0;
+    } else {
+      delta = hp.temp + delta;
+      this.update({[`data.attributes.hp.temp`]: 0});
+    }
+    if (game.settings.get('pf2e', 'staminaVariant') > 0 && delta < 0) {
+      if ((sp.value + delta) >= 0) {
+        const newSP = sp.value + delta;
+        this.update({[`data.attributes.sp.value`]: newSP});
+        delta = 0;
+      } else {
+        delta = sp.value + delta;
+        this.update({[`data.attributes.sp.value`]: 0});
+      }
+    }
+    return delta;
+  }
 }
 
 Handlebars.registerHelper('if_stamina', function(options) {
