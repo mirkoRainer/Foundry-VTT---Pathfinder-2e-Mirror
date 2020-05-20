@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Bracers of Armor I",
+    "permission": {
+      "default": 0,
+      "ZqHmTRe9ulB29uhC": 3
+    },
+    "type": "equipment",
+    "data": {
+      "description": {
+        "value": "<p><span id=\"ctl00_MainContent_DetailedOutput\">These stiff leather armguards grant you a +1 item bonus to AC and saving throws, and a maximum Dexterity modifier of +5. You can affix talismans to brac<em>ers of armor</em> as though they were light armor.&nbsp;</span></p>",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": {
+        "value": ""
+      },
+      "traits": {
+        "value": []
+      },
+      "quantity": {
+        "value": "1"
+      },
+      "weight": {
+        "value": "L"
+      },
+      "price": {
+        "value": "450 gp"
+      },
+      "invested": {
+        "value": false
+      },
+      "equipped": {
+        "value": false
+      },
+      "identified": {
+        "value": false
+      },
+      "level": {
+        "value": "8"
+      }
+    },
+    "flags": {},
+    "img": "systems/pf2e/icons/equipment/worn-items/other-worn-items/bracers-of-armor.jpg",
+    "_id": "02q8s6sSicMkhs1l"
+  },
+  {
+    "name": "Bracers of Armor II",
+    "permission": {
+      "default": 0,
+      "ZqHmTRe9ulB29uhC": 3
+    },
+    "type": "equipment",
+    "data": {
+      "description": {
+        "value": "<p><span id=\"ctl00_MainContent_DetailedOutput\">These stiff leather armguards grant you a +2 item bonus to AC and saving throws, and a maximum Dexterity modifier of +5. You can affix talismans to brac<em>ers of armor</em> as though they were light armor.&nbsp;</span></p>",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": {
+        "value": ""
+      },
+      "traits": {
+        "value": []
+      },
+      "quantity": {
+        "value": "1"
+      },
+      "weight": {
+        "value": "L"
+      },
+      "price": {
+        "value": "4,000 gp"
+      },
+      "invested": {
+        "value": false
+      },
+      "equipped": {
+        "value": false
+      },
+      "identified": {
+        "value": false
+      },
+      "level": {
+        "value": "14"
+      }
+    },
+    "flags": {},
+    "img": "systems/pf2e/icons/equipment/worn-items/other-worn-items/bracers-of-armor.jpg",
+    "_id": "8mhSUxEvNuXDP8Ki"
+  }
+]

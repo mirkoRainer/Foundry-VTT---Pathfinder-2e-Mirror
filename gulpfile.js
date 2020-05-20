@@ -16,6 +16,8 @@ const babel = require('gulp-babel');
 
 const { argv } = require('yargs');
 
+const CompendiumBuilder = require('./compendiumBuilder.js');
+
 sass.compiler = require('sass');
 
 function getConfig() {
@@ -139,6 +141,18 @@ function buildSASS() {
   return gulp.src('src/**/*.scss', { sourcemaps: true })
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('dist', { sourcemaps: true }));
+}
+
+async function buildCompendiums() {
+  const promises = fs.readdirSync(path.join("src", "compendiums"), { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => dirent.name)
+    .map((compendium) => {
+      const builder = new CompendiumBuilder(path.resolve("src", "compendiums", compendium))
+      const content = builder.compendiumContent;
+      return fs.writeFile(path.join("dist", "packs", `${compendium}.db`), content)
+    })
+  return Promise.all(promises);
 }
 
 /**
@@ -388,7 +402,7 @@ function gitTag() {
 
 const execGit = gulp.series(gitAdd, gitCommit, gitTag);
 
-const execBuild = gulp.parallel(buildTS, buildJS, buildLess, buildSASS, copyFiles);
+const execBuild = gulp.parallel(buildTS, buildJS, buildLess, buildSASS, buildCompendiums, copyFiles);
 
 async function releaseAndTag(zipFile, version) {
   const config = getConfig();
