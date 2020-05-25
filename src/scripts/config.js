@@ -265,6 +265,11 @@ CONFIG.spellSchools = {
   trs: 'PF2E.SpellSchoolTrs',
 };
 
+// Crafting Types
+CONFIG.craftingTypes = {
+  downtime: 'PF2E.DowntimeCrafting'
+}
+
 CONFIG.classTraits = {
   alchemist: 'PF2E.TraitAlchemist',
   barbarian: 'PF2E.TraitBarbarian',

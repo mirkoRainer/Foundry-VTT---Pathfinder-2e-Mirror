@@ -98,6 +98,9 @@ class ActorSheetPF2eCharacter extends ActorSheetPF2e {
     // Spellcasting Entries
     const spellcastingEntries = [];
 
+    // Formulabook
+    const formulabookEntriesList = [];
+
     // Feats
     const feats = {
       ancestry: { label: game.i18n.localize("PF2E.FeatAncestryHeader"), feats: [] },
@@ -228,6 +231,11 @@ class ActorSheetPF2eCharacter extends ActorSheetPF2e {
         } else i.data.tradition.focus = false;
 
         spellcastingEntries.push(i);
+      }
+
+      // Formulae
+      else if (i.type === 'formulabookEntry') {
+        formulabookEntriesList.push(i);
       }
 
       // Feats
@@ -393,8 +401,9 @@ class ActorSheetPF2eCharacter extends ActorSheetPF2e {
       entry.spellbook = spellbooks[entry._id];
     }
 
-    actorData.spellcastingEntries = spellcastingEntries;
-
+    actorData.spellcastingEntries = spellcastingEntries; 
+    actorData.formulabookEntries = formulabookEntriesList;
+    console.log('blarg actorData.formulabookEntries', actorData.formulabookEntries);
 
     // Inventory encumbrance
     const items = itemsFromActorData(actorData);

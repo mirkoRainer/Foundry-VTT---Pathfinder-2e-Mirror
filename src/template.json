@@ -920,6 +920,9 @@
           "max": 0
         }
       }
+    },
+    "formulabookEntry": {
+      "templates": ["itemDescription"]
     }
   }
 }

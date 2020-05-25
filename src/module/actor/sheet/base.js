@@ -595,6 +595,9 @@ class ActorSheetPF2e extends ActorSheet {
     // Remove Spellcasting Entry
     html.find('.spellcasting-remove').click((ev) => this._removeSpellcastingEntry(ev));
 
+    // Add Formulabook Entry
+    html.find('.formulabook-create').click((ev) => this._createFormulabookEntry(ev));
+
     // toggle visibility of filter containers
     html.find('.hide-container-toggle').click((ev) => {
       $(ev.target).parent().siblings().toggle(100, (e) => { });
@@ -1473,6 +1476,102 @@ class ActorSheetPF2e extends ActorSheet {
         },
         default: 'Yes',
       }).render(true);
+    });
+  }
+
+  /**
+   * Handle creating a new spellcasting entry for the actor
+   * @private
+   */
+
+  _createFormulabookEntry(event) {
+    event.preventDefault();
+
+    let craftingType = 'downtime';
+
+    // Render modal dialog
+    const template = 'systems/pf2e/templates/actors/formulabook-dialog.html';
+    const title = 'Select Formula Book Entry Details';
+    const dialogOptions = {
+      width: 300,
+      top: event.clientY - 80,
+      left: window.innerWidth - 710,
+    };
+    const dialogData = {
+      craftingType,
+      craftingTypes: CONFIG.PF2E.craftingTypes,
+    };
+    renderTemplate(template, dialogData).then((dlg) => {
+      new Dialog({
+        title,
+        content: dlg,
+        buttons: {
+          create: {
+            label: 'Create',
+            callback: (html) => {
+              // if ( onClose ) onClose(html, parts, data);
+              let name = '';
+              magicTradition = html.find('[name="magicTradition"]').val();
+              if (magicTradition === 'ritual') {
+                spellcastingType = '';
+                name = `${CONFIG.PF2E.magicTraditions[magicTradition]}s`;
+              } else if (magicTradition === 'focus') {
+                spellcastingType = '';
+                name = `${CONFIG.PF2E.magicTraditions[magicTradition]} Spells`;
+              } else if (magicTradition === 'scroll') {
+                spellcastingType = '';
+                name = `${CONFIG.PF2E.magicTraditions[magicTradition]}`;
+              } else if (magicTradition === 'wand') {
+                spellcastingType = 'prepared';
+                name = `${CONFIG.PF2E.magicTraditions[magicTradition]}`;
+              } else {
+                spellcastingType = html.find('[name="spellcastingType"]').val();
+                name = `${CONFIG.PF2E.preparationType[spellcastingType]} ${CONFIG.PF2E.magicTraditions[magicTradition]} Spells`;
+              }
+
+              // Define new spellcasting entry
+              const spellcastingEntity = {
+                ability: {
+                  type: 'String',
+                  label: 'Spellcasting Ability',
+                  value: '',
+                },
+                spelldc: {
+                  type: 'String',
+                  label: 'Class DC',
+                  item: 0,
+                },
+                tradition: {
+                  type: 'String',
+                  label: 'Magic Tradition',
+                  value: magicTradition,
+                },
+                prepared: {
+                  type: 'String',
+                  label: 'Spellcasting Type',
+                  value: spellcastingType,
+                },
+                showUnpreparedSpells: { value: true },
+              };
+
+              const data = {
+                name,
+                type: 'spellcastingEntry',
+                data: spellcastingEntity,
+              };
+
+              // this.actor.createOwnedItem(data, {renderSheet: true});
+              this.actor.createEmbeddedEntity('OwnedItem', data);
+
+              /*             let key = `data.attributes.spellcasting.entry.${magicTradition}#${spellcastingType}`
+                let entry = {};
+                entry[key] = spellcastingEntity;
+                this.actor.update(entry);  */
+            }
+          },
+        },
+        default: 'create',
+      }, dialogOptions).render(true);
     });
   }
 
