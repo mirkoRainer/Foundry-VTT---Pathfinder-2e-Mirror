@@ -1,20 +1,28 @@
 const newActivation = {
-    activationCost: 'A',
-    components: [],
-    additionalActivationCost: {
-        description: ''
+    cost: {
+        value: 'A',
+        specificAction: {
+            value: ''
+        },
     },
+    components: [],
     trigger: {
-        description: ''
+        value: ''
+    },
+    frequency: {
+        value: '',
+        custom: {
+            value: ''
+        }
     },
     requirements: {
-        description: ''
+        value: ''
     },
     onset: {
-        description: ''
+        value: ''
     },
     effect: {
-        description: ''
+        value: ''
     }
 };
 

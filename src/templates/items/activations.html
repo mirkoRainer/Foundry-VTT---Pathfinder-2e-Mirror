@@ -1,7 +1,7 @@
 <div class="form-list">
   <div class="form-group">
     <label>{{localize "PF2E.ActivationCost"}}</label>
-    <select name="data.activations[0].value" data-dtype="String">
+    <select name="data.activations[0].cost.value" data-dtype="String">
       {{#select data.armorType.value}}
       <option value=""></option>
       {{#each activationCosts as |name type|}}
@@ -12,28 +12,39 @@
   </div>
   <div class="form-group">
     <label>{{localize "PF2E.ActivationSpecificAction"}}</label>
+    <input name="data.activations[0].cost.specificAction.value" value="{{data.activations[0].cost.specificAction.value}}" data-dtype="String">
   </div>
   
-  <div class="form-group">
+  <div class="form-group-stacked">
     <label>{{localize "PF2E.ActivationComponents"}}</label>
     <!-- TODO: allow spell trait for each component: spellTraits (can also include move trait); component can be empty as well but have spell traits -->
+    <a class="trait-selector" data-options="activationComponents"><i class="fas fa-edit"></i></a>
+    <ul class="traits-list pf-value pf-large">
+      {{#each data.traits.value as |v k|}}
+      <span class="tag {{k}}">{{v}}</span>
+      {{/each}}
+    </ul>
+    </div>
   </div>
 
   <div class="form-group">
     <label>{{localize "PF2E.ActivationTrigger"}}</label>
+    <input name="data.activations[0].trigger.value" value="{{data.activations[0].trigger.value}}" data-dtype="String">
   </div>
 
   <div class="form-group">
     <label>{{localize "PF2E.ActivationRequirements"}}</label>
+    <input name="data.activations[0].requirements.value" value="{{data.activations[0].requirements.value}}" data-dtype="String">
   </div>
 
   <div class="form-group">
     <label>{{localize "PF2E.ActivationOnset"}}</label>
+    <input name="data.activations[0].onset.value" value="{{data.activations[0].onset.value}}" data-dtype="String">
   </div>
 
   <div class="form-group">
     <label>{{localize "PF2E.ActivationFrequency"}}</label>
-    <select name="data.frequencies[0].value" data-dtype="String">
+    <select name="data.activations[0].frequency.value" data-dtype="String">
       {{#select data.armorType.value}}
       <option value=""></option>
       {{#each activationFrequencies as |name type|}}
@@ -45,10 +56,12 @@
   
   <div class="form-group">
     <label>{{localize "PF2E.ActivationCustomFrequency"}}</label>
+    <input name="data.activations[0].frequency.custom.value" value="{{data.activations[0].frequency.custom.value}}" data-dtype="String">
   </div>
   
   <div class="form-group">
     <label>{{localize "PF2E.ActivationEffect"}}</label>
+    {{editor content=data.activations[0].effect.value target="data.activations[0].effect.value" button=true owner=owner editable=editable}}
   </div>
   
   
