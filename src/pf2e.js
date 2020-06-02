@@ -56,7 +56,7 @@ Hooks.once('setup', () => {
   
   // Localize CONFIG objects once up-front
   const toLocalize = [
-    'abilities', 'skills', 'martialSkills', 'currencies', 'saves', 'armorTraits', 'preciousMaterialGrades', 'activationComponents', 'activationCosts', 'activationFrequencies',
+    'abilities', 'skills', 'martialSkills', 'currencies', 'saves', 'armorTraits', 'preciousMaterialGrades', 'activationComponents', 'activationCosts', 'activationFrequencies', 'durations',
     'armorPotencyRunes', 'armorResiliencyRunes', 'armorPropertyRunes', 'weaponPotencyRunes', 'weaponStrikingRunes',
     'weaponPropertyRunes', 
     'damageTypes', 'weaponDamage', 'healingTypes', 'weaponTypes', 'weaponGroups', 'consumableTraits',

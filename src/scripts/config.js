@@ -80,18 +80,25 @@ CONFIG.activationFrequencies = {
     'once per week': "PF2E.ActivationFrequencyOncePerWeek",
 }
 
+CONFIG.durations = {
+    '1 min': 'PF2E.Duration1Min',
+    '10 min': 'PF2E.Duration10Min',
+    '1 hour': 'PF2E.Duration1Hour',
+    '1 day': 'PF2E.Duration1Day',
+    '1 or more days': 'PF2E.Duration1DayOrMore',
+};
+
+
 CONFIG.activationCosts = {
     A: 'PF2E.ActivationCost1Action',
     AA: 'PF2E.ActivationCost2Actions',
     AAA: 'PF2E.ActivationCost3Actions',
     R: 'PF2E.ActivationCostReaction',
     F: 'PF2E.ActivationCostFreeAction',
-    '1 min': 'PF2E.ActivationCost1Min',
-    '10 min': 'PF2E.ActivationCost10Min',
-    '1 hour': 'PF2E.ActivationCost1Hour',
-    '1 day': 'PF2E.ActivationCost1Day',
-    '1 or more days': 'PF2E.ActivationCost1DayOrMore',
 };
+
+mergeObject(CONFIG.activationCosts, CONFIG.durations);
+
 CONFIG.currencies = {
   "pp": "PF2E.CurrencyPP",
   "gp": "PF2E.CurrencyGP",

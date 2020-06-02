@@ -56,6 +56,7 @@ export class ItemSheetPF2e extends ItemSheet {
     data.activationComponents = CONFIG.PF2E.activationComponents;
     data.activationFrequencies = CONFIG.PF2E.activationFrequencies;
     data.activationCosts = CONFIG.PF2E.activationCosts;
+    data.durations = CONFIG.PF2E.durations;
     data.activations = data.data.activations || [];
     console.log(data.data.activations)
     

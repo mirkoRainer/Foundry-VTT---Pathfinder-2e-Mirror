@@ -37,10 +37,17 @@
       <label>{{localize "PF2E.ActivationRequirements"}}</label>
       <input name="data.activations[{{@index}}].requirements.value" value="{{requirements.value}}" data-dtype="String">
     </div>
-  
+
     <div class="form-group">
       <label>{{localize "PF2E.ActivationOnset"}}</label>
-      <input name="data.activations[{{@index}}].onset.value" value="{{onset.value}}" data-dtype="String">
+      <select name="data.activations[{{@index}}].onset.value" data-dtype="String">
+        {{#select onset.value }}
+        <option value=""></option>
+        {{#each ../durations as |name type|}}
+        <option value="{{type}}">{{name}}</option>
+        {{/each}}
+        {{/select}}
+      </select>
     </div>
   
     <div class="form-group">
