@@ -2,6 +2,7 @@
  * Override and extend the basic :class:`ItemSheet` implementation
  */
 import { getPropertySlots } from './runes.js';
+import { createNewActivation } from './activations.js';
 
 export class ItemSheetPF2e extends ItemSheet {
   static get defaultOptions() {
@@ -300,6 +301,12 @@ export class ItemSheetPF2e extends ItemSheet {
     // Remove Damage Roll
     html.find('.delete-damage').click((ev) => {
       this._deleteDamageRoll(ev);
+    });
+    
+    html.find('.add-activation').click(ev => {
+        ev.preventDefault();
+        const activation = createNewActivation(); 
+        console.log(this.item);
     });
   }
 

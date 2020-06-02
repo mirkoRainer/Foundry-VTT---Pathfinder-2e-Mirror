@@ -594,7 +594,8 @@
         },
         "rarity": {
           "value": "common"
-        }
+        },
+        "activations": []
       },
       "physicalItem": {
         "quantity": {
