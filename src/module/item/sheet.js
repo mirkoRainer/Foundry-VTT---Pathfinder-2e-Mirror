@@ -2,6 +2,8 @@
  * Override and extend the basic :class:`ItemSheet` implementation
  */
 import { getPropertySlots } from './runes.js';
+import { createNewActivation } from './activations.js';
+
 export class ItemSheetPF2e extends ItemSheet {
   static get defaultOptions() {
     const options = super.defaultOptions;
@@ -51,7 +53,12 @@ export class ItemSheetPF2e extends ItemSheet {
     data.bulkDisabled = stackGroup !== undefined && stackGroup !== null && stackGroup.trim() !== '';
     data.rarity = CONFIG.PF2E.rarityTraits; // treasure data
 	data.usage = CONFIG.PF2E.usageTraits; // usage data
-
+    data.activationComponents = CONFIG.PF2E.activationComponents;
+    data.activationFrequencies = CONFIG.PF2E.activationFrequencies;
+    data.activationCosts = CONFIG.PF2E.activationCosts;
+    data.activations = data.data.activations || [];
+    console.log(data.data.activations)
+    
     if (type === 'treasure') {
       data.currencies = CONFIG.currencies;
       data.stackGroups = CONFIG.stackGroups;
@@ -305,6 +312,27 @@ export class ItemSheetPF2e extends ItemSheet {
     html.find('.delete-damage').click(ev => {
       this._deleteDamageRoll(ev);
     });
+
+    html.find('.add-activation').click(async (ev) => {
+        ev.preventDefault();
+        const activations = this.item.data.data.activations || [];
+        activations.push(createNewActivation())
+        await this.item.update({
+          "data.activations": activations
+        })
+        this._onSubmit(ev);
+    });
+
+      html.find('.remove-activation').click(async (ev) => {
+          ev.preventDefault();
+          const index = parseInt(ev.target.dataset.index, 10);
+          const activations = this.item.data.data.activations || [];
+          activations.splice(index, 1);
+          await this.item.update({
+              "data.activations": activations
+          })
+          this._onSubmit(ev);
+      });
   }
   /**
    * Always submit on a form field change. Added because tabbing between fields

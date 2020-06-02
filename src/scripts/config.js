@@ -61,6 +61,37 @@ CONFIG.saves = {
   "will": "PF2E.SavesWill"
 }; // Inventory currency labels
 
+CONFIG.activationComponents = {
+    interact: "PF2E.ActivationComponentInteract",
+    envision: "PF2E.ActivationComponentEnvision",
+    focus: "PF2E.ActivationComponentFocus",
+    command: "PF2E.ActivationComponentCommand",
+    castSpell: "PF2E.ActivationComponentCastASpell",
+}
+
+CONFIG.activationFrequencies = {
+    'once per round': "PF2E.ActivationFrequencyOncePerRound",
+    'once per minute': "PF2E.ActivationFrequencyOncePerMinute",
+    'once per 10 minutes': "PF2E.ActivationFrequencyOncePer10Mins",
+    'once per per hour': "PF2E.ActivationFrequencyOncePerHour",
+    'once per per day': "PF2E.ActivationFrequencyOncePerDay",
+    'twice per day': "PF2E.ActivationFrequencyTwicePerDay",
+    'three times per day': "PF2E.ActivationFrequencyThreeTimesPerDay",
+    'once per week': "PF2E.ActivationFrequencyOncePerWeek",
+}
+
+CONFIG.activationCosts = {
+    A: 'PF2E.ActivationCost1Action',
+    AA: 'PF2E.ActivationCost2Actions',
+    AAA: 'PF2E.ActivationCost3Actions',
+    R: 'PF2E.ActivationCostReaction',
+    F: 'PF2E.ActivationCostFreeAction',
+    '1 min': 'PF2E.ActivationCost1Min',
+    '10 min': 'PF2E.ActivationCost10Min',
+    '1 hour': 'PF2E.ActivationCost1Hour',
+    '1 day': 'PF2E.ActivationCost1Day',
+    '1 or more days': 'PF2E.ActivationCost1DayOrMore',
+};
 CONFIG.currencies = {
   "pp": "PF2E.CurrencyPP",
   "gp": "PF2E.CurrencyGP",
@@ -557,30 +588,33 @@ CONFIG.consumableTraits = {
 mergeObject(CONFIG.consumableTraits, CONFIG.magicalSchools); // Spell Traits
 
 CONFIG.spellTraits = {
-  attack: 'PF2E.TraitAttack',
-  disease: 'PF2E.TraitDisease',
-  polymorph: 'PF2E.TraitPolymorph',
-  incapacitation: 'PF2E.TraitIncapacitation',
-  plant: 'PF2E.TraitPlant',
-  teleportation: 'PF2E.TraitTeleportation',
-  visual: 'PF2E.TraitVisual',
-  emotion: 'PF2E.TraitEmotion',
-  light: 'PF2E.TraitLight',
-  darkness: 'PF2E.TraitDarkness',
-  death: 'PF2E.TraitDeath',
-  scrying: 'PF2E.TraitScrying',
-  detection: 'PF2E.TraitDetection',
-  composition: 'PF2E.TraitComposition',
-  water: 'PF2E.TraitWater',
-  healing: 'PF2E.TraitHealing',
-  cantrip: 'PF2E.TraitCantrip',
-  nonlethal: 'PF2E.TraitNonlethal',
-  earth: 'PF2E.TraitEarth',
-  curse: 'PF2E.TraitCurse',
-  misfortune: 'PF2E.TraitMisfortune',
-  fungus: 'PF2E.TraitFungus',
-  linguistic: 'PF2E.TraitLinguistic',
-  morph: 'PF2E.TraitMorph'
+    auditory: 'PF2E.TraitAuditory',
+    attack: 'PF2E.TraitAttack',
+    disease: 'PF2E.TraitDisease',
+    polymorph: 'PF2E.TraitPolymorph',
+    incapacitation: 'PF2E.TraitIncapacitation',
+    plant: 'PF2E.TraitPlant',
+    teleportation: 'PF2E.TraitTeleportation',
+    visual: 'PF2E.TraitVisual',
+    emotion: 'PF2E.TraitEmotion',
+    light: 'PF2E.TraitLight',
+    darkness: 'PF2E.TraitDarkness',
+    death: 'PF2E.TraitDeath',
+    scrying: 'PF2E.TraitScrying',
+    detection: 'PF2E.TraitDetection',
+    composition: 'PF2E.TraitComposition',
+    water: 'PF2E.TraitWater',
+    metamagic: 'PF2E.TraitMetamagic',
+    healing: 'PF2E.TraitHealing',
+    cantrip: 'PF2E.TraitCantrip',
+    nonlethal: 'PF2E.TraitNonlethal',
+    earth: 'PF2E.TraitEarth',
+    curse: 'PF2E.TraitCurse',
+    misfortune: 'PF2E.TraitMisfortune',
+    fortune: 'PF2E.TraitFortune',
+    fungus: 'PF2E.TraitFungus',
+    linguistic: 'PF2E.TraitLinguistic',
+    morph: 'PF2E.TraitMorph',
 };
 mergeObject(CONFIG.spellTraits, CONFIG.damageTypes);
 mergeObject(CONFIG.spellTraits, CONFIG.spellTraditions);
