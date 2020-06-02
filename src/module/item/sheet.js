@@ -59,7 +59,7 @@ export class ItemSheetPF2e extends ItemSheet {
     data.durations = CONFIG.PF2E.durations;
     data.activations = data.data.activations || [];
     console.log(data.data.activations)
-    
+
     if (type === 'treasure') {
       data.currencies = CONFIG.currencies;
       data.stackGroups = CONFIG.stackGroups;
