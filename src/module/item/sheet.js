@@ -47,7 +47,7 @@ export class ItemSheetPF2e extends ItemSheet {
       type,
       hasSidebar: true,
       sidebarTemplate: () => `systems/pf2e/templates/items/${type}-sidebar.html`,
-      hasDetails: ['consumable', 'equipment', 'feat', 'spell', 'weapon', 'armor', 'action', 'melee', 'backpack'].includes(type),
+      hasDetails: ['consumable', 'class', 'equipment', 'feat', 'spell', 'weapon', 'armor', 'action', 'melee', 'backpack'].includes(type),
       detailsTemplate: () => `systems/pf2e/templates/items/${type}-details.html`
     }); // Damage types
 
@@ -69,6 +69,32 @@ export class ItemSheetPF2e extends ItemSheet {
       data.bulkTypes = CONFIG.PF2E.bulkTypes;
       data.stackGroups = CONFIG.stackGroups;
       data.consumableTraits = CONFIG.consumableTraits;
+	} else if (type === 'class') {
+	  data.keyability1 = CONFIG.abilities;
+      data.keyability2 = CONFIG.abilities;
+	  data.classHP = CONFIG.PF2E.classHitPoints;
+	  data.classprofPer = CONFIG.PF2E.proficiencyLevels;
+	  data.classprofFor = CONFIG.PF2E.proficiencyLevels;
+	  data.classprofRef = CONFIG.PF2E.proficiencyLevels;
+	  data.classprofWil = CONFIG.PF2E.proficiencyLevels;
+	  data.classskillProf1 = CONFIG.PF2E.skillList;
+	  data.classskillProfLevel1 = CONFIG.PF2E.proficiencyLevels;
+      data.classskillProf2 = CONFIG.PF2E.skillList;
+	  data.classskillProfLevel2 = CONFIG.PF2E.proficiencyLevels;	  
+      data.classweaponProf1 = CONFIG.PF2E.weaponTypes;
+	  data.classweaponProfLevel1 = CONFIG.PF2E.proficiencyLevels;
+      data.classweaponProf2 = CONFIG.PF2E.weaponTypes;
+	  data.classweaponProfLevel2 = CONFIG.PF2E.proficiencyLevels;
+      data.classweaponProf3 = CONFIG.PF2E.weaponTypes;
+	  data.classweaponProfLevel3 = CONFIG.PF2E.proficiencyLevels;
+	  data.classarmorProf1 = CONFIG.PF2E.armorTypes;
+	  data.classarmorProfLevel1 = CONFIG.PF2E.proficiencyLevels;
+      data.classarmorProf2 = CONFIG.PF2E.armorTypes;
+	  data.classarmorProfLevel2 = CONFIG.PF2E.proficiencyLevels;
+      data.classarmorProf3 = CONFIG.PF2E.armorTypes;
+	  data.classarmorProfLevel3 = CONFIG.PF2E.proficiencyLevels;
+	  data.classspellProf = CONFIG.PF2E.spellTraditions;
+	  data.classspellProfLevel = CONFIG.PF2E.proficiencyLevels;   
     } else if (type === 'spell') {
       // Spell Data
       mergeObject(data, {

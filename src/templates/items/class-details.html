@@ -1,0 +1,372 @@
+<div class=label>
+	<label>{{localize "PF2E.InitialProficiencies"}}</label>
+</div>
+<div class="form-group">
+	<label>{{localize "PF2E.ClassTypeLabel"}}</label>
+    <input type="text" name="data.classes.value" value="{{data.classes.value}}" data-dtype="{{data.classes.type}}"/>
+</div>
+<ol class="form-list"> 
+<div class="form-group">
+    <label>{{localize "PF2E.KeyAbilityLabel"}}</label>
+	<div class="details-container-two-columns">
+    <select name="data.keyability1.value" data-dtype="{{data.keyability1.type}}">
+        {{#select data.keyability1.value}}
+        <option value=""></option>
+        {{#each keyability1 as |label key|}}
+        <option value="{{key}}">{{localize label}}</option>
+        {{/each}}
+        {{/select}}
+    </select>
+	<div style="display: flex;">
+	<label>or </label>
+	<select name="data.keyability2.value" data-dtype="{{data.keyability2.type}}">
+        {{#select data.keyability2.value}}
+        <option value=""></option>
+        {{#each keyability2 as |label key|}}
+        <option value="{{key}}">{{localize label}}</option>
+        {{/each}}
+        {{/select}}
+    </select>
+	</div>
+</div>
+</ol>
+
+<div class="form-group">
+    <label>{{localize "PF2E.HitPointsHeader"}}</label>
+    <div class="details-container-two-columns">
+        <select name="data.classHP.value" data-dtype="{{data.classHP.type}}">
+        {{#select data.classHP.value}}
+        <option value=""></option>
+        {{#each classHP as |label key|}}
+        <option value="{{key}}">{{localize label}}</option>
+        {{/each}}
+        {{/select}}
+    </select>
+        <div style="display: flex;">
+            <label style="flex: 4;">{{localize "PF2E.AbilityConModLabel"}}</label>
+        </div>
+    </div>
+</div>
+
+<ol class="form-list"> 
+<li class="form-group">
+            <label>
+                {{localize "PF2E.InitialProficienciesLabel"}}
+            </label>
+		 </li>
+	<div class="form-group">
+		<label>{{localize "PF2E.PerceptionLabel"}}</label>
+		
+		<select name="data.classprofPer.value" data-dtype="String">
+			{{#select data.classprofPer.value}}
+			<option value=""></option>
+			{{#each classprofPer as |name type|}}
+			<option value="{{type}}">{{name}}</option>
+			{{/each}}
+			{{/select}}
+		</select>
+	</div>
+</ol>
+
+<ol class="form-list"> 
+	<li class="form-group">
+            <label>
+                {{localize "PF2E.InitialSavesLabel"}}
+            </label>
+		</li>
+		<div class="form-group">
+		<label>{{localize "PF2E.SavesFortitude"}}</label>
+		
+			<select name="data.classprofFor.value" data-dtype="String">
+				{{#select data.classprofFor.value}}
+				<option value=""></option>
+				{{#each classprofFor as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+		</div>
+		<div class="form-group">
+			<label>{{localize "PF2E.SavesReflex"}}</label>
+			<select name="data.classprofRef.value" data-dtype="String">
+				{{#select data.classprofRef.value}}
+				<option value=""></option>
+				{{#each classprofRef as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+		</div>
+		<div class="form-group">
+			<label>{{localize "PF2E.SavesWill"}}</label>
+			<select name="data.classprofWil.value" data-dtype="String">
+				{{#select data.classprofWil.value}}
+				<option value=""></option>
+				{{#each classprofWil as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+		</div>
+</ol>
+
+<ol class="form-list"> 
+		<li class="form-group">
+            <label>
+                {{localize "PF2E.InitialSkillsLabel"}}
+            </label>
+		</li>
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classskillProfLevel1.value" data-dtype="String">
+				{{#select data.classskillProfLevel1.value}}
+				<option value=""></option>
+				{{#each classskillProfLevel1 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classskillProf1.value" data-dtype="String">
+					{{#select data.classskillProf1.value}}
+					<option value=""></option>
+					{{#each classskillProf1 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classskillProfLevel2.value" data-dtype="String">
+				{{#select data.classskillProfLevel2.value}}
+				<option value=""></option>
+				{{#each classskillProfLevel2 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classskillProf2.value" data-dtype="String">
+					{{#select data.classskillProf2.value}}
+					<option value=""></option>
+					{{#each classskillProf2 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label>{{localize "PF2E.InitialAdditionalSkills"}}</label>
+		<input type="text" name="data.additionalSkills.value" value="{{data.additionalSkills.value}}" data-dtype="{{data.additionalSkills.type}}"/>
+	</div>
+</ol>
+
+<ol class="form-list"> 
+	<li class="form-group">
+            <label>
+                {{localize "PF2E.InitialAttacksLabel"}}
+            </label>
+		</li>
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classweaponProfLevel1.value" data-dtype="String">
+				{{#select data.classweaponProfLevel1.value}}
+				<option value=""></option>
+				{{#each classweaponProfLevel1 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classweaponProf1.value" data-dtype="String">
+					{{#select data.classweaponProf1.value}}
+					<option value=""></option>
+					{{#each classweaponProf1 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+
+	{{#if data.classweaponProfLevel1.value}}
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classweaponProfLevel2.value" data-dtype="String">
+				{{#select data.classweaponProfLevel2.value}}
+				<option value=""></option>
+				{{#each classweaponProfLevel2 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classweaponProf2.value" data-dtype="String">
+					{{#select data.classweaponProf2.value}}
+					<option value=""></option>
+					{{#each classweaponProf2 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+	{{/if}}
+
+	{{#if data.classweaponProf2.value}}
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classweaponProfLevel3.value" data-dtype="String">
+				{{#select data.classweaponProfLevel3.value}}
+				<option value=""></option>
+				{{#each classweaponProfLevel3 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classweaponProf3.value" data-dtype="String">
+					{{#select data.classweaponProf3.value}}
+					<option value=""></option>
+					{{#each classweaponProf3 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+{{/if}}
+<div class="form-group">
+	<label>{{localize "PF2E.InitialAdditionalWeapons"}}</label>
+    <input type="text" name="data.additionalweapons.value" value="{{data.additionalweapons.value}}" data-dtype="{{data.additionalweapons.type}}"/>
+</div>
+</ol>
+
+<ol class="form-list"> 
+	<li class="form-group">
+            <label>
+                {{localize "PF2E.InitialDefensesLabel"}}
+            </label>
+		</li>
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classarmorProfLevel1.value" data-dtype="String">
+				{{#select data.classarmorProfLevel1.value}}
+				<option value=""></option>
+				{{#each classarmorProfLevel1 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classarmorProf1.value" data-dtype="String">
+					{{#select data.classarmorProf1.value}}
+					<option value=""></option>
+					{{#each classarmorProf1 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+
+	{{#if data.classarmorProfLevel1.value}}
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classarmorProfLevel2.value" data-dtype="String">
+				{{#select data.classarmorProfLevel2.value}}
+				<option value=""></option>
+				{{#each classarmorProfLevel2 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classarmorProf2.value" data-dtype="String">
+					{{#select data.classarmorProf2.value}}
+					<option value=""></option>
+					{{#each classarmorProf2 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+	{{#if data.classarmorProfLevel2.value}}
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classarmorProfLevel3.value" data-dtype="String">
+				{{#select data.classarmorProfLevel3.value}}
+				<option value=""></option>
+				{{#each classarmorProfLevel3 as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classarmorProf3.value" data-dtype="String">
+					{{#select data.classarmorProf3.value}}
+					<option value=""></option>
+					{{#each classarmorProf3 as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+{{/if}}
+</ol>
+
+<ol class="form-list"> 
+	<li class="form-group">
+            <label>
+                {{localize "PF2E.InitialSpellsLabel"}}
+            </label>
+		</li>
+	<div class="form-group">
+		<div class="details-container-two-columns">
+			<select name="data.classspellProfLevel.value" data-dtype="String">
+				{{#select data.classspellProfLevel.value}}
+				<option value=""></option>
+				{{#each classspellProfLevel as |name type|}}
+				<option value="{{type}}">{{name}}</option>
+				{{/each}}
+				{{/select}}
+			</select>
+			<div style="display: flex;">
+				<label>{{localize "PF2E.InitialTrainedIn"}}</label>
+				<select name="data.classspellProf.value" data-dtype="String">
+					{{#select data.classspellProf.value}}
+					<option value=""></option>
+					{{#each classspellProf as |name type|}}
+					<option value="{{type}}">{{name}}</option>
+					{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+</ol>

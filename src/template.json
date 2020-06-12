@@ -575,6 +575,7 @@
       "melee",
       "armor",
       "equipment",
+	  "class",
       "consumable",
       "treasure",
       "lore",
