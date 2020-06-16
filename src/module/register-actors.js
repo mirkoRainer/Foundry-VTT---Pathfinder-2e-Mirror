@@ -3,6 +3,8 @@ import ActorSheetPF2eCharacterReadOnly from './actor/sheet/characterReadOnly.js'
 import ActorSheetPF2eNPC from './actor/sheet/npc.js';
 import UpdatedNPCActorPF2ESheet from './actor/sheet/updatednpcsheet.js';
 import CRBStyleCharacterActorSheetPF2E from './actor/sheet/crb-style/crb-style.js';
+import ActorSheetPF2eHazard from './actor/sheet/hazard.js';
+import ActorSheetPF2eLoot from './actor/sheet/loot.js';
 
 function registerActors() {
   Actors.unregisterSheet('core', ActorSheet);
@@ -10,19 +12,19 @@ function registerActors() {
   // Register Character Sheet
   Actors.registerSheet('pf2e', ActorSheetPF2eCharacter, {
     types: ['character'],
-    makeDefault: true,
+    makeDefault: false,
   });
 
   // Register Read-Only Character Sheet
-  Actors.registerSheet('pf2e', ActorSheetPF2eCharacterReadOnly, {
+/*   Actors.registerSheet('pf2e', ActorSheetPF2eCharacterReadOnly, {
     types: ['character'],
-    makeDefault: true,
-  });
+    makeDefault: false,
+  }); */
 
   // Register Character Sheet with new UI
   Actors.registerSheet('pf2e', CRBStyleCharacterActorSheetPF2E, {
     types: ['character'],
-    makeDefault: false,
+    makeDefault: true,
   });
 
   // Register NPC Sheet
@@ -34,6 +36,18 @@ function registerActors() {
   // Register NPC Sheet
   Actors.registerSheet('pf2e', UpdatedNPCActorPF2ESheet, {
     types: ['npc'],
+    makeDefault: true,
+  });
+
+  // Register Hazard Sheet
+  Actors.registerSheet('pf2e', ActorSheetPF2eHazard, {
+    types: ['hazard'],
+    makeDefault: true,
+  });
+
+  // Register Loot Sheet
+  Actors.registerSheet('pf2e', ActorSheetPF2eLoot, {
+    types: ['loot'],
     makeDefault: true,
   });
 }

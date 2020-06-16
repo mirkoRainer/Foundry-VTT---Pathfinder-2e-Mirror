@@ -1,3 +1,10 @@
+import {calculateWealth, sellAllTreasureSimple, sellTreasure} from '../../item/treasure.js';
+import { AddCoinsPopup } from './AddCoinsPopup.js';
+import {isCycle} from "../../item/container.js";
+import { isKit, addKit } from '../../item/kits.js';
+import { actionBrowser, inventoryBrowser, featBrowser, spellBrowser } from "../../packs/spell-browser.js";
+import { MoveLootPopup } from './loot/MoveLootPopup.js';
+
 /**
  * Extend the basic ActorSheet class to do all the PF2e things!
  * This sheet is an Abstract layer which is not used.
@@ -14,6 +21,8 @@ class ActorSheetPF2e extends ActorSheet {
         '.feats-pane',
         '.inventory-pane',
         '.actions-pane',
+        '.spellbook-pane',
+        '.skillstab-pane'
       ],
     });
   }
@@ -34,46 +43,74 @@ class ActorSheetPF2e extends ActorSheet {
   getData() {
     const sheetData = super.getData();
 
+    if (this.actorType === "hazard") {
+      return sheetData;
+    }
+
     // Update martial skill labels
-    for (const [s, skl] of Object.entries(sheetData.data.martial)) {
-      skl.icon = this._getProficiencyIcon(skl.rank);
-      skl.hover = CONFIG.PF2E.proficiencyLevels[skl.rank];
-      skl.label = CONFIG.PF2E.martialSkills[s];
-      skl.value = skl.rank ? (skl.rank * 2) + sheetData.data.details.level.value : 0;
+    if (sheetData.data.martial !== undefined)
+    {
+      for (const [s, skl] of Object.entries(sheetData.data.martial)) {
+        skl.icon = this._getProficiencyIcon(skl.rank);
+        skl.hover = CONFIG.PF2E.proficiencyLevels[skl.rank];
+        skl.label = CONFIG.PF2E.martialSkills[s];
+        skl.value = skl.rank ? (skl.rank * 2) + sheetData.data.details.level.value : 0;
+      }
     }
 
     // Update save labels
-    for (const [s, save] of Object.entries(sheetData.data.saves)) {
-      save.icon = this._getProficiencyIcon(save.rank);
-      save.hover = CONFIG.PF2E.proficiencyLevels[save.rank];
-      save.label = CONFIG.PF2E.saves[s];
+    if (sheetData.data.saves !== undefined)
+    {
+      for (const [s, save] of Object.entries(sheetData.data.saves)) {
+        save.icon = this._getProficiencyIcon(save.rank);
+        save.hover = CONFIG.PF2E.proficiencyLevels[save.rank];
+        save.label = CONFIG.PF2E.saves[s];
+      }
     }
 
 
     // Update proficiency label
-    sheetData.data.attributes.perception.icon = this._getProficiencyIcon(sheetData.data.attributes.perception.rank);
-    sheetData.data.attributes.perception.hover = CONFIG.PF2E.proficiencyLevels[sheetData.data.attributes.perception.rank];
+    if (sheetData.data.attributes !== undefined)
+    {
+      sheetData.data.attributes.perception.icon = this._getProficiencyIcon(sheetData.data.attributes.perception.rank);
+      sheetData.data.attributes.perception.hover = CONFIG.PF2E.proficiencyLevels[sheetData.data.attributes.perception.rank];
+    }
 
     // Ability Scores
-    for ( let [a, abl] of Object.entries(sheetData.data.abilities)) {
-      abl.label = CONFIG.PF2E.abilities[a];
+    if (sheetData.data.abilities !== undefined)
+    {
+      for ( let [a, abl] of Object.entries(sheetData.data.abilities)) {
+        abl.label = CONFIG.PF2E.abilities[a];
+      }
     }
 
     // Update skill labels
-    for (let [s, skl] of Object.entries(sheetData.data.skills)) {
-      skl.ability = sheetData.data.abilities[skl.ability].label.substring(0, 3);
-      skl.icon = this._getProficiencyIcon(skl.rank);
-      skl.hover = CONFIG.PF2E.proficiencyLevels[skl.value];
-      skl.label = CONFIG.PF2E.skills[s];
+    if (sheetData.data.skills !== undefined)
+    {
+      for (let [s, skl] of Object.entries(sheetData.data.skills)) {
+        skl.ability = sheetData.data.abilities[skl.ability].label.substring(0, 3);
+        skl.icon = this._getProficiencyIcon(skl.rank);
+        skl.hover = CONFIG.PF2E.proficiencyLevels[skl.rank];
+        skl.label = CONFIG.PF2E.skills[s];
+      }
     }
 
-    // Currency Labels
-    for ( let [c, currency] of Object.entries(sheetData.data.currency)) {
-      currency.label = CONFIG.PF2E.currencies[c];
+    // update currency based on items
+    if (sheetData.actor.items !== undefined)
+    {
+      const treasure = calculateWealth(sheetData.actor.items);
+      sheetData.totalTreasure = {};
+      for (const [denomination, value] of Object.entries(treasure)) {
+          sheetData.totalTreasure[denomination] = {
+              value,
+              label: CONFIG.PF2E.currencies[denomination],
+          };
+      }
     }
 
     // Update traits
     sheetData.abilities = CONFIG.PF2E.abilities;
+    sheetData.skills = CONFIG.PF2E.skills;
     sheetData.actorSizes = CONFIG.PF2E.actorSizes;
     sheetData.alignment = CONFIG.PF2E.alignment;
     sheetData.rarity = CONFIG.PF2E.rarityTraits;
@@ -93,6 +130,8 @@ class ActorSheetPF2e extends ActorSheet {
   /* -------------------------------------------- */
 
   _prepareTraits(traits) {
+    if (traits == undefined) return;
+
     const map = {
       languages: CONFIG.PF2E.languages,
       dr: CONFIG.PF2E.resistanceTypes,
@@ -109,15 +148,19 @@ class ActorSheetPF2e extends ActorSheet {
         trait.selected = {};
         for (const entry of trait) {
           if (typeof entry === 'object') {
-            if ('exceptions' in entry && entry.exceptions != "")
+            if ('exceptions' in entry && entry.exceptions != "") {
               trait.selected[entry.type] = `${choices[entry.type]} (${entry.value}) [${entry.exceptions}]`;
-            else
-              trait.selected[entry.type] = `${choices[entry.type]} (${entry.value})`;
+            } else {
+              let text = `${choices[entry.type]}`;
+              if (entry.value !== "")
+                text = `${text} (${entry.value})`;
+              trait.selected[entry.type] = text;
+            }
           } else {
             trait.selected[entry] = choices[entry] || `${entry}`;
           }
         }
-      } else {
+      } else if (trait.value) {
         trait.selected = trait.value.reduce((obj, t) => {
           obj[t] = choices[t];
            return obj;
@@ -139,7 +182,7 @@ class ActorSheetPF2e extends ActorSheet {
    * @private
    */
   _prepareSpell(actorData, spellbook, spell) {
-    const lvl = (Number(spell.data.level.value) < 11) ? Number(spell.data.level.value) : 10;
+    const spellLvl = (Number(spell.data.level.value) < 11) ? Number(spell.data.level.value) : 10;
     const isNPC = this.actorType === 'npc';
     let spellcastingEntry = '';
 
@@ -147,18 +190,39 @@ class ActorSheetPF2e extends ActorSheet {
       spellcastingEntry = (this.actor.getOwnedItem(spell.data.location.value) || {}).data;
     }
 
+    // if the spellcaster entry cannot be found (maybe it was deleted?)
+    if (!spellcastingEntry) {
+      console.log(`PF2e System | Prepare Spell | Spellcasting entry not found for spell ${spell.name}`);
+      return;
+    }
+
+    //This is needed only if we want to prepare the data model only for the levels that a spell is already prepared in setup spellbook levels for all of those to catch case where sheet only has spells of lower level prepared in higher level slot
+    const isNotLevelBasedSpellcasting = spellcastingEntry.data?.tradition?.value === "wand" ||
+      spellcastingEntry.data?.tradition?.value === "scroll" ||
+      spellcastingEntry.data?.tradition?.value === "ritual" ||
+      spellcastingEntry.data?.tradition?.value === "focus"
+
+    const spellsSlotsWhereThisIsPrepared = Object.entries(spellcastingEntry.data?.slots || {})?.filter( slotArr => !!Object.values(slotArr[1].prepared).find(slotSpell => slotSpell?.id === spell._id))
+    const highestSlotPrepared = spellsSlotsWhereThisIsPrepared?.map(slot => parseInt(slot[0].match(/slot(\d+)/)[1],10)).reduce( (acc,cur) => cur>acc ? cur : acc, 0) ?? spellLvl
+    const normalHighestSpellLevel = Math.ceil(actorData.data.details.level.value / 2)
+    const maxSpellLevelToShow = Math.min(10,Math.max(spellLvl, highestSlotPrepared, normalHighestSpellLevel))
     // Extend the Spellbook level
-    spellbook[lvl] = spellbook[lvl] || {
-      isCantrip: lvl === 0,
-      isFocus: lvl === 11,
-      label: CONFIG.PF2E.spellLevels[lvl],
-      spells: [],
-      prepared: [],
-      uses: spellcastingEntry ? parseInt(spellcastingEntry.data.slots[`slot${lvl}`].value) || 0 : 0,
-      slots: spellcastingEntry ? parseInt(spellcastingEntry.data.slots[`slot${lvl}`].max) || 0 : 0,
-      displayPrepared: spellcastingEntry && spellcastingEntry.data.displayLevels && spellcastingEntry.data.displayLevels[lvl] !== undefined ? (spellcastingEntry.data.displayLevels[lvl]) : true,
-      unpreparedSpellsLabel: spellcastingEntry ? (spellcastingEntry.data.tradition.value=='arcane' && spellcastingEntry.data.prepared.value=='prepared') ? game.i18n.localize("PF2E.UnpreparedSpellsLabelArcanePrepared") : game.i18n.localize("PF2E.UnpreparedSpellsLabel") : game.i18n.localize("PF2E.UnpreparedSpellsLabel")
-    };
+    for(let i=maxSpellLevelToShow;i>=0;i--){
+      if(!isNotLevelBasedSpellcasting || i === spellLvl){
+        spellbook[i] = spellbook[i] || {
+          isCantrip: i === 0,
+          isFocus: i === 11,
+          label: CONFIG.PF2E.spellLevels[i],
+          spells: [],
+          prepared: [],
+          uses: spellcastingEntry ? parseInt(spellcastingEntry.data?.slots[`slot${i}`].value) || 0 : 0,
+          slots: spellcastingEntry ? parseInt(spellcastingEntry.data?.slots[`slot${i}`].max) || 0 : 0,
+          displayPrepared: spellcastingEntry && spellcastingEntry.data.displayLevels && spellcastingEntry.data.displayLevels[i] !== undefined ? (spellcastingEntry.data.displayLevels[i]) : true,
+          unpreparedSpellsLabel: spellcastingEntry ? (spellcastingEntry.data.tradition.value=='arcane' && spellcastingEntry.data.prepared.value=='prepared') ? game.i18n.localize("PF2E.UnpreparedSpellsLabelArcanePrepared") : game.i18n.localize("PF2E.UnpreparedSpellsLabel") : game.i18n.localize("PF2E.UnpreparedSpellsLabel")
+        };
+      }
+    }
+
 
     // Add the spell to the spellbook at the appropriate level
     spell.data.school.str = CONFIG.PF2E.spellSchools[spell.data.school.value];
@@ -171,7 +235,7 @@ class ActorSheetPF2e extends ActorSheet {
     } catch (err) {
       console.log(`PF2e System | Character Sheet | Could not load chat data for spell ${spell.id}`, spell)
     }
-    spellbook[lvl].spells.push(spell);
+    spellbook[spellLvl].spells.push(spell);
   }
 
 
@@ -282,6 +346,7 @@ class ActorSheetPF2e extends ActorSheet {
       id: spell.id
     };
     await this.actor.updateOwnedItem(spellcastingEntry, true);  */
+    if (CONFIG.debug.hooks === true) console.log(`PF2e DEBUG | Updating location for spell ${spell.name} to match spellcasting entry ${entryId}`);
     const key = `data.slots.slot${spellLevel}.prepared.${spellSlot}`;
     const options = {
       _id: entryId,
@@ -308,7 +373,7 @@ class ActorSheetPF2e extends ActorSheet {
       prepared: false
     };
     await this.actor.updateOwnedItem(spellcastingEntry, true);  */
-
+    if (CONFIG.debug.hooks === true) console.log(`PF2e DEBUG | Updating spellcasting entry ${entryId} to remove spellslot ${spellSlot} for spell level ${spellLevel}`);
     const key = `data.slots.slot${spellLevel}.prepared.${spellSlot}`;
     const options = {
       _id: entryId,
@@ -370,7 +435,7 @@ class ActorSheetPF2e extends ActorSheet {
     const circle = '<i class="far fa-circle"></i>';
     const cross = '<i class="fas fa-times-circle"></i>';
     const skull = '<i class="fas fa-skull"></i>';
-    const redOpen = '<span style="color:var(--tertiary-background);">';
+    const redOpen = '<span>';
     const redClose = '</span>';
     let icons = {};
 
@@ -413,9 +478,9 @@ class ActorSheetPF2e extends ActorSheet {
   _getDoomedIcon(level) {
     const icons = {
       0: '<i class="far fa-circle"></i><i class="far fa-circle"></i><i class="far fa-circle"></i>',
-      1: '<i class="fas fa-skull" style="color:var(--tertiary-background);"></i><i class="far fa-circle"></i><i class="far fa-circle"></i>',
-      2: '<i class="fas fa-skull" style="color:var(--tertiary-background);"></i><i class="fas fa-skull" style="color:var(--tertiary-background);"></i><i class="far fa-circle"></i>',
-      3: '<i class="fas fa-skull" style="color:var(--tertiary-background);"></i><i class="fas fa-skull" style="color:var(--tertiary-background);"></i><i class="fas fa-skull" style="color:var(--tertiary-background);"></i>',
+      1: '<i class="fas fa-skull"></i><i class="far fa-circle"></i><i class="far fa-circle"></i>',
+      2: '<i class="fas fa-skull"></i><i class="fas fa-skull"></i><i class="far fa-circle"></i>',
+      3: '<i class="fas fa-skull"></i><i class="fas fa-skull"></i><i class="fas fa-skull"></i>',
     };
     return icons[level];
   }
@@ -493,15 +558,28 @@ class ActorSheetPF2e extends ActorSheet {
     // Roll Save Checks
     html.find('.save-name').click((ev) => {
       ev.preventDefault();
-      const save = ev.currentTarget.parentElement.getAttribute('data-save');
-      this.actor.rollSave(ev, save);
+      const save = $(ev.currentTarget).parents('[data-save]')[0].getAttribute('data-save');
+      if (this.actor.data.data.saves[save]?.roll) {
+        this.actor.data.data.saves[save].roll(ev);
+      } else {
+        this.actor.rollSave(ev, save);
+      }
     });
 
     // Roll Attribute Checks
+    html.find('.roll-init').click((ev) => {
+      ev.preventDefault();
+      this.actor.data.data.attributes.initiative.roll(ev);
+    });
+
     html.find('.attribute-name').click((ev) => {
       ev.preventDefault();
       const attribute = ev.currentTarget.parentElement.getAttribute('data-attribute');
-      this.actor.rollAttribute(ev, attribute);
+      if (this.actor.data.data.attributes[attribute]?.roll) {
+        this.actor.data.data.attributes[attribute]?.roll(ev);
+      } else {
+        this.actor.rollAttribute(ev, attribute);
+      }
     });
 
     // Roll Ability Checks
@@ -514,7 +592,11 @@ class ActorSheetPF2e extends ActorSheet {
     // Roll Skill Checks
     html.find('.skill-name.rollable').click((ev) => {
       const skl = ev.currentTarget.parentElement.getAttribute('data-skill');
-      this.actor.rollSkill(ev, skl);
+      if (this.actor.data.data.skills[skl]?.roll) {
+        this.actor.data.data.skills[skl].roll(ev);
+      } else {
+        this.actor.rollSkill(ev, skl);
+      }
     });
 
     // Roll Recovery Flat Check when Dying
@@ -563,16 +645,19 @@ class ActorSheetPF2e extends ActorSheet {
 
     // Toggle equip
     html.find('.item-toggle-equip').click((ev) => {
-      const f = $(event.currentTarget);
+      const f = $(ev.currentTarget);
       const itemId = f.parents('.item').attr('data-item-id');
-      f.toggleClass('active');
       const active = f.hasClass('active');
-      this.actor.updateEmbeddedEntity('OwnedItem', { _id: itemId, 'data.equipped.value': active });
+      this.actor.updateEmbeddedEntity('OwnedItem', { _id: itemId, 'data.equipped.value': !active });
 
     });
 
     // Trait Selector
     html.find('.trait-selector').click((ev) => this._onTraitSelector(ev));
+
+    html.find('.add-coins-popup button').click(ev => this._onAddCoinsPopup(ev));
+
+    html.find('.sell-all-treasure button').click(ev => this._onSellAllTreasure(ev));
 
     // Feat Browser
     html.find('.feat-browse').click((ev) => featBrowser.render(true));
@@ -610,6 +695,14 @@ class ActorSheetPF2e extends ActorSheet {
     // Create New Item
     html.find('.item-create').click((ev) => this._onItemCreate(ev));
 
+    html.find('.item-toggle-container').click((ev) => this._toggleContainer(ev));
+
+    // Sell treasure item
+    html.find('.item-sell-treasure').click((ev) => {
+      const itemId = $(ev.currentTarget).parents('.item').attr('data-item-id');
+      sellTreasure(this.actor, itemId);
+    });
+
     // Update Inventory Item
     html.find('.item-edit').click((ev) => {
       const itemId = $(ev.currentTarget).parents('.item').attr('data-item-id');
@@ -623,8 +716,29 @@ class ActorSheetPF2e extends ActorSheet {
     html.find('.item-delete').click((ev) => {
       const li = $(ev.currentTarget).parents('.item');
       const itemId = li.attr('data-item-id');
-      this.actor.deleteOwnedItem(itemId);
-      li.slideUp(200, () => this.render(false));
+      const item = new Item(this.actor.getOwnedItem(itemId).data, { actor: this.actor });
+
+      renderTemplate('systems/pf2e/templates/actors/delete-item-dialog.html', {name: item.name}).then((html) => {
+        new Dialog({
+          title: 'Delete Confirmation',
+          content: html,
+          buttons: {
+            Yes: {
+              icon: '<i class="fa fa-check"></i>',
+              label: 'Yes',
+              callback: () => {
+                this.actor.deleteOwnedItem(itemId);
+                li.slideUp(200, () => this.render(false));
+              },
+            },
+            cancel: {
+              icon: '<i class="fas fa-times"></i>',
+              label: 'Cancel',
+            },
+          },
+          default: 'Yes',
+        }).render(true);
+      });
     });
 
     // Increase Item Quantity
@@ -639,11 +753,8 @@ class ActorSheetPF2e extends ActorSheet {
       const li = $(event.currentTarget).parents('.item');
       const itemId = li.attr('data-item-id');
       const item = this.actor.getOwnedItem(itemId).data;
-      if (Number(item.data.quantity.value) > 1) {
+      if (Number(item.data.quantity.value) > 0) {
         this.actor.updateEmbeddedEntity('OwnedItem', { _id: itemId, 'data.quantity.value': Number(item.data.quantity.value) - 1 });
-      } else {
-        this.actor.deleteOwnedItem(itemId);
-        li.slideUp(200, () => this.render(false));
       }
     });
 
@@ -663,8 +774,28 @@ class ActorSheetPF2e extends ActorSheet {
       li.addEventListener('dragstart', handler, false);
     });
 
+    // change background for dragged over items that are containers
+      const containerItems = Array.from(html[0].querySelectorAll('[data-item-is-container="true"]'));
+      containerItems
+        .forEach(elem =>
+            elem.addEventListener('dragenter', () => elem.classList.add('hover-container'), false))
+    containerItems
+          .forEach(elem => elem.addEventListener('dragleave', () => elem.classList.remove('hover-container'), false))
+
+    // Action Rolling (experimental strikes)
+    html.find('[data-action-index].item .item-image.action-strike').click((event) => {
+      const actionIndex = $(event.currentTarget).parents('.item').attr('data-action-index');
+      this.actor.data.data.actions[Number(actionIndex)]?.roll(event);
+    });
+
+    html.find('[data-variant-index].variant-strike').click((event) => {
+      const actionIndex = $(event.currentTarget).parents('.item').attr('data-action-index');
+      const variantIndex = $(event.currentTarget).attr('data-variant-index');
+      this.actor.data.data.actions[Number(actionIndex)]?.variants[Number(variantIndex)]?.roll(event);
+    });
+
     // Item Rolling
-    html.find('.item .item-image').click((event) => this._onItemRoll(event));
+    html.find('[data-item-id].item .item-image').click((event) => this._onItemRoll(event));
 
     // NPC Weapon Rolling
     html.find('button').click((ev) => {
@@ -843,19 +974,6 @@ class ActorSheetPF2e extends ActorSheet {
       this.render();
     });
 
-    Hooks.on("createOwnedItem", (actor, item) => {
-      // Show unprepared spells if creating a new item
-      if (item.type == "spell") {
-        const currentLvlToDisplay = {};
-        currentLvlToDisplay[item.data.level.value] = true;
-        this.actor.updateEmbeddedEntity('OwnedItem', {
-          _id: item.data.location.value,
-          'data.showUnpreparedSpells.value': true,
-          'data.displayLevels': currentLvlToDisplay
-        });
-      }
-    });
-
   }
 
   /* -------------------------------------------- */
@@ -1022,26 +1140,31 @@ class ActorSheetPF2e extends ActorSheet {
    */
   async _onDrop(event) {
     event.preventDefault();
+    if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** PF2e _onDrop (spell) override method called *****');
 
     // get the item type of the drop target
     const dropSlotType = $(event.target).parents('.item').attr('data-item-type');
     const dropContainerType = $(event.target).parents('.item-container').attr('data-container-type');
 
+
     // if the drop target is of type spellSlot then check if the item dragged onto it is a spell.
     if (dropSlotType === 'spellSlot') {
+
       const dragData = event.dataTransfer.getData('text/plain');
       const dragItem = JSON.parse(dragData);
       // dragItem = this.actor.getOwnedItem(dragJSON.data._id);
 
       // if the dragged item is from a compendium pack.
       if (dragItem.pack) {
+        if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** item from compendium pack dropped on a spellSlot *****');
         const dropID = $(event.target).parents('.item-container').attr('data-container-id');
         this.actor.importItemFromCollection(dragItem.pack, dragItem.id, dropID);
         return false;
       }
 
-      // if the dragged item is from a compendium pack.
+      // if the dragged item is a apell.
       if (dragItem && dragItem.data && dragItem.data.type === 'spell') {
+        if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** spell dropped on a spellSlot *****');
         const dropID = $(event.target).parents('.item').attr('data-item-id');
         const spellLvl = Number($(event.target).parents('.item').attr('data-spell-lvl'));
         const entryId = $(event.target).parents('.item').attr('data-entry-id');
@@ -1052,6 +1175,7 @@ class ActorSheetPF2e extends ActorSheet {
       // else if the dragged item is from another actor and is the data is explicitly provided
       else if (dragItem.data) {
         if (dragItem.data.type === 'spell') { // check if dragged item is a spell, if not, handle with the super _onDrop method.
+          if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** spell dragged from another actor dropped on a spellSlot *****');
           if (dragItem.actorId === this.actor._id) return false; // Don't create duplicate items (ideally the previous if statement would have handled items being dropped on the same actor.)
 
           const dropID = $(event.target).parents('.item-container').attr('data-container-id');
@@ -1062,6 +1186,9 @@ class ActorSheetPF2e extends ActorSheet {
           this.actor.createEmbeddedEntity('OwnedItem', dragData.data);
           return false;
         }
+        else if (dragItem.data.type === 'item') {
+          console.log('An item from another sheet has been dropped here.');
+        }
       }
     }
 
@@ -1071,6 +1198,7 @@ class ActorSheetPF2e extends ActorSheet {
 
       // if the dragged item is a spell and is from the same actor
       if (dragData && dragData.data && dragData.data.type === 'spell' && (dragData.actorId === this.actor.id)) {
+        if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** spell from same actor dropped on a spellcasting entry *****');
         const dropID = $(event.target).parents('.item-container').attr('data-container-id');
 
         if (dropID) {
@@ -1086,6 +1214,7 @@ class ActorSheetPF2e extends ActorSheet {
       // else if the dragged item is from another actor and is the data is explicitly provided
       if (dragData.data) {
         if (dragData.data.type === 'spell') { // check if dragged item is a spell, if not, handle with the super _onDrop method.
+          if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** spell from another actor dropped on a spellcasting entry *****');
           if (dragData.actorId === this.actor.id) return false; // Don't create duplicate items (ideally the previous if statement would have handled items being dropped on the same actor.)
 
           const dropID = $(event.target).parents('.item-container').attr('data-container-id');
@@ -1100,6 +1229,7 @@ class ActorSheetPF2e extends ActorSheet {
 
       // else if the dragged item is from a compendium pack.
       else if (dragData.pack) {
+        if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** item from a compendium pack dropped on a spellcasting entry *****');
         const dropID = $(event.target).parents('.item-container').attr('data-container-id');
 
         this.actor.importItemFromCollection(dragData.pack, dragData.id, dropID);
@@ -1120,9 +1250,159 @@ class ActorSheetPF2e extends ActorSheet {
       }
     }
 
-    super._onDrop(event);
+    if (CONFIG.debug.hooks === true) console.log('PF2e DEBUG | ***** PF2e _onDrop (spell) override method finished passing over to _onDropOverride *****');
+
+    await this._onDropOverride(event);
   }
 
+    /**
+     * override super._onDrop to fix https://gitlab.com/foundrynet/foundryvtt/-/issues/2871
+     * @param event
+     * @return {Promise<boolean|*>}
+     * @private
+     */
+    async _onDropOverride(event) {
+        // Try to extract the data
+        let data;
+        try {
+            data = JSON.parse(event.dataTransfer.getData('text/plain'));
+            if (data.type !== "Item") return;
+        } catch (err) {
+            return false;
+        }
+        // Case 1 - Import from a Compendium pack
+        const actor = this.actor;
+        if (data.pack) {
+          console.log(`Comes from compemdium`);
+            const pack = game.packs.get(data.pack);
+            if (isKit(data.id)) {
+                await addKit(data.id, async (itemId, containerId, quantity) => {
+                    const itemData = await pack.getEntry(itemId);
+                    const createdItem = await actor.createOwnedItem(itemData);
+                    const ownedItem = actor.getOwnedItem(createdItem._id);
+                    const update = {};
+                    if (containerId) update['data.containerId.value'] = containerId;
+                    if (quantity) update['data.quantity.value'] = quantity;
+                    await ownedItem.update(update);
+                    return createdItem._id;
+                });
+            } else {
+                return this.stashOrUnstash(event, actor, async () => {
+                    const itemData = await pack.getEntry(data.id);
+                    const item = await actor.createOwnedItem(itemData);
+                    return actor.getOwnedItem(item._id);
+                });
+            }
+        }
+        // Case 2 - Data explicitly provided
+        else if (data.data) {
+            this.moveItemBetweenActors(event, data.actorId, actor._id, data.id);
+        }
+        // Case 3 - Import from World entity
+        else {
+          console.log(`From world entry`);
+            let item = game.items.get(data.id);
+            if (!item) return;
+            return this.stashOrUnstash(event, actor, () => {
+                return actor.createEmbeddedEntity("OwnedItem", duplicate(item.data));
+            });
+        }
+    }
+
+    /**
+     * Moves an item between two actors' inventories.
+     * @param {event} event         Event that fired this method.
+     * @param {actor} sourceActorId ID of the actor who originally owns the item.
+     * @param {actor} targetActorId ID of the actor where the item will be stored.
+     * @param {id} itemId           ID of the item to move between the two actors.
+     */
+    async moveItemBetweenActors(event, sourceActorId, targetActorId, itemId) {
+      const sourceActor = game.actors.get(sourceActorId);
+      const targetActor = game.actors.get(targetActorId);
+      const item = sourceActor.getOwnedItem(itemId);
+
+      let isSameActor = sourceActorId === targetActorId;
+
+      if (isSameActor) {
+        await this.stashOrUnstash(event, targetActor, () => { return item; });
+        return this._onSortItem(event, item.data);
+      } else {
+        const sourceItemQuantity = Number(item.data.data.quantity.value);
+
+        // If more than one item can be moved, show a popup to ask how many to move
+        if (sourceItemQuantity > 1)
+        {
+          const popup = new MoveLootPopup(sourceActor, {}, (quantity) => {
+            console.log(`Accepted moving ${quantity} items`);
+            this._moveItemBetweenActors(event, sourceActor, targetActor, item, quantity);
+          });
+
+          popup.render(true);
+        }
+        else
+        {
+          this._moveItemBetweenActors(event, sourceActor, targetActor, item, 1);
+        }
+      }
+    }
+
+    async _moveItemBetweenActors(event, sourceActor, targetActor, item, quantity) {
+      const sourceItemQuantity = Number(item.data.data.quantity.value);
+      
+      if (quantity > sourceItemQuantity) {
+        quantity = sourceItemQuantity;
+      }
+
+      const newItemQuantity = sourceItemQuantity - quantity;
+      const hasToRemoveFromSource = newItemQuantity < 1;
+
+      if (hasToRemoveFromSource) {
+        await sourceActor.deleteEmbeddedEntity('OwnedItem', item._id);
+      } else {
+        const update = { '_id': item._id, 'data.quantity.value': newItemQuantity };
+        await sourceActor.updateEmbeddedEntity('OwnedItem', update);
+      }
+
+      let itemInTargetActor = targetActor.items.find(i => i.name === item.name);
+
+      if (itemInTargetActor !== null)
+      {
+        // Increase amount of item in target actor if there is already an item with the same name
+        const targetItemNewQuantity = Number(itemInTargetActor.data.data.quantity.value) + quantity;
+        const update = { '_id': itemInTargetActor._id, 'data.quantity.value': targetItemNewQuantity};
+        await targetActor.updateEmbeddedEntity('OwnedItem', update);
+      }
+      else
+      {
+        // If no item with the same name in the target actor, create new item in the target actor
+        let newItemData = duplicate(item);
+        newItemData.data.quantity.value = quantity;
+
+        const result = await targetActor.createOwnedItem(newItemData);
+
+        itemInTargetActor = targetActor.items.get(result._id);
+      }
+
+      return this.stashOrUnstash(event, targetActor, () => { return itemInTargetActor; });
+    }
+
+    async stashOrUnstash(event, actor, getItem) {
+        const container = $(event.target).parents('[data-item-is-container="true"]');
+        if (container[0] !== undefined) {
+            const droppedItemId = container.attr('data-item-id')?.trim();
+            const item = await getItem();
+            if (item.type !== 'spell' && !isCycle(item._id, droppedItemId, this.actor.data.items)) {
+                return item.update({
+                    'data.containerId.value': droppedItemId,
+                    'data.equipped.value': false,
+                });
+            }
+            return item;
+        }
+        const item = await getItem();
+        const result = await item.update({'data.containerId.value': ''});
+        return result;
+    }
 
   /* -------------------------------------------- */
 
@@ -1173,18 +1453,18 @@ class ActorSheetPF2e extends ActorSheet {
       const summary = li.children('.item-summary');
       summary.slideUp(200, () => summary.remove());
     } else {
-      const div = $(`<div class="item-summary">${chatData.description.value}</div>`);
-      const props = $('<div class="item-properties"></div>');
+      const div = $(`<div class="item-summary"><div class="item-description">${chatData.description.value}</div></div>`);
+      const props = $('<div class="item-properties tags"></div>');
       if (chatData.properties) {
         chatData.properties.filter((p) => typeof p === 'string').forEach((p) => {
-          props.append(`<span class="tag">${localize(p)}</span>`);
+          props.append(`<span class="tag tag_secondary">${localize(p)}</span>`);
         });
       }
       if (chatData.critSpecialization) props.append(`<span class="tag" title="${localize(chatData.critSpecialization.description)}" style="background: rgb(69,74,124); color: white;">${localize(chatData.critSpecialization.label)}</span>`);
       // append traits (only style the tags if they contain description data)
       if (chatData.traits && chatData.traits.length) {
         chatData.traits.forEach((p) => {
-          if (p.description) props.append(`<span class="tag" title="${localize(p.description)}" style="background: #b75b5b; color: white;">${localize(p.label)}</span>`);
+          if (p.description) props.append(`<span class="tag tag_alt" title="${localize(p.description)}">${localize(p.label)}</span>`);
           else props.append(`<span class="tag">${localize(p.label)}</span>`);
         });
       }
@@ -1205,10 +1485,10 @@ class ActorSheetPF2e extends ActorSheet {
         case 'action':
           if (chatData.weapon.value) {
             if (chatData.weapon.value) {
-              buttons.append(`<span class="tag"><button data-action="weaponAttack">${localize('PF2E.WeaponStrikeLabel')}</button></span>`);
-              buttons.append('<span class="tag"><button data-action="weaponAttack2">2</button></span>');
-              buttons.append('<span class="tag"><button data-action="weaponAttack3">3</button></span>');
-              buttons.append(`<span class="tag"><button data-action="weaponDamage">${localize('PF2E.DamageLabel')}</button></span>`);
+              buttons.append(`<button class="weapon_attack tag" data-action="weaponAttack">${localize('PF2E.WeaponStrikeLabel')}</button>`);
+              buttons.append('<button class="tag weapon_attack2" data-action="weaponAttack2">2</button>');
+              buttons.append('<button class="tag weapon_attack3" data-action="weaponAttack3">3</button>');
+              buttons.append(`<button class="tag weapon_damage" data-action="weaponDamage">${localize('PF2E.DamageLabel')}</button>`);
             }
           }
           break;
@@ -1218,22 +1498,22 @@ class ActorSheetPF2e extends ActorSheet {
             if (chatData.wieldedTwoHands) buttons.append('<span class="tag"><button data-action="toggleHands"><i class="far fa-hand-paper"></i><i class="far fa-hand-paper"></i></button></span>');
             else buttons.append('<span class="tag"><button data-action="toggleHands"><i class="far fa-hand-paper"></i></button></span>');
           }
-          buttons.append(`<span class="tag"><button data-action="weaponAttack">${localize('PF2E.WeaponStrikeLabel')} (+${chatData.attackRoll})</button></span>`);
-          buttons.append(`<span class="tag"><button data-action="weaponAttack2">${chatData.map2}</button></span>`);
-          buttons.append(`<span class="tag"><button data-action="weaponAttack3">${chatData.map3}</button></span>`);
-          buttons.append(`<span class="tag"><button data-action="weaponDamage">${localize('PF2E.DamageLabel')}</button></span>`);
-          buttons.append(`<span class="tag"><button data-action="weaponDamageCritical">${localize('PF2E.CriticalDamageLabel')}</button></span>`);
+          buttons.append(`<button class="weapon_attack tag" data-action="weaponAttack">${localize('PF2E.WeaponStrikeLabel')} (+${chatData.attackRoll})</button>`);
+          buttons.append(`<button class="tag weapon_attack2" data-action="weaponAttack2">${chatData.map2}</button>`);
+          buttons.append(`<button class="tag weapon_attack3" data-action="weaponAttack3">${chatData.map3}</button>`);
+          buttons.append(`<button class="tag weapon_damage" data-action="weaponDamage">${localize('PF2E.DamageLabel')}</button>`);
+          buttons.append(`<button class="tag weapon_critical" data-action="weaponDamageCritical">${localize('PF2E.CriticalDamageLabel')}</button>`);
           break;
         case 'spell':
           if (chatData.isSave) buttons.append(`<span class="tag">${localize('PF2E.SaveDCLabel')} ${chatData.save.dc} ${chatData.save.basic} ${chatData.save.str}</span>`);
-          if (chatData.isAttack) buttons.append(`<span class="tag"><button data-action="spellAttack">${localize('PF2E.AttackLabel')}</button></span>`);
-          if (item.data.data.damage.value) buttons.append(`<span class="tag"><button data-action="spellDamage">${chatData.damageLabel}: ${item.data.data.damage.value}</button></span>`);
+          if (chatData.isAttack) buttons.append(`<span class="tag"><button class="spell_attack" data-action="spellAttack">${localize('PF2E.AttackLabel')}</button></span>`);
+          if (item.data.data.damage.value) buttons.append(`<span class="tag"><button class="spell_damage" data-action="spellDamage">${chatData.damageLabel}: ${item.data.data.damage.value}</button></span>`);
           break;
         case 'consumable':
-          if (chatData.hasCharges) buttons.append(`<span class="tag"><button data-action="consume">${localize('PF2E.ConsumableUseLabel')} ${item.name}</button></span>`);
+          if (chatData.hasCharges) buttons.append(`<span class="tag"><button class="consume" data-action="consume">${localize('PF2E.ConsumableUseLabel')} ${item.name}</button></span>`);
           break;
         case 'tool':
-          buttons.append(`<span class="tag"><button data-action="toolCheck" data-ability="${chatData.ability.value}">${localize('PF2E.ConsumableUseLabel')} ${item.name}</button></span>`);
+          buttons.append(`<span class="tag"><button class="tool_check" data-action="toolCheck" data-ability="${chatData.ability.value}">${localize('PF2E.ConsumableUseLabel')} ${item.name}</button></span>`);
           break;
       }
 
@@ -1275,6 +1555,16 @@ class ActorSheetPF2e extends ActorSheet {
 
   /* -------------------------------------------- */
 
+    /**
+     * Opens an item container
+     */
+    _toggleContainer(event) {
+        const itemId = $(event.currentTarget).parents('.item').data('item-id');
+        const item = this.actor.getOwnedItem(itemId);
+        const isCollapsed = item?.data?.data?.collapsed?.value ?? false;
+        item.update({'data.collapsed.value': !isCollapsed});
+    }
+
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
    * @private
@@ -1294,6 +1584,9 @@ class ActorSheetPF2e extends ActorSheet {
       data.name = `New ${data.actionType.capitalize()}`;
       mergeObject(data, { 'data.weaponType.value': data.actionType });
     } else if (data.type === 'spell') {
+      // for prepared spellcasting entries, set showUnpreparedSpells to true to avoid the confusion of nothing appearing to happen.
+      this.actor._setShowUnpreparedSpells(data.location, data.level);
+
       data.name = `New  Level ${data.level} ${data.type.capitalize()}`;
       mergeObject(data, {
         'data.level.value': data.level,
@@ -1454,7 +1747,7 @@ class ActorSheetPF2e extends ActorSheet {
               const itemsToDelete = [];
               for (const i of this.actor.data.items) {
                 if (i.type === 'spell') {
-                  if (Number(i.data.location.value) === itemId) {
+                  if (i.data.location.value === itemId) {
                     itemsToDelete.push(i._id);
                   }
                 }
@@ -1465,7 +1758,7 @@ class ActorSheetPF2e extends ActorSheet {
               }
 
               // Delete item container
-              this.actor.deleteOwnedItem(itemId);
+              await this.actor.deleteOwnedItem(itemId);
               li.slideUp(200, () => this.render(false));
             },
           },
@@ -1576,6 +1869,15 @@ class ActorSheetPF2e extends ActorSheet {
   }
 
   /* -------------------------------------------- */
+  _onAddCoinsPopup(event) {
+      event.preventDefault();
+      new AddCoinsPopup(this.actor, {}).render(true)
+  }
+
+  _onSellAllTreasure(event) {
+      event.preventDefault();
+      sellAllTreasureSimple(this.actor);
+  }
 
   _onTraitSelector(event) {
     event.preventDefault();
@@ -1585,6 +1887,21 @@ class ActorSheetPF2e extends ActorSheet {
       title: a.parent().text().trim(),
       choices: CONFIG.PF2E[a.attr('data-options')],
       has_values: (a.attr('data-has-values') === 'true'),
+      allow_empty_values: (a.attr('data-allow-empty-values') === 'true'),
+      has_exceptions: (a.attr('data-has-exceptions') === 'true'),
+    };
+    new TraitSelector5e(this.actor, options).render(true);
+  }
+
+  _onCrbTraitSelector(event) {
+    event.preventDefault();
+    const a = $(event.currentTarget);
+    const options = {
+      name: a.parents('li').attr('for'),
+      title: a.parent().parent().siblings('h4').text().trim(),
+      choices: CONFIG.PF2E[a.attr('data-options')],
+      has_values: (a.attr('data-has-values') === 'true'),
+      allow_empty_values: (a.attr('data-allow-empty-values') === 'true'),
       has_exceptions: (a.attr('data-has-exceptions') === 'true'),
     };
     new TraitSelector5e(this.actor, options).render(true);

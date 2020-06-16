@@ -4,9 +4,13 @@
     <div class="npc-title-bar">
       <h1 class='name'>{{actor.name}}</h1>
         <h1 class="editNPCButton">
-          <div style="font-size: 10px; font-weight: normal; margin-right: 150px; text-align: center;">
+          <div style="font-size: 10px; font-weight: normal; margin-right: 50px; text-align: center;">
             <label>{{localize "PF2E.EditNPCLabel"}}</label><input class="isNPCEditable" name="flags.pf2e.editNPC.value" type="checkbox" data-dtype="Boolean" {{checked flags.pf2e.editNPC.value}}/>
           </div>
+        </h1>
+        <h1 class="creature-adjustment traits-bar" style="font-size: 1em;font-weight: normal;">
+          <a class="npc-elite-adjustment trait{{npcEliteActive}}{{npcEliteHidden}}">ELITE</a>
+          <a class="npc-weak-adjustment trait{{npcWeakActive}}{{npcWeakHidden}}">WEAK</a>
         </h1>
       <h1 class='level'>Creature {{data.details.level.value}}</h1>
     </div>
@@ -282,11 +286,6 @@
                   <span class="tag"><button data-action="npcAttack" >{{localize "PF2E.WeaponStrikeLabel"}} (+{{item.data.bonus.total}})</button></span>
                     <span class="tag"><button data-action="npcAttack2" >{{#unless item.data.isAgile}}-5{{else}}-4{{/unless}}</button></span>
                     <span class="tag"><button data-action="npcAttack3" >{{#unless item.data.isAgile}}-10{{else}}-8{{/unless}}</button></span>
-                    {{#if_all item.flags item.flags.pf2e_updatednpcsheet item.flags.pf2e_updatednpcsheet.damageRolls}}
-                        {{#each item.flags.pf2e_updatednpcsheet.damageRolls as |damageRoll dID|}}
-                        <span class="tag"><button class="npc-damageroll" data-dmgRoll="{{dID}}" data-action="npcDamageRoll">{{localize "PF2E.DamageLabel"}}: {{damageRoll.die}} {{damageRoll.damageType}}</button></span>
-                        {{/each}}
-                    {{else}}
                         <span class="tag">
                           <button data-action="npcDamage">
                             {{localize "PF2E.DamageLabel"}} (
@@ -299,7 +298,6 @@
                           </button>
                         </span>
                         <span class="tag"><button data-action="npcDamageCritical">{{localize "PF2E.CriticalDamageLabel"}}</button></span>
-                    {{/if_all}}
                     {{#if_all item.data item.data.attackEffects item.data.attackEffects.value}}
                         {{#each item.data.attackEffects.value as |attackEffect aID|}}
                             <span class="tag"><button class="npc-attackEffect" data-attackEffect="{{aID}}" data-action="npcAttackEffect">Plus {{attackEffect}}</button></span>
@@ -367,6 +365,7 @@
                   <!-- List Spells -->
             {{#unless entry.data.prepared.preparedSpells}}
                 {{#each entry.spellbook as |section lvl|}}
+                  {{#if section.spells.length}}
                     <li class="item inventory-header sub-category spellbook-header">
                         <div class="item-name flexrow">
                             <h3 style="background-color: var(--alternate-background);">{{section.label}}</h3>
@@ -435,9 +434,11 @@
                         {{/if}}
                     </li>
                     {{/each}}
+                  {{/if}}
                 {{/each}}
             {{else}}
                 {{#each entry.spellbook as |section lvl|}}
+                    {{#if section.prepared.length}}
                         <li class="item inventory-header sub-category spellbook-header">
                             <div class="item-name flexrow">
                                 <h3 style="background-color: var(--alternate-background);">{{section.label}}</h3>
@@ -510,8 +511,9 @@
                             {{/if}}
                         </li>
                         {{/each}}
-                    {{/each}}
-                {{/unless}}
+                    {{/if}}
+                {{/each}}
+            {{/unless}}
   
     </ol>
     <hr>

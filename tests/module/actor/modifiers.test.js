@@ -6,10 +6,6 @@ import {
 } from 'module/modifiers.js';
 
 describe('#modifiers', () => {
-  test('prevent untyped bonus', () => {
-    expect(() => new PF2Modifier('invalid untyped bonus', 1, PF2ModifierType.UNTYPED)).toThrow(RangeError);
-  });
-
   each([
     [STRENGTH.withScore(10), PF2ModifierType.ABILITY],
     [DEXTERITY.withScore(10), PF2ModifierType.ABILITY],
@@ -48,18 +44,6 @@ describe('#modifiers', () => {
     [2, 4, LEGENDARY.atLevel(2).modifier],
   ]).test('ensure level %d and rank 0 modifier matches modifier of %d', (level, rank, expectedModifier) => {
     expect(ProficiencyModifier.fromLevelAndRank(level, rank).modifier).toBe(expectedModifier);
-  });
-
-  test('disable all zero modifiers', () => {
-    const modifiers = [
-      new PF2Modifier('Status Modifier', 0, PF2ModifierType.STATUS),
-      new PF2Modifier('Circumstance Modifier', 0, PF2ModifierType.CIRCUMSTANCE),
-      new PF2Modifier('Item Modifier', 0, PF2ModifierType.ITEM),
-    ];
-    new PF2StatisticModifier('Test Stat', modifiers); // apply stacking rules
-    modifiers.forEach((modifier) => {
-      expect(modifier.enabled).toBe(false);
-    });
   });
 
   each([
@@ -194,6 +178,6 @@ describe('#modifiers', () => {
       new PF2Modifier('Test Bonus', 2, PF2ModifierType.PROFICIENCY),
     ];
     const stat = new PF2StatisticModifier('Test Stat', modifiers);
-    expect(stat.totalModifier).toBe(2);
+    expect(stat.modifiers.length).toBe(1);
   });
 });

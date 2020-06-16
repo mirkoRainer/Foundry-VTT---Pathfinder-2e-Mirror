@@ -5,6 +5,11 @@
     h3 {
         font-size: 18px;
         font-weight: 600;
-        margin: 0 10px;
+        margin: 0 8px;
+        @include text-gold;
+        white-space: nowrap;
+    }
+    .initiative-select {
+        width: 129px;
     }
 }

@@ -2,8 +2,33 @@
  * Override and extend the basic :class:`Item` implementation
  */
 import Spell from './spell.js';
+import { getAttackBonus, getArmorBonus, getStrikingDice } from './runes.js';
+import { addSign } from '../utils.js';
 
 export default class extends Item {
+
+  prepareData() {
+    super.prepareData();
+    const item = this.data;
+
+    if (item.type === 'weapon') {
+      // calculate multiple attack penalty tiers
+      const agile = (item.data.traits.value || []).includes('agile');
+      const alternateMAP = (item.data.MAP || {}).value;
+      switch (alternateMAP) {
+        case '1': { item.data.map2 = -1; item.data.map3 = -2; break; }
+        case '2': { item.data.map2 = -2; item.data.map3 = -4; break; }
+        case '3': { item.data.map2 = -3; item.data.map3 = -6; break; }
+        case '4': { item.data.map2 = -4; item.data.map3 = -8; break; }
+        case '5': { item.data.map2 = -5; item.data.map3 = -10; break; }
+        default: {
+          item.data.map2 = agile ? -4 : -5;
+          item.data.map3 = agile ? -8 : -10;
+        }
+      }
+    }
+  }
+
   /**
    * Roll the item to Chat, creating a chat card which contains follow up attack or damage roll options
    * @return {Promise}
@@ -34,7 +59,7 @@ export default class extends Item {
 
     // Toggle default roll mode
     const rollMode = game.settings.get('core', 'rollMode');
-    if (['gmroll', 'blindroll'].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperIDs('GM');
+    if (['gmroll', 'blindroll'].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients('GM').map(u => u._id);
     if (rollMode === 'blindroll') chatData.blind = true;
 
     // Render the template
@@ -51,8 +76,11 @@ export default class extends Item {
   getChatData(htmlOptions) {
     const itemType = this.data.type;
     const data = this[`_${itemType}ChatData`]();
-    data.description.value = TextEditor.enrichHTML(data.description.value, htmlOptions);
-    return data;
+    if (data) {
+      data.description.value = TextEditor.enrichHTML(data.description.value, htmlOptions);
+      return data;
+    }
+    return;
   }
 
   /* -------------------------------------------- */
@@ -63,7 +91,7 @@ export default class extends Item {
     const properties = [
       CONFIG.PF2E.armorTypes[data.armorType.value],
       CONFIG.PF2E.armorGroups[data.group.value],
-      `+${data.armor.value ? data.armor.value : 0} ${localize('PF2E.ArmorArmorLabel')}`,
+      `${addSign(getArmorBonus(data))} ${localize('PF2E.ArmorArmorLabel')}`,
       `${data.dex.value || 0} ${localize('PF2E.ArmorDexLabel')}`,
       `${data.check.value || 0} ${localize('PF2E.ArmorCheckLabel')}`,
       `${data.speed.value || 0} ${localize('PF2E.ArmorSpeedLabel')}`,
@@ -145,7 +173,7 @@ export default class extends Item {
       }
     }
     data.proficiency = proficiency
-    data.attackRoll = parseInt(data.bonus.value) + actorData.data.abilities[abl].mod + proficiency.value;
+    data.attackRoll = getAttackBonus(data) + actorData.data.abilities[abl].mod + proficiency.value;
 
     const properties = [
       // (parseInt(data.range.value) > 0) ? `${data.range.value} feet` : null,
@@ -158,34 +186,6 @@ export default class extends Item {
         label: CONFIG.PF2E.weaponGroups[data.group.value],
         description: CONFIG.PF2E.weaponDescriptions[data.group.value],
       };
-    }
-
-
-    const isAgile = (data.traits.value || []).includes('agile');
-    const alternateMAP = (data.MAP || {}).value;
-    if (alternateMAP == 1){
-      data.map2 = '-1';
-      data.map3 = '-2';
-    }
-    else if (alternateMAP == 2){
-      data.map2 = '-2';
-      data.map3 = '-4';
-    }
-    else if (alternateMAP == 3){
-      data.map2 = '-3';
-      data.map3 = '-6';
-    }
-    else if (alternateMAP == 4){
-      data.map2 = '-4';
-      data.map3 = '-8';
-    }
-    else if (alternateMAP == 5){
-      data.map2 = '-5';
-      data.map3 = '-10';
-    }
-    else {
-      data.map2 = isAgile ? '-4' : '-5';
-      data.map3 = isAgile ? '-8' : '-10';
     }
 
     data.isTwohanded = !!twohandedTrait;
@@ -201,7 +201,7 @@ export default class extends Item {
   _meleeChatData() {
     const data = duplicate(this.data.data);
     const traits = [];
-    
+
     if ((data.traits.value || []).length != 0) {
       for (let i = 0; i < data.traits.value.length; i++) {
         const traitsObject = {
@@ -227,6 +227,12 @@ export default class extends Item {
     data.consumableType.str = CONFIG.PF2E.consumableTypes[data.consumableType.value];
     data.properties = [data.consumableType.str, `${data.charges.value}/${data.charges.max} ${localize('PF2E.ConsumableChargesLabel')}`];
     data.hasCharges = data.charges.value >= 0;
+    return data;
+  }
+
+  _treasureChatData() {
+    const localize = game.i18n.localize.bind(game.i18n);
+    const data = duplicate(this.data.data);
     return data;
   }
 
@@ -270,6 +276,9 @@ export default class extends Item {
     const ad = this.actor.data.data;
 
     const spellcastingEntry = this.actor.getOwnedItem(data.location.value);
+
+    if (!spellcastingEntry) return;
+
     const spellDC = spellcastingEntry.data.data.spelldc.dc;
     const spellAttack = spellcastingEntry.data.data.spelldc.value;
 
@@ -292,6 +301,7 @@ export default class extends Item {
       data.range.value ? `${localize('PF2E.SpellRangeLabel')}: ${data.range.value}` : null,
       data.target.value ? `${localize('PF2E.SpellTargetLabel')}: ${data.target.value}` : null,
       data.area.value ? `${localize('PF2E.SpellAreaLabel')}: ${CONFIG.PF2E.areaSizes[data.area.value]} ${CONFIG.PF2E.areaTypes[data.area.areaType]}` : null,
+      data.areasize?.value ? `${localize('PF2E.SpellAreaLabel')}: ${data.areasize.value}` : null,
       data.time.value ? `${localize('PF2E.SpellTimeLabel')}: ${data.time.value}` : null,
       data.duration.value ? `${localize('PF2E.SpellDurationLabel')}: ${data.duration.value}` : null,
     ];
@@ -437,7 +447,7 @@ export default class extends Item {
     }
 
     rollData.item = itemData;
-    rollData.itemBonus = itemData.bonus.value;
+    rollData.itemBonus = getAttackBonus(itemData);
     // if ( !itemData.proficient.value ) parts.pop();
 
     if (multiAttackPenalty == 2) parts.push(itemData.map2);
@@ -487,6 +497,7 @@ export default class extends Item {
     const abl = 'str';
     let abilityMod = rollData.abilities[abl].mod;
     let parts = [];
+    let partsCritOnly = [];
     const dtype = CONFIG.PF2E.damageTypes[itemData.damage.damageType];
 
     // Get detailed trait information from item
@@ -502,6 +513,7 @@ export default class extends Item {
     const twohandedRegex = '(\\btwo-hand\\b)-(d\\d+)';
     const thrownRegex = '(\\bthrown\\b)-(\\d+)';
     const hasThiefRacket = this.actor.data.items.filter((e) => e.type === 'feat' && e.name == 'Thief Racket').length > 0;
+    const strikingDice = getStrikingDice(itemData);
 
     if (hasThiefRacket && rollData.abilities.dex.mod > abilityMod) abilityMod = rollData.abilities.dex.mod;
 
@@ -527,43 +539,37 @@ export default class extends Item {
     if (itemData.bonusDamage && itemData.bonusDamage.value) bonusDamage = parseInt(itemData.bonusDamage.value);
 
     // Join the damage die into the parts to make a roll (this will be overwriten below if the damage is critical)
-    let weaponDamage = itemData.damage.dice + rollDie;
+    let damageDice = (itemData.damage.dice ?? 1);  
+    let weaponDamage = (damageDice + strikingDice) + rollDie;
     parts = [weaponDamage, '@itemBonus'];
     rollData.itemBonus = bonusDamage;
 
-    // If this damage roll is a critical, apply critical damage and effects
-    if (critical === true) {
-      bonusDamage = bonusDamage * 2;
-      rollData.itemBonus = bonusDamage;
-      if (critTrait === 'deadly') {
-        weaponDamage = (Number(itemData.damage.dice) * 2) + rollDie;
-        const dice = itemData.damage.dice ? itemData.damage.dice : 1;
-        const deadlyDice = dice > 2 ? 2 : 1; // since deadly requires a greater striking (3dX)
-        const deadlyDamage = deadlyDice + critDie;
-        parts = [weaponDamage, deadlyDamage, '@itemBonus'];
-      } else if (critTrait === 'fatal') {
-        weaponDamage = ((Number(itemData.damage.dice) * 2) + 1) + critDie;
-        parts = [weaponDamage, '@itemBonus'];
-      } else {
-        weaponDamage = (Number(itemData.damage.dice) * 2) + rollDie;
+    // Apply critical damage and effects
+    if (critTrait === 'deadly') {
+      // Deadly adds 3 dice with major Striking, 2 dice with greater Striking
+      // and 1 die otherwise
+      const deadlyDice = strikingDice > 0 ? strikingDice : 1;
+      const deadlyDamage = deadlyDice + critDie;
+      partsCritOnly.push(deadlyDamage)
+    } else if (critTrait === 'fatal') {
+      if (critical === true) {
+        weaponDamage = damageDice + strikingDice + critDie;
         parts = [weaponDamage, '@itemBonus'];
       }
+      partsCritOnly.push(1 + critDie);
     }
 
     // Add abilityMod to the damage roll.
     if (itemData.range.value === 'melee' || itemData.range.value === 'reach' || itemData.range.value == '') { // if a melee attack
-      if (critical) parts.push(abilityMod * 2);
-      else parts.push(abilityMod);
+      parts.push(abilityMod);
     } else { // else if a ranged attack
       if ((itemData.traits.value || []).includes('propulsive')) {
         if (Math.sign(this.actor.data.data.abilities.str.mod) === 1) {
           const halfStr = Math.floor(this.actor.data.data.abilities.str.mod / 2);
-          if (critical) parts.push(halfStr * 2);
-          else parts.push(halfStr);
+          parts.push(halfStr);
         }
       } else if (thrownTrait) {
-        if (critical) parts.push(abilityMod * 2);
-        else parts.push(abilityMod);
+        parts.push(abilityMod);
       }
     }
 
@@ -571,20 +577,13 @@ export default class extends Item {
 
     // add strike damage
     if (itemData.property1.dice && itemData.property1.die && itemData.property1.damageType) {
-      if (critical) {
-        const propertyDamage = (Number(itemData.property1.dice) * 2) + itemData.property1.die;
-        parts.push(propertyDamage);
-      } else {
-        const propertyDamage = Number(itemData.property1.dice) + itemData.property1.die;
-        parts.push(propertyDamage);
-      }
+      const propertyDamage = Number(itemData.property1.dice) + itemData.property1.die;
+      parts.push(propertyDamage);
     }
     // add critical damage
     if (itemData.property1.critDice && itemData.property1.critDie && itemData.property1.critDamageType) {
-      if (critical) {
-        const propertyDamage = Number(itemData.property1.critDice) + itemData.property1.critDie;
-        parts.push(propertyDamage);
-      }
+      const propertyDamage = Number(itemData.property1.critDice) + itemData.property1.critDie;
+      partsCritOnly.push(propertyDamage);
     }
 
     // Set the title of the roll
@@ -598,6 +597,8 @@ export default class extends Item {
     DicePF2e.damageRoll({
       event,
       parts,
+      partsCritOnly,
+      critical,
       actor: this.actor,
       data: rollData,
       title,
@@ -627,7 +628,8 @@ export default class extends Item {
     const title = `${this.name} - Attack Roll${(multiAttackPenalty > 1) ? ` (MAP ${multiAttackPenalty})` : ''}`;
 
     rollData.item = itemData;
-    rollData.itemBonus = itemData.bonus.value;
+    //rollData.itemBonus = getAttackBonus(itemData); // @putt1 rolling this change back as getAttackBonus does not handle NPCs correctly - hooking
+    rollData.itemBonus = itemData.bonus.value
 
     if (multiAttackPenalty == 2) parts.push(itemData.map2);
     else if (multiAttackPenalty == 3) parts.push(itemData.map3);
@@ -669,25 +671,13 @@ export default class extends Item {
     if (itemData.damageRolls && (typeof itemData.damageRolls === "object")) {
       Object.keys(itemData.damageRolls).forEach(key => {
         if (itemData.damageRolls[key].damage)
-          if (critical === true) {
-            parts.push(itemData.damageRolls[key].damage);
-            parts.push(itemData.damageRolls[key].damage);
-            partsType.push(`${itemData.damageRolls[key].damageType}`);
-          } else {
-            parts.push(itemData.damageRolls[key].damage);
-            partsType.push(`${itemData.damageRolls[key].damage} ${itemData.damageRolls[key].damageType}`);
-          }
+          parts.push(itemData.damageRolls[key].damage);
+          partsType.push(`${itemData.damageRolls[key].damage} ${itemData.damageRolls[key].damageType}`);
       });
     } else if (itemData.damageRolls && itemData.damageRolls.length) { //this can be removed once existing NPCs are migrated to use new damageRolls object (rather than an array)
       itemData.damageRolls.forEach(entry => {
-        if (critical === true) {
-          parts.push(entry.damage);
-          parts.push(entry.damage);
-          partsType.push(`${entry.damageType}`);
-        } else {
-          parts.push(entry.damage);
-          partsType.push(`${entry.damage} ${entry.damageType}`);
-        }        
+        parts.push(entry.damage);
+        partsType.push(`${entry.damage} ${entry.damageType}`);
       });
     } else {
       parts = [itemData.damage.die];
@@ -708,6 +698,7 @@ export default class extends Item {
     DicePF2e.damageRoll({
       event,
       parts,
+      critical,
       actor: this.actor,
       data: rollData,
       title,

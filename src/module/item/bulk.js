@@ -32,6 +32,10 @@ export const stacks = {
     coins: {
         size: 1000,
         lightBulk: 10,
+    },
+    gems: {
+        size: 2000,
+        lightBulk: 10,
     }
 };
 
@@ -43,6 +47,10 @@ export class Bulk {
 
     get isNegligible() {
         return this.normal === 0 && this.light === 0;
+    }
+    
+    toLightBulk() {
+        return this.normal * 10 + this.light;
     }
 
     plus(bulk) {
@@ -95,6 +103,13 @@ export class Bulk {
         return this.normal === bulk.normal && this.light === bulk.light;
     }
 
+    isPositive() {
+        return this.normal > 0 || this.light > 0;
+    }
+    
+    toString() {
+        return `normal: ${this.normal}; light: ${this.light}`;
+    }
 }
 
 /**
@@ -121,6 +136,7 @@ export function formatBulk(bulk) {
 
 export class BulkItem {
     constructor({
+        id = '',
         bulk = new Bulk(),
         quantity = 1,
         stackGroup = undefined,
@@ -136,6 +152,7 @@ export class BulkItem {
         // extra dimensional containers cease to work when nested inside each other
         extraDimensionalContainer = false,
     } = {}) {
+        this.id = id;
         this.bulk = bulk;
         this.quantity = quantity;
         this.stackGroup = stackGroup;
@@ -266,7 +283,6 @@ function calculateChildOverflow(overflow, item, ignoreContainerOverflow) {
  */
 function calculateCombinedBulk(item, stackDefinitions, nestedExtraDimensionalContainer = false, bulkConfig = {}) {
     const [mainBulk, mainOverflow] = calculateItemBulk(item, stackDefinitions, bulkConfig);
-
     const [childBulk, childOverflow] = item.holdsItems
         .map(child => calculateCombinedBulk(child, stackDefinitions, item.extraDimensionalContainer, bulkConfig))
         .reduce(combineBulkAndOverflow, [new Bulk(), {}]);
@@ -351,19 +367,14 @@ export function normalizeWeight(weight) {
         .trim();
 }
 
-function countCoins(actorData) {
-    return Object.values(actorData?.data?.currency ?? {})
-        .map(denomination => parseInt(denomination.value, 10))
-        .reduce((prev, curr) => prev + curr, 0);
-}
-
 /**
  *
  * @param item
  * @param nestedItems
  * @return {BulkItem}
  */
-export function toItemOrContainer(item, nestedItems = []) {
+export function toBulkItem(item, nestedItems = []) {
+    const id = item._id;
     const weight = item.data?.weight?.value;
     const quantity = item.data?.quantity?.value ?? 0;
     const isEquipped = item.data?.equipped?.value ?? false;
@@ -374,6 +385,7 @@ export function toItemOrContainer(item, nestedItems = []) {
     const extraDimensionalContainer = item.data?.traits?.value?.includes('extradimensional') ?? false;
 
     return new BulkItem({
+        id,
         bulk: weightToBulk(normalizeWeight(weight)) ?? new Bulk(),
         negateBulk: weightToBulk(normalizeWeight(negateBulk)) ?? new Bulk(),
         // this stuff overrides bulk so we don't want to default to 0 bulk if undefined
@@ -400,9 +412,9 @@ function buildContainerTree(items, groupedItems) {
             const itemId = item._id;
             if (itemId !== null && itemId !== undefined && groupedItems.has(itemId)) {
                 const itemsInContainer = buildContainerTree(groupedItems.get(itemId), groupedItems);
-                return toItemOrContainer(item, itemsInContainer);
+                return toBulkItem(item, itemsInContainer);
             }
-            return toItemOrContainer(item);
+            return toBulkItem(item);
 
         });
 }
@@ -416,7 +428,7 @@ function buildContainerTree(items, groupedItems) {
  * @param items
  * @return {*[]|*}
  */
-function toBulkItems(items) {
+export function toBulkItems(items) {
     const allIds = new Set(items.map(item => item._id));
     const itemsInContainers = groupBy(items, (item) => {
         // we want all items in the top level group that are in no container
@@ -426,15 +438,13 @@ function toBulkItems(items) {
         if (ref === null || !allIds.has(ref)) {
             return null;
         }
-        return item._id;
+        return ref;
     });
-
     if (itemsInContainers.has(null)) {
         const topLevelItems = itemsInContainers.get(null);
         return buildContainerTree(topLevelItems, itemsInContainers);
     }
     return [];
-
 }
 
 const itemTypesWithBulk = new Set();
@@ -443,6 +453,7 @@ itemTypesWithBulk.add('armor');
 itemTypesWithBulk.add('equipment');
 itemTypesWithBulk.add('consumable');
 itemTypesWithBulk.add('backpack');
+itemTypesWithBulk.add('treasure');
 
 /**
  * Takes actor data and returns a list of items to calculate bulk with
@@ -451,13 +462,7 @@ itemTypesWithBulk.add('backpack');
 export function itemsFromActorData(actorData) {
     const itemsHavingBulk = actorData.items
         .filter(item => itemTypesWithBulk.has(item.type));
-
-    const items = toBulkItems(itemsHavingBulk);
-    items.push(new BulkItem({
-        stackGroup: 'coins',
-        quantity: countCoins(actorData),
-    }));
-    return items;
+    return toBulkItems(itemsHavingBulk);
 }
 
 /**
@@ -490,4 +495,24 @@ export function fixWeight(brokenWeight) {
         return `${bulk.normal}`;
     }
     return null;
+}
+
+/**
+ * Fill in nodes recursively indexed by id
+ * @param bulkItem
+ * @param resultMap
+ */
+function fillBulkIndex(bulkItem, resultMap) {
+    resultMap.set(bulkItem.id, bulkItem);
+    bulkItem.holdsItems.forEach(heldBulkItem => fillBulkIndex(heldBulkItem, resultMap));
+}
+
+/**
+ * Walk the bulk items tree and create a Map for quick lookups
+ * @param bulkItems first item is always the inventory, so unpack that first
+ */
+export function indexBulkItemsById(bulkItems = []) {
+    const result = new Map();
+    bulkItems.forEach(bulkItem => fillBulkIndex(bulkItem, result));
+    return result;
 }

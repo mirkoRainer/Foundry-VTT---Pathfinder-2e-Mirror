@@ -2,21 +2,20 @@
   "name": "pf2e",
   "title": "Pathfinder 2nd Edition",
   "description": "A community contributed game system for Pathfinder Second Edition.",
-  "version": "0.574.2",
-  "schema": 0.575,
-  "minimumCoreVersion": "0.4.7",
-  "compatibleCoreVersion": "0.5.5",
+  "version": "1.5.4",
+  "schema": 0.584,
+  "minimumCoreVersion": "0.6.0",
+  "compatibleCoreVersion": "0.6.2",
   "author": "hooking, Trey",
   "esmodules": ["pf2e.js"],
   "scripts": [
     "./scripts/init.js",
-    "./scripts/item/sheet.js",
     "./scripts/actor/trait-selector.js",
     "./scripts/actor/statusEffects.js",
     "./scripts/dice.js",
-    "./scripts/packs/spell-browser.js",
     "./scripts/chat/chatdamagebuttonsPF2e.js",
-    "./scripts/actor/sheet/itemBehaviour.js"
+    "./scripts/actor/sheet/itemBehaviour.js",
+    "./scripts/lib/tooltipster.bundle.min.js"
   ],
   "styles": ["./styles/pf2e.css"],
   "packs": [
@@ -61,13 +60,37 @@
       "entity": "Item"
     },
     {
-      "name": "bestiary-v05750",
-      "label": "Bestiary v0.575.0",
+      "name": "archetypes",
+      "label": "Archetypes",
       "system": "pf2e",
       "module": "pf2e",
-      "path": "packs/bestiary-v05750.db",
+      "path": "packs/archetypes.db",
+      "entity": "JournalEntry"
+    },
+    {
+      "name": "pathfinder-bestiary",
+      "label": "Pathfinder Bestiary",
+      "system": "pf2e",
+      "module": "pf2e",
+      "path": "packs/pathfinder-bestiary.db",
       "entity": "Actor"
-    },    
+    },
+    {
+      "name": "pathfinder-bestiary-2",
+      "label": "Pathfinder Bestiary 2",
+      "system": "pf2e",
+      "module": "pf2e",
+      "path": "packs/pathfinder-bestiary-2.db",
+      "entity": "Actor"
+    },
+    {
+      "name": "hazards",
+      "label": "Hazards",
+      "system": "pf2e",
+      "module": "pf2e",
+      "path": "packs/hazards.db",
+      "entity": "Actor"
+    },
     {
       "name": "age-of-ashes-bestiary",
       "label": "Age of Ashes Bestiary",
@@ -77,8 +100,16 @@
       "entity": "Actor"
     },
     {
-      "name": "fall-of-plaguestone-bestiary-v012",
-      "label": "Fall of Plaguestone Bestiary v0.1.2",
+      "name": "extinction-curse-bestiary",
+      "label": "Extinction Curse Bestiary",
+      "system": "pf2e",
+      "module": "pf2e",
+      "path": "packs/extinction-curse-bestiary.db",
+      "entity": "Actor"
+    },
+    {
+      "name": "fall-of-plaguestone-bestiary-v021",
+      "label": "Fall of Plaguestone v0.2.1",
       "system": "pf2e",
       "module": "pf2e",
       "path": "packs/fall-of-plaguestone.db",
@@ -90,6 +121,14 @@
       "system": "pf2e",
       "module": "pf2e",
       "path": "packs/iconics.db",
+      "entity": "Actor"
+    },
+    {
+      "name": "npc-gallery",
+      "label": "NPC Gallery (GMG)",
+      "system": "pf2e",
+      "module": "pf2e",
+      "path": "packs/npc-gallery.db",
       "entity": "Actor"
     },
     {
@@ -124,22 +163,22 @@
       "path": "packs/backgrounds.db",
       "entity": "JournalEntry"
     },
-	{
-      "name": "crb-srd",
-      "label": "Core Rulebook (SRD)",
+    {
+      "name": "deities",
+      "label": "Deities",
       "system": "pf2e",
       "module": "pf2e",
-      "path": "packs/crb-srd.db",
+      "path": "packs/deities.db",
       "entity": "JournalEntry"
     },
-	{
+    {
       "name": "gmg-srd",
       "label": "Game Mastery Guide (SRD)",
       "system": "pf2e",
       "module": "pf2e",
       "path": "packs/gmg-srd.db",
       "entity": "JournalEntry"
-    },	
+    },
     {
       "name": "classes",
       "label": "Classes (SRD)",
@@ -148,14 +187,14 @@
       "path": "packs/classes.db",
       "entity": "JournalEntry"
     },
-	{
+    {
       "name": "criticaldeck",
       "label": "Critical Hit/Fumble Deck",
       "system": "pf2e",
       "module": "pf2e",
       "path": "packs/criticaldeck.db",
       "entity": "JournalEntry"
-    }, 
+    },
     {
       "name": "pf2e-macros",
       "label": "PF2e Macros",
@@ -179,5 +218,5 @@
   "gridUnits": "ft",
   "url": "https://gitlab.com/hooking/foundry-vtt---pathfinder-2e",
   "manifest": "https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/raw/master/system.json",
-  "download": "https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/uploads/9dcc83052d3221562f07399acf4b282d/pf2e-v0.574.2.zip"
+  "download": "https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/uploads/0be5d7fc2ef206fd67e954e3d0d60acd/pf2e-v1.5.4.zip"
 }

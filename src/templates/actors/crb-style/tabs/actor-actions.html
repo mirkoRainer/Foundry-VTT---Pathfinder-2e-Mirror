@@ -1,5 +1,42 @@
-<div class="tab actions" data-group="primary" data-tab="actions">
-    <ol class="actions-list inventory-list directory-list actions-pane">
+<div class="tab actions actions-pane" data-group="primary" data-tab="actions">
+    <ol class="actions-list inventory-list directory-list strikes-list">
+        <li class="item action-header">
+            <h3 class="item-name pf-heading pf-actions">{{localize 'PF2E.StrikesLabel'}} ({{localize 'PF2E.ExperimentalLabel'}})</h3>
+        </li>
+        {{#each actor.data.actions as |action ai|}}
+        <li class="item expandable" data-action-index="{{ai}}">
+            <div class="item-name rollable">
+                <div class="item-image action-strike" style="background-image: url({{action.imageUrl}})">
+                    <i class="fas fa-dice-d20"></i>
+                </div>
+                <h4 class="action-name">{{action.name}} <span class="activity-icon">{{action.glyph}}</span></h4>
+            </div>
+            <div class="button-group">
+                {{#each action.variants as |variant vi|}}
+                <button type="button" class="tag variant-strike" data-variant-index="{{vi}}">{{variant.label}}</button>
+                {{/each}}
+                <button type="button" class="tag damage-strike">{{localize 'Damage'}}</button>
+                <button type="button" class="tag critical-strike">{{localize 'Critical'}}</button>
+            </div>
+            <div class="item-summary">
+                <div class="item-description">
+                  <p>{{{localize action.description}}}</p>
+                  <hr/>
+                  <dl>
+                    <dt>{{{localize 'PF2E.CritSuccess'}}}</dt>
+                    <dd>{{{localize action.criticalSuccess}}}</dd>
+                    <dt>{{{localize 'PF2E.Success'}}}</dt>
+                    <dd>{{{localize action.success}}}</dd>
+                  </dl>
+                </div>
+                <div class="item-properties tags">
+                    {{#each action.traits as |trait|}}
+                    <span class="tag tag_secondary">{{trait.label}}</span>
+                    {{/each}}
+                </div>
+            </div>
+        </li>
+        {{/each}}
         {{#each actor.actions as |section sid|}}
             <li class="item action-header">
                 <h3 class="item-name pf-heading pf-actions">{{section.label}}</h3>
@@ -13,7 +50,9 @@
             {{#each section.actions as |action aid|}}
             <li class="item" data-item-id="{{action._id}}">
                 <div class="item-name rollable">
-                    <div class="item-image" style="background-image: url({{action.img}})"></div>
+                    <div class="item-image" style="background-image: url({{action.img}})">
+                        <i class="fas fa-comment-alt"></i>
+                    </div>
                     <h4>
                         {{action.name}}
                     </h4>

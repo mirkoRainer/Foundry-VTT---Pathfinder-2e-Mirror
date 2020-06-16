@@ -22,6 +22,7 @@
                 </select></dd>
             </dl>    -->
         </div>
+        <button class="clear-filters">{{localize "PF2E.BrowserClearFilters"}}</button>
         <div class="filtercontainer" id="itemTypesfilter">
             <h3>{{localize "PF2E.BrowserFilterInventoryTypes"}}</h3>
             <dl>
@@ -94,9 +95,12 @@
             <div class="spell-name">
                 <span class="item-edit" ><a>{{item.name}}</a></span>
             </div>
-<!--             <div class="spell-tags">
-                <span title="Feat level">{{item.data.level.formated}}</span>
-            </div> -->
+            <div class="spell-tags">
+                <span title="Item Price">{{item.data.price.value}}</span>
+            </div>
+            <div class="spell-tags">
+                <span title="Item level">{{item.data.level.value}}</span>
+            </div>
             {{#each item.data as |attrib id|}}
                 <input type="hidden" name="{{id}}" value="{{attrib.value}}">
             {{/each}}

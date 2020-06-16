@@ -7,7 +7,8 @@ export const BLINDED = Object.freeze({
 });
 export const CLUMSY = Object.freeze({
   withValue: (value) => ({
-    'dex-based': new PF2Modifier('PF2E.condition.clumsy.name', -value, PF2ModifierType.STATUS)
+    'dex-based': new PF2Modifier('PF2E.condition.clumsy.name', -value, PF2ModifierType.STATUS),
+    'dex-damage': new PF2Modifier('PF2E.condition.clumsy.name', -value, PF2ModifierType.STATUS),
   })
 });
 export const DRAINED = Object.freeze({
@@ -18,6 +19,7 @@ export const DRAINED = Object.freeze({
 export const ENFEEBLED = Object.freeze({
   withValue: (value) => ({
     'str-based': new PF2Modifier('PF2E.condition.enfeebled.name', -value, PF2ModifierType.STATUS),
+    'str-damage': new PF2Modifier('PF2E.condition.enfeebled.name', -value, PF2ModifierType.STATUS),
   })
 });
 export const FASCINATED = Object.freeze({
@@ -58,13 +60,11 @@ export const FLAT_FOOTED = Object.freeze({
 });
 export const FRIGHTENED = Object.freeze({
   withValue: (value) => ({
-    // also applies to attack rolls
     all: new PF2Modifier('PF2E.condition.frightened.name', -value, PF2ModifierType.STATUS),
   })
 });
 export const SICKENED = Object.freeze({
   withValue: (value) => ({
-    // also applies to attack rolls and skills
     all: new PF2Modifier('PF2E.condition.sickened.name', -value, PF2ModifierType.STATUS),
   })
 });

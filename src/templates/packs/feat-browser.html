@@ -22,6 +22,7 @@
                 </select></dd>
             </dl>    -->
         </div>
+        <button class="clear-filters">{{localize "PF2E.BrowserClearFilters"}}</button>
 <!--         <div class="filtercontainer" id="classfilter">
             <h3>Traditions</h3>
             <dl>
@@ -30,6 +31,19 @@
                 {{/each}}
             </dl>
         </div> -->
+        <div class="filtercontainer" id="featTypefilter">
+            <h3>{{localize "PF2E.BrowserFilterCategory"}}</h3>
+            <dl style="display:none;">
+              <dt><input type="checkbox" name="featType-ancestry"></dt><dd>{{localize "PF2E.FeatAncestryHeader"}}</dd>
+              <dt><input type="checkbox" name="featType-ancestryfeature"></dt><dd>{{localize "PF2E.FeaturesAncestryHeader"}}</dd>
+              <dt><input type="checkbox" name="featType-archetype"></dt><dd>{{localize "PF2E.FeatArchetypeHeader"}}</dd>
+              <dt><input type="checkbox" name="featType-bonus"></dt><dd>{{localize "PF2E.FeatBonusHeader"}}</dd>
+              <dt><input type="checkbox" name="featType-class"></dt><dd>{{localize "PF2E.FeatClassHeader"}}</dd>
+              <dt><input type="checkbox" name="featType-classfeature"></dt><dd>{{localize "PF2E.FeaturesClassHeader"}}</dd>
+              <dt><input type="checkbox" name="featType-skill"></dt><dd>{{localize "PF2E.FeatSkillHeader"}}</dd>
+              <dt><input type="checkbox" name="featType-general"></dt><dd>{{localize "PF2E.FeatGeneralHeader"}}</dd>
+            </dl>
+        </div>
         <div class="filtercontainer" id="levelfilter">
             <h3>{{localize "PF2E.BrowserFilterLevels"}}</h3>
             <dl style="display:none;">
@@ -91,17 +105,17 @@
     <ul>
         {{#each feats as |feat id|}}
         <li class="spell flexrow draggable" data-entry-compendium="{{feat.compendium}}" data-entry-id="{{feat._id}}" data-item-category="feats">
-<!--             <div class="spell-image">
+            <div class="spell-image">
                 <img class="" src="{{feat.img}}" title="{{feat.name}}" width="32" height="32"/>
-            </div> -->
-            {{#unless feat.data.actionType.img}}
+            </div>
+<!--             {{#unless feat.data.actionType.img}}
             <div class="spell-image">
             </div>
             {{else}}
             <div class="spell-image">
                 <img class="" src="{{feat.data.actionType.img}}" title="{{feat.data.level.value}}" width="32" height="32"/>
             </div>
-            {{/unless}}
+            {{/unless}} -->
             <div class="spell-name">
                 <span class="item-edit" ><a>{{feat.name}}</a></span>
             </div>

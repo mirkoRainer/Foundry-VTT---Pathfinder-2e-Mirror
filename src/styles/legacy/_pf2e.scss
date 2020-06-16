@@ -1505,6 +1505,9 @@
   line-height: 20px;
 }
 .pf2e.actor .currency > * {
+  flex: 0;
+}
+.pf2e.actor .currency > .denomination {
   flex: 1;
 }
 .pf2e.actor .currency li.denomination {
@@ -1523,7 +1526,7 @@
   flex: none;
   margin-right: 3px;
 }
-.pf2e.actor .currency li.denomination input {
+.pf2e.actor .currency li.denomination span {
   text-align: right;
   max-width: 48px;
 }
@@ -1689,6 +1692,10 @@
   border-right: 1px solid var(--secondary-background);
 }
 
+.add-coins-popup button, .sell-all-treasure button {
+    line-height: 17px;
+}
+
 .pf2e.actor .inventory-list .item .item-quantity {
   flex: 0 0 48px;
   display: flex;
@@ -1707,7 +1714,7 @@
 }
 
 .pf2e.actor .inventory-list .item .item-controls {
-  flex: 0 0 66px;
+  flex: 0 0 110px;
 }
 .pf2e.actor .inventory-list .item .item-controls a,
 .pf2e.actor .item.action-header .item-controls a {
@@ -1785,6 +1792,42 @@
   height: calc(100% - 42px);
   /* height: 100%; */
 }
+
+.pf2e.actor .container-metadata {
+    
+}
+
+.pf2e.actor .container-capacity {
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.1);
+    height: 20px;
+    position: relative;
+    width: 100%;
+    border-bottom: 1px solid #666;
+}
+.pf2e.actor .container-capacity .container-capacity-bar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: #aaa;
+    height: 19px;
+    
+}
+.pf2e.actor .container-capacity .container-capacity-label {
+    position: absolute;
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+    color: #000;
+    padding: 0 3px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+.pf2e.actor .container-capacity.over-limit .container-capacity-bar {
+    background: #ec6b6b;
+}
+
 .pf2e.actor .encumbrance {
   background: rgba(0, 0, 0, 0.1);
   height: 12px;
@@ -2125,6 +2168,10 @@
   display: grid;
   grid: "size type" / 50% 50%;
 }
+.pf2e.item form .details-container-three-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
 .pf2e.item form .consumable-details {
   flex: 0 0 24px;
 }
@@ -2313,8 +2360,8 @@
 .spell-browser .control-area {
   position:sticky;
   display: block;
-  min-width: 250px;
-  width: 300px;
+  min-width: 320px;
+  width: 320px;
   padding-right:5px;
   overflow:auto;
 }
@@ -2559,22 +2606,28 @@ button > i.far {
 */
 .pf2e.sheet form.updatedNPCSheet .npc-title-bar {
   display: flex;
+  margin-bottom: 0.1em;
+  width: 100%;
+  justify-content: space-between;
+  border-bottom: 2px solid #782e22;
+  margin: 0 0 0.5rem;
 }
 .pf2e.sheet form.updatedNPCSheet .npc-title-bar h1{
   font-family:'Oswald', sans-serif;
   font-weight:600;
   text-transform:uppercase;
+  margin-bottom: 0;
+  border-bottom: 0;
 }
-.pf2e.sheet form.updatedNPCSheet .npc-title-bar *{
-  margin-bottom:0.1em;
-}
+// .pf2e.sheet form.updatedNPCSheet .npc-title-bar *{
+//   margin-bottom:0.1em;
+// }
 .pf2e.sheet form.updatedNPCSheet .npc-title-bar .name {
-  flex: 9;
   justify-content:flex-start;
   font-variant: small-caps;
 }
-.pf2e.sheet form.updatedNPCSheet .npc-title-bar .level {
-  justify-content:flex-end;
+.pf2e.sheet form.updatedNPCSheet .npc-title-bar .level, .pf2e.sheet form.updatedNPCSheet .npc-title-bar .editNPCButton {
+  flex-shrink: 0;
 }
 
 .pf2e.sheet form.updatedNPCSheet hr {
@@ -2588,7 +2641,8 @@ button > i.far {
 }
 .pf2e.sheet form.updatedNPCSheet .editNPCButton {
   display:flex;
-  justify-content:flex-end
+  justify-content:flex-end;
+  margin-left: 1em;
 }
 .pf2e.sheet form.updatedNPCSheet .editNPCButton *{
   align-self: center;
@@ -2697,6 +2751,13 @@ button > i.far {
   text-shadow: 0 0 10px #ff6400;
 }
 
+.container-held-items {
+    margin-left: 10px;
+}
+
+li.item.hover-container {
+    background-color: #aaa !important;
+}
 /*
   Stats
 */
@@ -2914,20 +2975,30 @@ input[type="number"] {
   border-top-color: #999;
   border-top-style: solid;
 }
-.sheet-header .creature-adjustment {
+.npc-title-bar .creature-adjustment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: 1em;
+}
+.npc-title-bar .creature-adjustment *{
+  width:100%;
+}
+.sheet-header .creature-adjustment, .npc-title-bar .creature-adjustment a.hidden  {
   font-size: 12px;
 }
-.sheet-header .creature-adjustment a {
+.sheet-header .creature-adjustment a, .npc-title-bar .creature-adjustment a.hidden  {
   margin-left: 1px;
   background-color: var(--secondary-background);
   border-color: #bbb68f;
 }
-.sheet-header .creature-adjustment a.active {
+.sheet-header .creature-adjustment a.active, .npc-title-bar .creature-adjustment a.hidden  {
   margin-left: 1px;
   background-color: #5E0000;
   border-color: #bbb68f;
 }
-.sheet-header .creature-adjustment a.hidden {
+.sheet-header .creature-adjustment a.hidden , .npc-title-bar .creature-adjustment a.hidden {
   display: none;
 }
 #chat-log {
@@ -2937,4 +3008,12 @@ input[type="number"] {
 
 #chat-log .message:first-child {
   margin-top: auto;
+}
+
+.activity-icon {
+  display: inline !important;
+  margin: 0;
+  padding: 0;
+  font-family: Pathfinder2eActions;
+  font-size: 1.2em;
 }

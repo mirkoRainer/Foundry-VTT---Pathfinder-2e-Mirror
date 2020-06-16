@@ -4,6 +4,9 @@
 
 export default function () {
     const templatePaths = [
+        // Actor Sheets Partials (CRB-Style Tooltip)
+        'systems/pf2e/templates/actors/crb-style/partials/modifiers-tooltip.html',
+
         // Actor Sheets Partials (CRB-Syle Sidebar)
         'systems/pf2e/templates/actors/crb-style/sidebar/actor-armorclass.html',
         'systems/pf2e/templates/actors/crb-style/sidebar/actor-class-dc.html',
@@ -25,6 +28,7 @@ export default function () {
         'systems/pf2e/templates/actors/crb-style/tabs/actor-skills.html',
         'systems/pf2e/templates/actors/crb-style/tabs/actor-spellbook.html',
         'systems/pf2e/templates/actors/crb-style/tabs/actor-formulabook.html',
+        'systems/pf2e/templates/actors/crb-style/tabs/item-line.html',
         'systems/pf2e/templates/actors/crb-style/character-traits.html',
         'systems/pf2e/templates/actors/crb-style/character-abilities.html',
 
@@ -44,6 +48,7 @@ export default function () {
         'systems/pf2e/templates/actors/tabs/actor-biography.html',
         'systems/pf2e/templates/actors/tabs/actor-feats.html',
         'systems/pf2e/templates/actors/tabs/actor-inventory.html',
+        'systems/pf2e/templates/actors/tabs/item-line.html',
         'systems/pf2e/templates/actors/tabs/actor-skills.html',
         'systems/pf2e/templates/actors/tabs/actor-spellbook.html',
 
@@ -60,6 +65,7 @@ export default function () {
         'systems/pf2e/templates/items/armor-sidebar.html',
         'systems/pf2e/templates/items/backpack-details.html',
         'systems/pf2e/templates/items/backpack-sidebar.html',
+        'systems/pf2e/templates/items/treasure-sidebar.html',
         'systems/pf2e/templates/items/class-sidebar.html',
         'systems/pf2e/templates/items/consumable-details.html',
         'systems/pf2e/templates/items/consumable-sidebar.html',
@@ -74,6 +80,9 @@ export default function () {
         'systems/pf2e/templates/items/melee-details.html',
         'systems/pf2e/templates/items/weapon-details.html',
         'systems/pf2e/templates/items/weapon-sidebar.html',
+        // Loot partials
+        'systems/pf2e/templates/actors/loot/loot-avatar.html',
+        'systems/pf2e/templates/actors/loot/loot-inventory.html',
     ];
     return loadTemplates(templatePaths);
 }

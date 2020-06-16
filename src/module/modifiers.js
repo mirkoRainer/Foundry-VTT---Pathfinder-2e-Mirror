@@ -71,14 +71,13 @@ export class PF2Modifier {
    * @param {string} notes
    */
   constructor(name, modifier, type, enabled = true, source = undefined, notes = undefined) {
-    if (type === PF2ModifierType.UNTYPED && modifier > 0) {
-      throw new RangeError('only untyped penalties allowed');
-    }
     this.name = name;
     this.modifier = modifier;
     this.type = type;
     this.enabled = enabled;
+    this.ignored = false;
     this.deleted = false;
+    this.custom = false;
     if (source) this.source = source;
     if (notes) this.notes = notes;
   }
@@ -123,7 +122,11 @@ export const AbilityModifier = Object.freeze({
       case 'int': modifier = INTELLIGENCE.withScore(score); break;
       case 'wis': modifier = WISDOM.withScore(score); break;
       case 'cha': modifier = CHARISMA.withScore(score); break;
-      default: throw new Error(`invalid ability abbreviation: ${ability}`);
+      default:
+        // Throwing an actual error can completely break the sheet. Instead, log
+        // and use 0 for the modifier
+        console.error(`invalid ability abbreviation: ${ability}`);
+        modifier = new PF2Modifier('PF2E.AbilityUnknown', 0, PF2ModifierType.ABILITY);
     }
     return modifier;
   }
@@ -223,7 +226,7 @@ function applyPenalty(lowestPenalty, modifier) {
 
 /**
  * Applies the modifier stacking rules and calculates the total modifier.
- * 
+ *
  * @param {PF2Modifier[]} modifiers
  * @returns {number}
  */
@@ -235,12 +238,12 @@ function applyStackingRules(modifiers) {
     const modifier = modifiers[idx];
     if (modifier.deleted) {
       modifiers.splice(idx, 1); // remove any deleted modifiers
-    } else if (modifier.modifier === 0) {
-      modifier.enabled = false; // disable zero modifiers, since they have no impact
-    } else if (modifier.modifier > 0) {
-      total += applyBonus(highestBonus, modifier);
-    } else {
+    } else if (modifier.ignored) {
+      modifier.enabled = false;
+    } else if (modifier.modifier < 0) {
       total += applyPenalty(lowestPenalty, modifier);
+    } else {
+      total += applyBonus(highestBonus, modifier);
     }
   }
   return total;
@@ -276,7 +279,8 @@ export class PF2StatisticModifier {
    * @returns {PF2Modifier[]}
    */
   get modifiers() {
-    return Object.freeze(this._modifiers);
+    const copy = [].concat(this._modifiers); // shallow copy to enable freezing
+    return Object.freeze(copy);
   }
 
   /**
@@ -312,7 +316,7 @@ export class PF2CheckModifier extends PF2StatisticModifier {
    * @param {PF2StatisticModifier} statistic
    * @param {PF2Modifier[]} modifiers
    */
-  constructor(name, statistic, modifiers) {
-    super(name, JSON.parse(JSON.stringify(statistic.modifiers)).concat(modifiers)); // deep clone
+  constructor(name, statistic, modifiers= []) {
+    super(name, JSON.parse(JSON.stringify(statistic._modifiers)).concat(modifiers)); // deep clone
   }
 }

@@ -13,6 +13,7 @@
                 </select></dd>
             </dl>
         </div>
+        <button class="clear-filters">{{localize "PF2E.BrowserClearFilters"}}</button>
         <div class="filtercontainer" id="actionTraitfilter">
             <h3>{{localize "PF2E.BrowserFilterSizes"}}</h3>
             <dl>
@@ -34,6 +35,14 @@
             <dl style="display:none;">
                 {{#each traits as |trait key|}}
                 <dt><input type="checkbox" name="traits-{{trait}}"></dt><dd>{{trait}}</dd>
+                {{/each}}
+            </dl>
+        </div>
+        <div class="filtercontainer" id="actionTraitfilter">
+            <h3>{{localize "PF2E.BrowserFilterSource"}}</h3>
+            <dl style="display:none;">
+                {{#each source as |type key|}}
+                <dt><input type="checkbox" name="source-{{type}}"></dt><dd>{{type}}</dd>
                 {{/each}}
             </dl>
         </div>
