@@ -2,8 +2,8 @@
     <div class="form-group">
         <label>{{localize "PF2E.CraftingTypeLabel"}}</label>
         <select name="formulaType">
-        {{#select craftingTypes}}
-        {{#each craftingType as |label type|}}
+        {{#select craftingType}}
+        {{#each craftingTypes as |label type|}}
             <option value="{{type}}">{{label}}</option>
         {{/each}}
         {{/select}}

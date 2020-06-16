@@ -1326,23 +1326,23 @@ class ActorSheetPF2e extends ActorSheet {
       if (isSameActor) {
         await this.stashOrUnstash(event, targetActor, () => { return item; });
         return this._onSortItem(event, item.data);
-      } else {
-        const sourceItemQuantity = Number(item.data.data.quantity.value);
+      }  
 
-        // If more than one item can be moved, show a popup to ask how many to move
-        if (sourceItemQuantity > 1)
-        {
-          const popup = new MoveLootPopup(sourceActor, {}, (quantity) => {
-            console.log(`Accepted moving ${quantity} items`);
-            this._moveItemBetweenActors(event, sourceActor, targetActor, item, quantity);
-          });
+      const sourceItemQuantity = Number(item.data.data.quantity.value);
 
-          popup.render(true);
-        }
-        else
-        {
-          this._moveItemBetweenActors(event, sourceActor, targetActor, item, 1);
-        }
+      // If more than one item can be moved, show a popup to ask how many to move
+      if (sourceItemQuantity > 1)
+      {
+        const popup = new MoveLootPopup(sourceActor, {}, (quantity) => {
+          console.log(`Accepted moving ${quantity} items`);
+          this._moveItemBetweenActors(event, sourceActor, targetActor, item, quantity);
+        });
+
+        popup.render(true);
+      }
+      else
+      {
+        this._moveItemBetweenActors(event, sourceActor, targetActor, item, 1);
       }
     }
 
@@ -1515,6 +1515,8 @@ class ActorSheetPF2e extends ActorSheet {
         case 'tool':
           buttons.append(`<span class="tag"><button class="tool_check" data-action="toolCheck" data-ability="${chatData.ability.value}">${localize('PF2E.ConsumableUseLabel')} ${item.name}</button></span>`);
           break;
+        default:
+          break;
       }
 
       div.append(buttons);
@@ -1543,6 +1545,7 @@ class ActorSheetPF2e extends ActorSheet {
           case 'featDamage': item.rollFeatDamage(ev); break;
           case 'consume': item.rollConsumable(ev); break;
           case 'toolCheck': item.rollToolCheck(ev); break;
+          default: break;
         }
       });
 
@@ -1794,6 +1797,7 @@ class ActorSheetPF2e extends ActorSheet {
       craftingType,
       craftingTypes: CONFIG.PF2E.craftingTypes,
     };
+    console.log(dialogData);
     renderTemplate(template, dialogData).then((dlg) => {
       new Dialog({
         title,
@@ -1801,65 +1805,13 @@ class ActorSheetPF2e extends ActorSheet {
         buttons: {
           create: {
             label: 'Create',
-            callback: (html) => {
-              // if ( onClose ) onClose(html, parts, data);
-              let name = '';
-              magicTradition = html.find('[name="magicTradition"]').val();
-              if (magicTradition === 'ritual') {
-                spellcastingType = '';
-                name = `${CONFIG.PF2E.magicTraditions[magicTradition]}s`;
-              } else if (magicTradition === 'focus') {
-                spellcastingType = '';
-                name = `${CONFIG.PF2E.magicTraditions[magicTradition]} Spells`;
-              } else if (magicTradition === 'scroll') {
-                spellcastingType = '';
-                name = `${CONFIG.PF2E.magicTraditions[magicTradition]}`;
-              } else if (magicTradition === 'wand') {
-                spellcastingType = 'prepared';
-                name = `${CONFIG.PF2E.magicTraditions[magicTradition]}`;
-              } else {
-                spellcastingType = html.find('[name="spellcastingType"]').val();
-                name = `${CONFIG.PF2E.preparationType[spellcastingType]} ${CONFIG.PF2E.magicTraditions[magicTradition]} Spells`;
-              }
-
-              // Define new spellcasting entry
-              const spellcastingEntity = {
-                ability: {
-                  type: 'String',
-                  label: 'Spellcasting Ability',
-                  value: '',
-                },
-                spelldc: {
-                  type: 'String',
-                  label: 'Class DC',
-                  item: 0,
-                },
-                tradition: {
-                  type: 'String',
-                  label: 'Magic Tradition',
-                  value: magicTradition,
-                },
-                prepared: {
-                  type: 'String',
-                  label: 'Spellcasting Type',
-                  value: spellcastingType,
-                },
-                showUnpreparedSpells: { value: true },
-              };
-
+            callback: () => {
               const data = {
-                name,
-                type: 'spellcastingEntry',
-                data: spellcastingEntity,
+                name: "formulas! blarg",
+                type: 'craftingEntry',
+                data: craftingType,
               };
-
-              // this.actor.createOwnedItem(data, {renderSheet: true});
               this.actor.createEmbeddedEntity('OwnedItem', data);
-
-              /*             let key = `data.attributes.spellcasting.entry.${magicTradition}#${spellcastingType}`
-                let entry = {};
-                entry[key] = spellcastingEntity;
-                this.actor.update(entry);  */
             }
           },
         },
