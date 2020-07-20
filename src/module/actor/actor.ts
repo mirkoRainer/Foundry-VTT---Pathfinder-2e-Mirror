@@ -59,6 +59,18 @@ const SUPPORTED_ROLL_OPTIONS = Object.freeze([
 
 export default class PF2EActor extends Actor {
 
+  async update(data, options = {}): Promise<PF2EActor> {
+      // update shield hp
+      const equippedShieldId = this.getEquippedShield()?._id
+      if (equippedShieldId !== undefined) {
+          const shieldEntity = this.getOwnedItem(equippedShieldId);
+          console.log(shieldEntity);
+          await shieldEntity.update({
+              'data.hp.value': data['data.attributes.shield.value']
+          })
+      }
+      return super.update(data, options);
+  }  
   /**
    * Augment the basic actor data with additional dynamic data.
    */
@@ -220,6 +232,26 @@ export default class PF2EActor extends Actor {
       skl.value = proficiency;
       skl.breakdown = `proficiency(${proficiency})`;
     }
+
+      // shield
+      const equippedShield = this.getEquippedShield();
+      if (equippedShield === undefined) {
+          data.attributes.shield.max = 0;
+          data.attributes.shield.ac = 0;
+          data.attributes.shield.hardness = 0;
+          data.attributes.shield.brokenThreshold = 0;
+          data.attributes.shield.value = 0;
+          data.attributes.shield.min = 0;
+          data.attributes.shieldBroken = false;
+      } else {
+          data.attributes.shield.max = equippedShield.data?.maxHp?.value;
+          data.attributes.shield.ac = equippedShield.data?.armor?.value;
+          data.attributes.shield.hardness = equippedShield.data?.hardness?.value;
+          data.attributes.shield.brokenThreshold = equippedShield.data?.brokenThreshold?.value;
+          data.attributes.shield.value = equippedShield.data?.hp?.value;
+          data.attributes.shield.min = 0;
+          data.attributes.shieldBroken = equippedShield?.data?.hp?.value <= equippedShield?.data?.brokenThreshold?.value;
+      }
 
     // Perception
     {
@@ -562,6 +594,13 @@ export default class PF2EActor extends Actor {
         return this.data.items.filter((item) => item.type === 'armor')
             .filter((armor) => armor.data.armorType.value !== 'shield')
             .find((armor) => armor.data.equipped.value);
+    }
+
+    getEquippedShield() {
+        return this.data.items
+            .find(item => item.type === 'armor'
+                && item.data.equipped.value
+                && item.data.armorType.value === 'shield')
     }
 
     static traits(source) {

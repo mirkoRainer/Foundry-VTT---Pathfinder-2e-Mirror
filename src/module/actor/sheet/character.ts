@@ -29,18 +29,6 @@ class ActorSheetPF2eCharacter extends ActorSheetPF2e {
     return `${path}actor-sheet.html`;
   }
 
-    async _updateObject(event, formData) {
-        // update shield hp
-        const equippedShieldId = this.getEquippedShield(this.actor.data.items)?._id
-        if (equippedShieldId !== undefined) {
-            const shieldEntity = this.actor.getOwnedItem(equippedShieldId);
-            await shieldEntity.update({
-                'data.hp.value': formData['data.attributes.shield.hp.value']
-            })
-        }
-        await super._updateObject(event, formData);
-    }
-
     /* -------------------------------------------- */
 
   /**
@@ -429,32 +417,6 @@ class ActorSheetPF2eCharacter extends ActorSheetPF2e {
     }
 
     actorData.spellcastingEntries = spellcastingEntries;
-
-    // shield
-    const equippedShield = this.getEquippedShield(actorData.items);  
-    if (equippedShield === undefined) {
-        actorData.data.attributes.shield = {
-            hp: {
-                value: 0,
-            },
-            maxHp: {
-                value: 0,
-            },
-            armor: {
-                value: 0,
-            },
-            hardness: {
-                value: 0,
-            },
-            brokenThreshold: {
-                value: 0,
-            },
-        }
-        actorData.data.attributes.shieldBroken = false;
-    } else {
-        actorData.data.attributes.shield = duplicate(equippedShield.data)
-        actorData.data.attributes.shieldBroken = equippedShield?.data?.hp?.value <= equippedShield?.data?.brokenThreshold?.value;
-    }
 
     // Inventory encumbrance
     // FIXME: this is hard coded for now

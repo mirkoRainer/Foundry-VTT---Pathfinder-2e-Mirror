@@ -27,8 +27,8 @@
                 type="number"
                 data-dtype="Number"
                 placeholder="0"
-                name="data.attributes.shield.hp.value"
-                value="{{data.attributes.shield.hp.value}}"
+                name="data.attributes.shield.value"
+                value="{{data.attributes.shield.value}}"
                 title="{{localize 'PF2E.ShieldACBonusTitle'}}"
             />
         </div>
@@ -70,7 +70,7 @@
                     id="shield-ac"
                     type="number"
                     placeholder="0"
-                    value="{{data.attributes.shield.armor.value}}"
+                    value="{{data.attributes.shield.armor}}"
                     title="{{localize 'PF2E.ShieldACBonusTitle'}}"
                     readonly
                   />
@@ -93,7 +93,7 @@
                     class="data-value"
                     title="{{localize 'PF2E.ShieldHardnessTitle'}}"
                 >
-                  <input type="number" placeholder="0" value="{{data.attributes.shield.hardness.value}}" readonly/>
+                  <input type="number" placeholder="0" value="{{data.attributes.shield.hardness}}" readonly/>
                 </span>
             </li>
             <li>
@@ -112,7 +112,7 @@
                 <span
                     class="data-value"
                     title="{{localize 'PF2E.ShieldBTTitle'}}"
-                ><input readonly type="number" value="{{data.attributes.shield.brokenThreshold.value}}"></span>
+                ><input readonly type="number" value="{{data.attributes.shield.brokenThreshold}}"></span>
             </li>
         </ol>
     </div>
@@ -130,7 +130,7 @@
                 id="shield-max"
                 type="number"
                 placeholder="0"
-                value="{{data.attributes.shield.maxHp.value}}"
+                value="{{data.attributes.shield.max}}"
                 readonly
               />
 
