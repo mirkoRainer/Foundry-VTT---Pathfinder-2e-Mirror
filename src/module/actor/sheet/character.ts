@@ -175,7 +175,6 @@ class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature {
     const containers = getContainerMap(actorData.items, indexedBulkItems, stacks, bulkConfig);
 
     let investedCount = 0; // Tracking invested items
-    
     for (const i of actorData.items) {
       i.img = i.img || CONST.DEFAULT_TOKEN;
       i.containerData = containers.get(i._id);
@@ -197,7 +196,7 @@ class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature {
         investedCount += 1;
       }
 
-        // Inventory
+      // Inventory
       if (Object.keys(inventory).includes(i.type)) {
         i.data.quantity.value = i.data.quantity.value || 0;
         i.data.weight.value = i.data.weight.value || 0;
@@ -549,6 +548,8 @@ class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature {
     });
 
     html.find('.crb-trait-selector').click((ev) => this._onCrbTraitSelector(ev));
+
+    html.find('.character-builder-button').click((ev) => this._onCharacterBuilder(ev));
 
     html.find('.strikes-list [data-action-index]').on('click', '.action-name', (event) => {
       $(event.currentTarget).parents('.expandable').toggleClass('expanded');
