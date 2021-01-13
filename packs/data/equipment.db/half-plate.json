@@ -33,7 +33,7 @@
             "label": "Description",
             "type": "String",
             "unidentified": "",
-            "value": "<p><span class=\"fontstyle0\">Half plate consists of most of the upper body plates used in full plate, with lighter or sparser steel plate protection for the arms and legs. This provides some of the protection of full plate with greater flexibility and speed. A suit of this armor comes with an undercoat of padded armor (see below) and a pair of gauntlets (page 285).</span> </p>"
+            "value": "<p>Half plate consists of most of the upper body plates used in full plate, with lighter or sparser steel plate protection for the arms and legs. This provides some of the protection of full plate with greater flexibility and speed. A suit of this armor comes with an undercoat of padded armor (see below) and a pair of gauntlets (page 285).</p>"
         },
         "dex": {
             "label": "Dex Modifier Cap",
@@ -60,7 +60,7 @@
             "value": null
         },
         "identified": {
-            "value": false
+            "value": true
         },
         "invested": {
             "value": false
@@ -157,6 +157,7 @@
             "label": "Resilient",
             "type": "String"
         },
+        "rules": [],
         "source": {
             "label": "Source",
             "type": "String",
@@ -184,7 +185,7 @@
             "value": ""
         },
         "usage": {
-            "value": "held-in-one-hand"
+            "value": "wornarmor"
         },
         "weight": {
             "label": "Bulk",
@@ -192,6 +193,7 @@
             "value": "4"
         }
     },
+    "effects": [],
     "flags": {},
     "img": "systems/pf2e/icons/equipment/armor/halfplate.jpg",
     "name": "Half Plate",

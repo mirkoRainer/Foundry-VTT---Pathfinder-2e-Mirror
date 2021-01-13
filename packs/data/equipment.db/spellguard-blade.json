@@ -42,7 +42,7 @@
             "label": "Description",
             "type": "String",
             "unidentified": "",
-            "value": "<p>The guard of this +1 striking main-gauche is inscribed with eldritch glyphs that guard against magic. When you are benefiting from the +1 circumstance bonus to AC from this weapon's parry trait, you also apply that circumstance bonus to your saving throws against spells that target you.</p>"
+            "value": "<p>The guard of this +1 striking main-gauche is inscribed with eldritch glyphs that guard against magic.</p>\n<p>When you are benefiting from the +1 circumstance bonus to AC from this weapon's parry trait, you also apply that circumstance bonus to your saving throws against spells that target you.</p>\n<p>@Compendium[pf2e.spell-effects.Effect: Spellguard Blade]{Effect: Spellguard Blade}</p>"
         },
         "equipped": {
             "value": false
@@ -67,7 +67,7 @@
             "value": 0
         },
         "identified": {
-            "value": false
+            "value": true
         },
         "invested": {
             "value": false
@@ -83,6 +83,7 @@
         "negateBulk": {
             "value": "0"
         },
+        "originalName": "",
         "potencyRune": {
             "value": "1"
         },
@@ -167,6 +168,7 @@
             "type": "String",
             "value": ""
         },
+        "rules": [],
         "source": {
             "label": "Source",
             "type": "String",
@@ -210,6 +212,7 @@
             "value": "L"
         }
     },
+    "effects": [],
     "flags": {},
     "img": "systems/pf2e/icons/equipment/weapons/specific-magic-weapons/spellguard-blade.jpg",
     "name": "Spellguard Blade",

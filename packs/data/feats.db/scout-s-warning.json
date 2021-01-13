@@ -19,7 +19,7 @@
             "label": "Description",
             "type": "String",
             "unidentified": "",
-            "value": "<p><strong>Trigger</strong> You are about to roll a Perception or Survival check for initiative</p>\n<hr>\n<p>You visually or audibly warn your allies of danger, granting them each a +1 circumstance bonus to their initiative rolls. Depending on whether you use gestures or call out, this action gains either the visual or auditory trait, respectively.</p>"
+            "value": "<p><strong>Trigger</strong> You are about to roll a Perception or Survival check for initiative</p>\n<hr />\n<p>You visually or audibly warn your allies of danger, granting them each a +1 circumstance bonus to their initiative rolls. Depending on whether you use gestures or call out, this action gains either the visual or auditory trait, respectively.</p>"
         },
         "featType": {
             "label": "Feat Type",
@@ -34,7 +34,9 @@
         "prerequisites": {
             "label": "Prerequisites",
             "type": "String",
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -56,9 +58,6 @@
                 "ranger",
                 "rogue"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

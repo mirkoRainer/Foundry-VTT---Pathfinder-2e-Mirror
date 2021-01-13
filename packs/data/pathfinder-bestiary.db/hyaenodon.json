@@ -140,7 +140,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "Hyaenodons are the ferocious primeval cousins of the smaller hyena. Looming, shaggy-furred creatures nearly the size of a horse, hyaenodons are truly formidable predators to be reckoned with, due both to their size and to their bone-crushing jaws. Gnoll clans find these creatures particularly useful as mounts and guardians.<br><br>",
+            "flavorText": "Hyaenodons are the ferocious primeval cousins of the smaller hyena. Looming, shaggy-furred creatures nearly the size of a horse, hyaenodons are truly formidable predators to be reckoned with, due both to their size and to their bone-crushing jaws. Gnoll clans find these creatures particularly useful as mounts and guardians.<br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -591,7 +591,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "A creature that is critically hit by a hyaenodon must succeed at a DC 20 Fortitude save or become @Compendium[pf2e.conditionitems.Yl48xTdMh3aeQYL2]{Wounded} 1 as the creature's bones or cartilage are crushed by the beast's jaws."
+                    "value": "A creature that is critically hit by a hyaenodon must succeed at a DC 20 Fortitude save or become @Compendium[pf2e.conditionitems.Wounded]{Wounded} 1 as the creature's bones or cartilage are crushed by the beast's jaws."
                 },
                 "rarity": {
                     "value": "common"
@@ -640,7 +640,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "The hyaenodon makes a jaws Strike against a @Compendium[pf2e.conditionitems.j91X7x0XSomq8d60]{Prone} enemy. If it hits, in addition to dealing damage, the hyaenodon Strides up to 10 feet, dragging the enemy along."
+                    "value": "The hyaenodon makes a jaws Strike against a @Compendium[pf2e.conditionitems.Prone]{Prone} enemy. If it hits, in addition to dealing damage, the hyaenodon Strides up to 10 feet, dragging the enemy along."
                 },
                 "rarity": {
                     "value": "common"

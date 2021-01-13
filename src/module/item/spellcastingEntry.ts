@@ -1,17 +1,14 @@
-
 /**
  * @category Other
  */
-class SpellcastingEntry {
-  data: any;
+export class SpellcastingEntry {
+    data: any;
 
-  constructor(data) {
-    this.data = data;
-  }
+    constructor(data) {
+        this.data = data;
+    }
 
-  get ability() {
-    return this.data.data.ability.value || 'int';
-  }
+    get ability() {
+        return this.data.data.ability.value || 'int';
+    }
 }
-
-export default SpellcastingEntry;

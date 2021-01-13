@@ -22,7 +22,9 @@
             "value": "14"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -37,9 +39,6 @@
             "value": [
                 "oracle"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

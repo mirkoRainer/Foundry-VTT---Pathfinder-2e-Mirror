@@ -34,7 +34,9 @@
         "prerequisites": {
             "label": "Prerequisites",
             "type": "String",
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -57,9 +59,6 @@
                 "fighter",
                 "flourish"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

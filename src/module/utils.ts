@@ -13,9 +13,20 @@ export function groupBy<T, R>(array: T[], criterion: (value: T) => R): Map<R, T[
         if (result.get(key) === undefined) {
             result.set(key, [elem]);
         } else {
-            result.get(key)
-                .push(elem);
+            result.get(key).push(elem);
         }
+    }
+    return result;
+}
+
+/**
+ * Given an array, adds a certain amount of elements to it
+ * until the desired length is being reached
+ */
+export function padArray<T>(array: T[], requiredLength, padWith: T): T[] {
+    const result = [...array];
+    for (let i = array.length; i < requiredLength; i += 1) {
+        result.push(padWith);
     }
     return result;
 }
@@ -37,10 +48,7 @@ export function combineObjects<K extends keyof any, V>(
     second: Record<K, V> | {},
     mergeFunction: (first: V, second: V) => V,
 ): Record<K, V> {
-    const combinedKeys = new Set([
-        ...(Object.keys(first)),
-        ...(Object.keys(second)),
-    ]);
+    const combinedKeys = new Set([...Object.keys(first), ...Object.keys(second)]);
 
     const combinedObject = {} as Record<K, V>;
     for (const name of combinedKeys) {
@@ -87,7 +95,6 @@ export function toNumber(value: Optional<string> | Optional<number>): Optional<n
 export function add(x: number, y: number): number {
     return x + y;
 }
-
 
 /**
  * Adds a + if positive, nothing if 0 or - if negative

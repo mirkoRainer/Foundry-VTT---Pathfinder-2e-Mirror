@@ -145,16 +145,13 @@
         "traits": {
             "label": "Spell Traits",
             "rarity": {
-                "value": "common"
+                "value": "uncommon"
             },
             "type": "String",
             "value": [
                 "conjuration",
                 "teleportation"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "effects": [],

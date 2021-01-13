@@ -34,7 +34,9 @@
         "prerequisites": {
             "label": "Prerequisites",
             "type": "String",
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -63,9 +65,6 @@
                 "sorcerer",
                 "wizard"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

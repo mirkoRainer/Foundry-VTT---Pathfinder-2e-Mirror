@@ -13,7 +13,7 @@
         "description": {
             "chat": "",
             "unidentified": "",
-            "value": "<p>You won't allow others to restrain you. You can cast <a class=\"entity-link\" data-pack=\"pf2e.spells-srd\" data-id=\"aqRYNoSvxsVfqglH\" draggable=\"true\"><i class=\"fas fa-suitcase\"></i> Freedom of Movement</a> on yourself as a primal innate spell once per day.</p>"
+            "value": "<p>You won't allow others to restrain you. You can cast @Compendium[pf2e.spells-srd.Freedom of Movement]{Freedom of Movement} on yourself as a primal innate spell once per day.</p>"
         },
         "featType": {
             "value": "ancestry"
@@ -22,7 +22,9 @@
             "value": "9"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -38,9 +40,6 @@
             "value": [
                 "halfling"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

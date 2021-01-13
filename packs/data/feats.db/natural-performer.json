@@ -13,7 +13,7 @@
         "description": {
             "chat": "",
             "unidentified": "",
-            "value": "<p><span id=\"ctl00_MainContent_DetailedOutput\">Entertainment comes naturally to you. You become trained in Performance and gain one 1st-level Performance skill feat. </span></p>"
+            "value": "<p>Entertainment comes naturally to you. You become trained in Performance and gain one 1st-level Performance skill feat.</p>"
         },
         "featType": {
             "value": "ancestry"
@@ -22,7 +22,9 @@
             "value": "1"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -38,9 +40,6 @@
             "value": [
                 "gnome"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

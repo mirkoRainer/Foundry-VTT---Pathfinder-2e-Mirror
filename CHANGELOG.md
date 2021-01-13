@@ -1,5 +1,420 @@
 # Patch Notes:
 
+## Version 1.10.29
+### Bug Fixes
+* (stwlam) Set items to unequipped and uninvested on transfer between actors
+* (profounddark) Fix feat visibility
+* (profounddark) Fix missing translation key for swashbuckler traits
+* (profounddark & nikolaj-a) Filter out empty trait names
+* (nikolaj-a) Resolve selector in fixed proficiency rule element. Closes #979
+* (nikolaj-a) Fix shortform name for performance skill to ensure rule elements are properly applied
+* (nikolaj-a) Fix item identification for unlinked tokens
+
+### Content Changes
+* (stwlam) Fix field order for barbarian instincts
+* (stwlam) Remove usage property from non-equipment
+* (Shandyan) Item effects, completing items starting with S
+* (Shandyan) Preparation of effects for items starting with T through Z
+* (Shandyan) Items effects, for items starting with T through W (excluding wands)
+* (TMun) Split up Specialty crafting into separate feats for each type
+* (nikolaj-a) Fix typo in eldritch archer archetype name
+* (nikolaj-a) Fix formatting of hammer quake feat description
+
+### Core System Improvements
+* (putty) Escape earn income skill and move xp calculation into core
+
+### Development Improvements
+* (stwlam) Adjust template.json to reflect data definitions for invested items
+* (TMun) Fix line endings after updating .gitattributes
+
+
+## Version 1.10.28
+### Bug Fixes
+* (Trollderim) Fix chat labels for traits
+* (stwlam) Fix scrolling in loot sheet when Configure Sheet is toggled on
+* (Mothringer) Fix column misalignment issue for inventory
+* (Mothringer) Remove nonfunctional treasure buttons from non-owned loot actors for player
+* (Mothringer) Fix item duplication when dragging items from sheets to tokens
+* (nikolaj-a) Fix spell chat cards for spells without custom traits
+
+### Content Changes
+* (Evil Slime) Add barbarian rage compendium entries and rule elements:
+    * Rage effect
+    * Animal instincts
+    * Dragon instincts
+    * Fury instinct
+    * Giant instinct
+    * Spirit instincts
+* (nikolaj-a) Add rage action from class feature, including a link to the rage effect
+* (rectulo) Update Dread Marshal Stance description formatting
+* (rectulo) Update Clear the Way feat description formatting
+* (rectulo) Update Druid Dedication description
+* (rectulo) Fix typo in Unbalancing Finisher name
+* (rectulo) Update Mysterious Breath feat description
+* (rectulo) Update Hideous Ululation prerequisites
+* (rectulo) Update Unbalancing Finisher typo on Jirelle level 5
+* (SLATE) Added boons for season 2 00, 03, 08, Age of Ashes, and Menace Under Otari.
+* (SLATE) Added Deckhand background from Menace Under Otari
+* (profounddark) Added monk stance compendium entries, including rule elements and icons:
+    * Cobra stance
+    * Crane stance
+    * Dragon stance
+    * Gorilla stance
+    * Ironblood stance
+    * Mountain stance
+    * Rain of Embers stance
+    * Stumbling stance
+    * Tangled Forest stance
+    * Tiger stance
+    * Wolf stance
+* (TMun) Correct Shroud of Darkness to use saving throw instead of spell attack. Closes #970
+* (TMun) Update Ritualist archetype description with retraining penalty. Closes #975
+* (TMun) Adds ancestries as new ancestry items. The drag and Drop has not yet been implemented, so this is informational for now
+* (TMun) Set alchemist goggle rule elements to item modifier type
+* (TMun) Correct Snarecrafter Archetype Description. Closes #978
+* (TMun) Add Knight reclaimant dedication to shall not falter feat. Closes #983
+* (stwlam) Fix Rest for the Night macro for when Stamina setting has never been toggled
+* (stwlam) Rest Macro: Boost HP recovery if the actor has the Fast Recovery and/or Dream May feats
+* (putty) Add macros to roll stealth/perception for selected tokens
+* (putty) Add earn income macro
+* (Shandyan) Added rules effects for items starting with R and S
+
+### New Features
+* (Mothringer) Update loot actor treasure bar appearance
+* (Mothringer) Add choice of recipients when distributing coins from a loot actor
+* (Mothringer) Add coin changing functionality to distribute coins button
+* (Mothringer) Add loot NPCs button to loot actor
+* (stwlam) Drag/drop item transfers between player-observable loot and player-owned actor sheets
+
+### Core System Improvements
+* (Aramande) Changing modifiers on rolls for disabling fortune and misfortune plus adding secret
+* (putty) Remember previous values from XP popup
+* (putty) Make line breaks in hazard text editors work properly
+* (putty) Implement earn income logic
+* (abrault) Refactor rule element synthetics to simplify signature
+* (Drental) Removed legacy warning about CUB
+* (nikolaj-a) Refine identification data
+* (nikolaj-a) Strike rule element always-on options
+* (nikolaj-a) Support label field on modifiers
+
+### Development Improvements
+* (stwlam) Improve accuracy of duplicate and mergeObject type declarations
+* (stwlam) Catch entity names not matching their corresponding file names when extracting
+* (stwlam) Update compendium entry extract script to strip out AoN span tags and normalize entity links
+* (stwlam) Run all pack JSON files through the extract script to clean them up
+* (stwlam) Prettier pass on type declarations
+* (stwlam) Improve type definitions for better inferencing and constraints
+* (stwlam) Keep PF2E CONFIG data in its own namespace
+* (stwlam) Fill out more pixi subclasses, remove @ts-ignore in src/scripts/init.ts
+* (stwlam) Restore Foundry's self-closing tags after running pack HTML through JQuery's parser
+* (stwlam) Add PF2EPhysicalItem class with convenience methods
+* (stwlam) Update typescript, eslint, and eslint plugins to latest
+* (stwlam) Remove unused Axios dev dependency
+* (fryguy) Enable prettier on all files, and format the entire code-base
+* (Chup) Normalize line endings for .ts and .js files to LF
+* (Mothringer) Add test coverage to calculateTotalWealth in treasure.ts
+
+
+## Version 1.10.27
+### Bug Fixes
+* (putty) Fix issue where moving items between actors deleted the original name
+
+### Content Changes
+* (rectulo) Update Marshal, add missing text in target of opportunity feat trigger "an opponent within your weapon's first range increment."
+
+### Development Improvements
+* (fryguy) Refactor the actor sheet _onDrop function to use the latest API
+
+
+## Version 1.10.26
+### Bug Fixes
+* (Mothringer) Fix missing weaknesses on hazard sheet
+* (Mothringer) Cleanup hazards compendium
+* (putty) Use a different attribute to look up item rarity traits
+* (putty) Fix property runes, persist the original name in case of mystify
+* (putty) When mystifying an item, edit the original name instead of the unidentified name
+* (nikolaj-a) Prevent refresh attempts of uninitialized effect panel
+
+### New Features
+* (Mothringer) Add a button to remove coins on the PC sheet
+
+### Content Changes
+* (SLATE) Add missing PFS s1 boons
+* (SLATE) Add infiltrators accessory
+* (stwlam) Add rules elements to the _ventriloquist's rings_
+* (stwlam) Replace HTML anchors to compendium items with compendium links
+* (TMun) Correct failure criteria for _Steal the Sky_. Closes #957
+* (TMun) Correct prerequisites for _Cross the Final Horizon_. Closes #958
+* (TMun) Correct prerequisites for _Quick Juggler_ feat. Closes #961
+* (rectulo) Update _Knight Vigilant_ description
+* (Kaiser) Fix typo in _Warbal Bumblebrasher's_ surname
+
+### Core System Improvements
+* (Trollderim) Add attitude dropdown to the NPC sheet
+* (Trollderim) Add missing localization labels
+* (nikolaj-a) Reduce redundant entity updates
+* (nikolaj-a) Include initiative for effect duration
+* (nikolaj-a) Enable effect panel by default
+
+### Development Improvements
+* (putty) Properly type rune code
+* (stwlam) Add missing canvas-related type declarations, fill out some others
+
+
+## Version 1.10.25
+### Bug Fixes
+* (abrault) Allow Strikes to be popped out
+* (putty) Default to identified for non-physical items
+* (putty) Fix identify item popup changing size
+* (nikolaj-a) Fix unlinked token updates from rule elements and dragged effects
+* (nikolaj-a) Fix familiar-master relationship on startup
+
+### Content Changes
+* (nikolaj-a) Fix duration for bundled spell effects
+
+### Development Improvements
+* (Mothringer) Add information to CONTRIBUTING.md about using extractPacks to update compendium json files
+
+
+## Version 1.10.24
+### Bug Fixes
+* (Chup) Fix sell-all-treasure button to not trigger on Enter key press
+* (putty) Fix setting Potency Runes now correctly displays the dropdowns for Property Runes again
+* (Delethor) Changed check from modifier.label (does not exist) to modifier.name (does exist)
+* (SLATE) Fix prerequisites not always shown properly. Closes #950
+* (nikolaj-a) Fix effect panel refresh for unlinked tokens
+* (nikolaj-a) Amend NPC strike base damage with flat modifiers
+* (nikolaj-a) Fix rule element callbacks for unlinked actors, so rule elements like token icons should now apply properly
+
+### New Features
+* (putty) Implement Identify Creature rules. Knowledge DCs are now shown in the NPC sheet. Works with Proficiency Without Level rules.
+* (putty) Implement Identify Magic and Alchemy rules and UI for items. Items can now be marked as unidentified (use the question mark icon in your inventory) and the DCs to identify them are shown when trying to identify them. Works with Proficiency Without Level rules.
+* (Mothringer) Add sell all treasure button to loot actor sheet
+* (Mothringer) Add distribution coins button on loot actor sheet
+* (nikolaj-a) Register start time of effects dragged to the actor sheet or token, track their duration, and mark as expired in the effect panel
+
+### Content Changes
+* (Overdox) Unidentified items icons
+* (putty) Compendium updates:
+    * Rename One-Eye Amnin to Scarlet Triad Bruiser
+    * Rename Thea to Scarlet Triad Agent
+    * Implement XP macro. Selecting player and/or creature/hazard tokens and clicking the macro button shows the amount of XP a creature and/or hazard would give you. Works with Proficiency Without Level rules.
+    * Automate belt of good health
+* (San) Fix Lay on Hands heightening
+* (stwlam) Update Rest macro to restore focus pool and spell slots, remove Fatigued condition, and remove/reduce the Doomed and Drained conditions
+* (fryguy) Fix missing fields on Agents of Edgewatch #2 creature
+* (TMun): Compendium updates:
+    * Adds saving throw to _Jealous Hex_ spell
+    * Fix bludgeoning exception for _Doorwarden_ in Age of Ashes
+    * Adds area data to _Vomit Swarm_
+    * Adds gem stacking group to all gems from GMG page 11
+    * Changes _Nemmia Bramblecloak_ to a prepared caster
+    * Changes _robe of the archmagi_ to be armor vice equipment
+    * Corrects immunity text for _darkside mirror_
+    * Remove AoN span tags from archetypes.db
+    * Fix _Red Mantis Assassin_ paralyze spell
+* (SLATE): Compendium updates:
+    * Make _plane shift_ uncommon
+    * Replace ligatures. Closes #942
+    * Change spell actions from "x action(s)" to "x". Closes #922
+    * Add _moldy foodstuffs_ (yum!)
+    * Add _sodden floor_ trap
+    * Add _collapsing ceiling_
+    * Add _blightburn blast_ and its corresponding _blightburn sickness_
+    * Fix spelling error of _chirurgeon_
+* (nikolaj-a) Switch Laslunn melee damage entries to properly calculate base damage dice
+
+### Core System Improvements
+* (profounddark) Implement Untrained Improvisation and Pathfinder Agent Dedication feats using rule elements
+* (putty) Implement Difficulty Classes rules
+* (putty) Make hazard text fields use the wysiwyg editor. That way it is possible to format hazard texts properly now.
+* (Trollderim) Add current overflowing light bulk to encumbrance display
+* (Hermannm) Add diceResults to damage rollData object for use in callbacks
+* (mdizo) Hazards Sheet Cleanup
+* (mdizo) Effect Panel setup
+* (fryguy) Reorder sidebar to put Class DC farther down
+* (fryguy) Add a button for rolling secret Perception Checks from the sidebar
+* (fryguy) Replace the proficiency rank indicator for Perception and Class DC from the plaque to the blue square to make it more consistent
+* (fryguy) Add a consistent rank=color scheme for the UI (skills tab, saves, and new master/button etc)
+* (fryguy) Make the size of the skill proficiency on the tab the same as in the sidebar
+* (abrault) Normalise searches in the compendium browser
+
+### Development Improvements
+* (stwlam) Fix packbuilder regexp catching world-item links, fix world-item links
+* (stwlam) Update packs/extractpacks.js to convert links by ID to links by name
+* (stwlam) Avoid sorting ID keys in packextractor.js
+* (stwlam) Provide default for foundryConfig arg in extractpacks.js, make last warning in packbuilder.ts fatal
+* (SLATE) Include the following in the Open Gaming License file: PFS through s2-11, all APs up to #174, which releases end of 2021, all known Adventures, Beginner Box, and PFS bounties
+
+
+## Version 1.10.23
+### Bug Fixes
+* (Chup) Added confirmation dialog to 'Sell all treasure' button. Closes #576
+* (Trollderim) Fix quantity consideration in total wealth calculation
+* (Hermann) Fix callbacks to weapon damage functions
+* (nikolaj-a) Fix condition chat bubble grammar errors
+
+### New Features
+* (@nikolaj-a) Initial version of effect panel
+* (nikolaj-a) Add set property rule element
+
+### Content Changes
+* (putty) Set items to identified by default
+* (putty) Add remaining missing NPCs, hazards, and items for Beginner Box and Troubles in Otari
+* (putty) Add blinded flag to hunter's bow, to make it work with a toggle
+* (putty) Use more generic approach to trigger smoking sword damage
+* (Shandyan) Item effects for O and P
+* (SLATE) Moved wayfinder to razmiri (from ramziri)
+* (SLATE) Fixed all typos for retaliation
+* (SLATE) Added formulated sunlight, a ration for leshys that require photosynthesis
+* (TMun) Correct values of starknife again
+* (TMun) Fixes equipment data entry errors
+* (Mothringer) Add error message to treat wounds macro when no token is selected instead of silently failing
+
+### Core System Improvements
+* (Trollderim) Clean up UI of compendium browser
+* (nikolaj-a) Automatically advance world clock every combat round
+* (nikolaj-a) Basic world clock application
+* (nikolaj-a) Align apply damage icons with context menu
+* (nikolaj-a) Setting to disable condition chat bubbles
+
+### Development Improvements
+* (fryguy) Hack the actor constructor so that we can have polymorphism in the future without having a million line actor class
+* (fryguy) Remove default exports from codebase, and add linter check
+* (fryguy) Make the PF2EItem generic so that it's potentially type-safe in the future.
+* (fryguy) Add the same polymorphism factory hack to Items as well as Actors
+* (fryguy) Remove character helper class
+* (fryguy) Separate PF2EActor prepareXData functions into their own subclasses instead of having it all in the same file
+* (stwlam) Add missing @type dependencies
+* (stwlam) Rename ActorData in actorDataDefinitions.ts so it doesn't collide with ActorData in actor.d.ts
+* (stwlam) Remove discarded item/actor construction in favor of checking options
+
+
+## Version 1.10.22
+### Bug Fixes
+* (putty) Fix parsing for missing and non-conforming prices
+* (nikolaj-a) Omit breakdown of familiar abilities, if none is present on the master
+
+## Version 1.10.21
+### Bug Fixes
+* (nikolaj-a) Ensure hotbar assignment is repeatable
+* (nikolaj-a) Fix invalid ability abbreviation. Closes #849
+* (nikolaj-a) Add jaws strike for razortooth goblin. Closes #725
+
+### New Features
+* (Trollderim) Add UI element in the inventory which sums up the total gold value of a character's inventory
+* (nikolaj-a) Add Strike rule element
+
+### Content Changes
+* (putty) Compendium additions, changes, and fixes:
+    * Add Menace Under Otari Bestiary
+    * Use same attributes for trapmaster as Menace under Otari
+    * Add Smoking Sword and automate Spirit Strikes
+    * Fix stats and abilities for wyrmling and giant spider
+* (Kaiser) Crit and fumble deck typos fixed
+* (Shandyan) Compendium changes:
+    * Rules effects for items starting with J through N
+    * Added token effect icons to spell effects
+    * Corrections to items. Closes #920
+* (profounddark) Updated swashbuckler class features with finisher toggle
+* (SLATE) Clean up compendia, like removing trailing spaces, invalid characters etc:
+    * Cleanup pfs season 1 bestiary.db
+    * Cleanup pfs season 2 bestiary.db
+    * Cleanup spell effects.db
+    * Cleanup spells.db
+    * Cleanup the slithering bestiary.db
+    * Cleanup pathfinder society boons.db
+    * Cleanup pathfinder bestiary.db
+    * Cleanup npc gallery.db
+    * Cleanup iconics.db
+    * Cleanup gmg srd.db
+    * Cleanup fall of plaguestone.db
+    * Cleanup extinction curse bestiary.db
+    * Cleanup equipment.db
+    * Cleanup deities.db
+    * Cleanup actions.db of unicode
+    * Cleanup conditionspf2e
+    * Cleanup feats.db
+* (SLATE) Fixed some names and added missing goblin skeletons
+* (SLATE) Added Troubles in Otari bestiary and items
+* (nikolaj-a) Remove hardcoded Cinderclaw Gauntlet damage, and fix related damage dice rule element
+
+### Core System Improvements
+* (@abrault) Add force option to Fixed Proficiency Rule Element
+* (fryguy) Initial work for supporting drag and drop ancestries, backgrounds, and classes
+* (Kaiser) Action icons recreated - old ones had compression artefacts
+* (Hermann) Add callbacks to weapon damage functions for better utilization from macros
+* (nikolaj-a) Localize actor and item types in create dialog
+* (nikolaj-a) Toggle for hiding strikes of unequipped weapons
+* (nikolaj-a) Make toggles draggable to the hotbar
+* (nikolaj-a) Support for backstabber weapon trait
+* (nikolaj-a) Injectable properties in rule element selectors
+
+### Development Improvements
+* (@mirkoRainer) Update CONTRIBUTING.md since the pf2e-dev does not exist anymore
+* (stwlam) Tighten up the compendium assembly process:
+    * Typescript implementation of packbuilder
+    * Replace all links by ids with links by name, change over to packbuilder.ts
+    * Generate many warnings from packbuilder.ts
+    * Add system-local mystery-man.png, fix broken links to one from Foundry
+    * Fix remaining broken-image-link and missing-label warnings - Above warnings now fatal - File-system work in packbuilder.ts now synchronous
+    * Fix more pack issues, make base64-encoded image data fatal
+    * Fix all but one of the remaining broken links
+* (stwlam) Update CONTRIBUTING.md with Compendium content guidelines.
+* (nikolaj-a) Update vulnerable dependency versions
+* (nikolaj-a) Salvage use of AbilityString type
+
+
+## Version 1.10.20
+### Bug Fixes
+* (nikolaj-a) Fix broken actor sheet for spells with long casting time
+* (nikolaj-a) Fix broken strikes for new NPC actors
+* (nikolaj-a) Fix loading feats in the Compendium Browser
+
+### Content Changes
+* (stwlam) Treat Wounds macro: fill in bonuses, make medicine-check message mirror skill checks
+* (SLATE) Unicode/HTML entity cleanup and fixed trailing spaces and newlines in paragraph tags
+* (SLATE) Convert all prerequisite strings to arrays for better data format compatibility
+* (nikolaj-a) Spell effect icons for example spell effects
+
+
+## Version 1.10.19
+### Bug Fixes
+* (nikolaj-a) Fix sheet opening bug
+
+
+## Version 1.10.18
+### Bug Fixes
+* (fryguy) Sort the list of damage types so that they're easier to find in the dropdown. Closes #416
+* (SLATE) Shorten usage text to prevent UI breakage. Closes #913
+* (nikolaj-a) Damage roll chat message type, for integrate better with Tabbed Chat module
+
+### New Features
+* (nikolaj-a) Add experimental strikes to NPC sheet
+
+### Content Changes
+* (Kaiser) Immunities of NPCs moved out of custom field for Bestiary 1, Bestiary 2, Plaguestone bestiary, Agents of Edgewatch bestiary, Extinction Curse bestiary, Age of Ashes bestiary, Slithering, and Pathfinder Society season 1 and 2
+* (Kaiser) Usage corrections for runes, aeon stones, talisman, and various worn items
+* (Shandyan) Rules effects items starting with D through I
+* (stwlam) Fill in missing data for a few focus spells
+* (stwlam) Fix/cleanup Treat Wounds macro
+* (TMun) Remove duplicate bestiary entries
+* (SLATE) Remove trailing spaces in feat names, item names, and deity names
+* (SLATE) Convert prerequisite information for the new format in item sheets
+* (SLATE) Add two creatures and hazard from PFS 1-00
+
+### Core System Improvements
+* (SLATE) More obvious placement of prerequisites in item sheet
+* (Trollderim) Add color and cursor change for ability check hovering
+* (Trollderim) Add filtering by level for equipment, hazards, and monsters in Compendium Browser
+* (nikolaj-a) Expose roll-related classes to macros. Closes #876
+* (nikolaj-a) Popout support for specific chat cards
+
+### Development Improvements
+* (SLATE) Added debug flag to pack builder and added commands that will enable debugging
+* (nikolaj-a) Make action icons available in actor class
+
+
 ## Version 1.10.17
 ### Bug Fixes
 * (@CarlosFdez) Fix type check in addConditionToToken
@@ -669,7 +1084,7 @@ This is most likely the last version that will support version 0.6.6 of Foundry.
 * (@Shandyan) Compendium updates
     * Shameless Request Feat Missing from Feat Compendium (issue #599)
     * Non-Uniform formatting in the Take Cover action (issue #600)
-    * Field Discovery: Chirugeon contains text for Field Discovery: Bomber (issue #603)
+    * Field Discovery: Chirurgeon contains text for Field Discovery: Bomber (issue #603)
     * Alchemist's Tools entry not up-to-date (issue #605)
     * Uncanny Bombs feat missing from compendium (issue #607)
     * Aura of Righteousness and Effortless Concentration is missing from compendium (issue #609)

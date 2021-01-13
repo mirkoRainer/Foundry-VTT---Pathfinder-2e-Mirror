@@ -22,7 +22,9 @@
             "value": "1"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -38,9 +40,6 @@
                 "aasimar",
                 "lineage"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

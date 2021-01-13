@@ -22,7 +22,9 @@
             "value": "1"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -39,9 +41,6 @@
                 "lineage",
                 "tiefling"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

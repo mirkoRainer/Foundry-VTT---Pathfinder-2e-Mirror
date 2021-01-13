@@ -140,7 +140,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "The towering and brutish giants known as athaches are reviled for both their monstrosity and their cruelty. Beyond an athach's filthy habits, this giant is made stranger by the gangly third arm that protrudes from their torso and ends in a twitching, long-fingered claw. Huge, tusk-like fangs descend from an athach's upper jaw and prop their mouth open, leaking long strands of viscous drool that is itself is a toxic venom and coats the athach's fangs.<br><br>Athachs despise civilization almost as much as they despise their own kind, and they delight in committing sadistic acts and terrorizing victims. An athach does not keep a traditional territory of their own, but rather wanders the hinterlands of settled territories until they find a suitably easy settlement of smaller humanoids to target. Once the athach has chosen their target, the giant establishes a hidden lair in a location like an abandoned farmhouse or cave, and from there they launch their reign of torment. After a few weeks of harassing, capturing, and torturing victims, the athach bores of their games. The giant then goes on a final rampage, destroying every dwelling and eating every creature they can find. Sometimes, the giant allows a survivor or two to escape, forcing these terrified victims to spend the rest of their lives spreading word of the athach's fearsomeness.<br><br><br>",
+            "flavorText": "The towering and brutish giants known as athaches are reviled for both their monstrosity and their cruelty. Beyond an athach's filthy habits, this giant is made stranger by the gangly third arm that protrudes from their torso and ends in a twitching, long-fingered claw. Huge, tusk-like fangs descend from an athach's upper jaw and prop their mouth open, leaking long strands of viscous drool that is itself is a toxic venom and coats the athach's fangs.<br /><br />Athachs despise civilization almost as much as they despise their own kind, and they delight in committing sadistic acts and terrorizing victims. An athach does not keep a traditional territory of their own, but rather wanders the hinterlands of settled territories until they find a suitably easy settlement of smaller humanoids to target. Once the athach has chosen their target, the giant establishes a hidden lair in a location like an abandoned farmhouse or cave, and from there they launch their reign of torment. After a few weeks of harassing, capturing, and torturing victims, the athach bores of their games. The giant then goes on a final rampage, destroying every dwelling and eating every creature they can find. Sometimes, the giant allows a survivor or two to escape, forcing these terrified victims to spend the rest of their lives spreading word of the athach's fearsomeness.<br /><br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -1057,7 +1057,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<b>Requirements</b> The monster must have a free hand but can Release anything it’s holding as part of this reaction. <b>Trigger</b> The monster is targeted with a thrown rock Strike or a rock would fall on the monster. <b>Effect</b> The monster gains a +4 circumstance bonus to its AC against the triggering attack or to any defense against the falling rock. If the attack misses or the monster successfully defends against the falling rock, the monster catches the rock, takes no damage, and is now holding the rock."
+                    "value": "<b>Requirements</b> The monster must have a free hand but can Release anything it's holding as part of this reaction. <b>Trigger</b> The monster is targeted with a thrown rock Strike or a rock would fall on the monster. <b>Effect</b> The monster gains a +4 circumstance bonus to its AC against the triggering attack or to any defense against the falling rock. If the attack misses or the monster successfully defends against the falling rock, the monster catches the rock, takes no damage, and is now holding the rock."
                 },
                 "rarity": {
                     "value": "common"
@@ -1106,7 +1106,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<b>Saving Throw</b> DC 32 Fortitude; <b>Maximum Duration</b> 6 rounds; <b>Stage 1</b> [[/r 2d6 # poison damage]] poison damage and @Compendium[pf2e.conditionspf2e.Enfeebled] 1; <b>Stage 2</b> [[/r 2d6 # poison damage]] poison damage and enfeebled 2; <b>Stage 3</b> [[/r 2d6 # poison damage]] poison damage and enfeebled 3"
+                    "value": "<b>Saving Throw</b> DC 32 Fortitude; <b>Maximum Duration</b> 6 rounds; <b>Stage 1</b> [[/r 2d6 # poison damage]] poison damage and @Compendium[pf2e.conditionitems.Enfeebled]{Enfeebled} 1; <b>Stage 2</b> [[/r 2d6 # poison damage]] poison damage and enfeebled 2; <b>Stage 3</b> [[/r 2d6 # poison damage]] poison damage and enfeebled 3"
                 },
                 "rarity": {
                     "value": "common"

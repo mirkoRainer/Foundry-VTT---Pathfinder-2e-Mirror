@@ -43,7 +43,6 @@ import './types/apps/sidebar/sidebar';
 import './types/apps/sidebar/sidebartab';
 import './types/apps/sidebar/sidebardirectory';
 
-
 // Core
 
 import './types/core/audio';
@@ -81,17 +80,24 @@ import './types/framework/entities/user';
 // PIXI
 
 import './types/pixi/canvaslayer';
+import './types/pixi/gridlayer';
 import './types/pixi/mouseinteractionmanager';
 import './types/pixi/placeableobject';
 import './types/pixi/placeableslayer';
+import './types/pixi/templatelayer';
+import './types/pixi/tokenlayer';
 
 import './types/pixi/helpers/controlicon';
 import './types/pixi/helpers/ray';
 import './types/pixi/helpers/ruler';
 
+import './types/pixi/placeables/measuredtemplate';
 import './types/pixi/placeables/token';
 import './types/pixi/placeables/note';
 import './types/pixi/placeables/tile';
+
+import './types/pixi/grids/basegrid';
+import './types/pixi/grids/squaregrid';
 
 // UI
 
@@ -105,6 +111,7 @@ import './types/ui/tabs';
 //-- --//
 
 import './types/game';
+import './types/canvas';
 import './types/handlebars';
 import './types/pixi';
 import './types/prototypes';

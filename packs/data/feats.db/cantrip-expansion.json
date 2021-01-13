@@ -34,7 +34,9 @@
         "prerequisites": {
             "label": "Prerequisites",
             "type": "String",
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -59,9 +61,6 @@
                 "witch",
                 "wizard"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

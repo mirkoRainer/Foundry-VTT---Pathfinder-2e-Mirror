@@ -4,6 +4,7 @@
       "module": "commonjs",
       "lib": ["esnext", "dom"],
       "noImplicitAny": false,
+      "noUnusedLocals": true,
       "forceConsistentCasingInFileNames": true,
       "esModuleInterop": true,
       "sourceMap": true,
@@ -13,6 +14,6 @@
       "paths": {
         "foundry": ["types/foundry-pc-types"]
       },
-      "types": ["jquery", "webpack-env", "jest"]
+      "types": ["jquery", "webpack-env", "jest", "node"]
     },
   }

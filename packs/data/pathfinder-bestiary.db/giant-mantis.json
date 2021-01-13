@@ -149,7 +149,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "These massive cousins of normal praying mantises stand taller than an average human. They stalk through dense forests, striking at meals from the trees.<br><br>",
+            "flavorText": "These massive cousins of normal praying mantises stand taller than an average human. They stalk through dense forests, striking at meals from the trees.<br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -833,7 +833,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "On the first round of combat, creatures that haven't acted are @Compendium[pf2e.conditionitems.AJh5ex99aV6VTggg]{Flat-Footed} to the giant mantis."
+                    "value": "On the first round of combat, creatures that haven't acted are @Compendium[pf2e.conditionitems.Flat-Footed]{Flat-Footed} to the giant mantis."
                 },
                 "rarity": {
                     "value": "common"

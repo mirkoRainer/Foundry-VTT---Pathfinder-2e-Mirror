@@ -40,13 +40,10 @@
             },
             "selected": {},
             "value": []
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},
-    "img": "icons/mystery-man.png",
+    "img": "systems/pf2e/icons/default-icons/mystery-man.png",
     "name": "Vault Delver",
     "permission": {
         "default": 0

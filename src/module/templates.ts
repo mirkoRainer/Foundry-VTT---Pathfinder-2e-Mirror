@@ -2,8 +2,14 @@
  * @format
  */
 
-export default function () {
+export function loadPF2ETemplates() {
     const templatePaths = [
+        // effect panel
+        'systems/pf2e/templates/system/effect-panel.html',
+
+        // world clock
+        'systems/pf2e/templates/system/world-clock.html',
+
         // Actor Sheets Partials (CRB-Style Tooltip)
         'systems/pf2e/templates/actors/crb-style/partials/modifiers-tooltip.html',
 
@@ -37,11 +43,16 @@ export default function () {
         'systems/pf2e/templates/items/rules-panel.html',
         'systems/pf2e/templates/items/action-details.html',
         'systems/pf2e/templates/items/action-sidebar.html',
+        'systems/pf2e/templates/items/ancestry-details.html',
+        'systems/pf2e/templates/items/ancestry-sidebar.html',
         'systems/pf2e/templates/items/armor-details.html',
         'systems/pf2e/templates/items/armor-sidebar.html',
+        'systems/pf2e/templates/items/background-details.html',
+        'systems/pf2e/templates/items/background-sidebar.html',
         'systems/pf2e/templates/items/backpack-details.html',
         'systems/pf2e/templates/items/backpack-sidebar.html',
         'systems/pf2e/templates/items/treasure-sidebar.html',
+        'systems/pf2e/templates/items/class-details.html',
         'systems/pf2e/templates/items/class-sidebar.html',
         'systems/pf2e/templates/items/consumable-details.html',
         'systems/pf2e/templates/items/consumable-sidebar.html',

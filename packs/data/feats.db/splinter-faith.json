@@ -22,7 +22,9 @@
             "value": "1"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -44,9 +46,6 @@
                 "champion",
                 "cleric"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

@@ -203,7 +203,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "As with any humanoid animated statues of Medium size, giant animated statues are used to guard locations of importance, but their increased size and power make them most useful in large vaults, spacious chambers, or outdoor locations. Animated objects of this strength and size are ideal for tasks and responsibilities usually performed by golems, and more powerful animated objects are thus all but unheard of.<br><br>",
+            "flavorText": "As with any humanoid animated statues of Medium size, giant animated statues are used to guard locations of importance, but their increased size and power make them most useful in large vaults, spacious chambers, or outdoor locations. Animated objects of this strength and size are ideal for tasks and responsibilities usually performed by golems, and more powerful animated objects are thus all but unheard of.<br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -1116,7 +1116,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<b>Requirements</b> The monster’s last action was a success with a Strike that lists Grab in its damage entry, or it has a creature grabbed using this action. <b>Effect</b> The monster automatically Grabs the target until the end of the monster’s next turn. The creature is grabbed by whichever body part the monster attacked with, and that body part can’t be used to Strike creatures until the grab is ended. Using Grab extends the duration of the monster’s Grab until the end of its next turn for all creatures grabbed by it. A grabbed creature can use the Escape action to get out of the grab, and the Grab ends for a grabbed creatures if the monster moves away from it."
+                    "value": "<b>Requirements</b> The monster's last action was a success with a Strike that lists Grab in its damage entry, or it has a creature grabbed using this action. <b>Effect</b> The monster automatically Grabs the target until the end of the monster's next turn. The creature is grabbed by whichever body part the monster attacked with, and that body part can't be used to Strike creatures until the grab is ended. Using Grab extends the duration of the monster's Grab until the end of its next turn for all creatures grabbed by it. A grabbed creature can use the Escape action to get out of the grab, and the Grab ends for a grabbed creatures if the monster moves away from it."
                 },
                 "rarity": {
                     "value": "common"
@@ -1263,7 +1263,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<p>Each day at dawn, if the guardian has been destroyed, it re‑forms in this room. Its maximum Hit Points are permanently reduced by 10, but it is otherwise restored to its full, lower Hit Point total. Once the statue&rsquo;s maximum Hit Points would be 60 or fewer, it can no longer be restored in this manner and is permanently destroyed.</p>"
+                    "value": "<p>Each day at dawn, if the guardian has been destroyed, it re‑forms in this room. Its maximum Hit Points are permanently reduced by 10, but it is otherwise restored to its full, lower Hit Point total. Once the statue's maximum Hit Points would be 60 or fewer, it can no longer be restored in this manner and is permanently destroyed.</p>"
                 },
                 "rarity": {
                     "value": "common"

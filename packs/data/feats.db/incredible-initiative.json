@@ -34,7 +34,9 @@
         "prerequisites": {
             "label": "Prerequisites",
             "type": "String",
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -62,9 +64,6 @@
             "value": [
                 "general"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "effects": [],

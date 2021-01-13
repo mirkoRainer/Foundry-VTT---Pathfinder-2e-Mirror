@@ -140,7 +140,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "Found in salt or fresh water, stingrays are normally passive creatures, but when threatened or cornered, they lash out with their tails to lance foes with their toxic stingers. Stingrays often bury themselves in mud, sand, or sea grass, and unfortunately for those wading in shallow waters, stepping on an unseen stingray is a surefire way to receive a painful sting.<br><br>",
+            "flavorText": "Found in salt or fresh water, stingrays are normally passive creatures, but when threatened or cornered, they lash out with their tails to lance foes with their toxic stingers. Stingrays often bury themselves in mud, sand, or sea grass, and unfortunately for those wading in shallow waters, stepping on an unseen stingray is a surefire way to receive a painful sting.<br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -643,7 +643,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<b>Saving Throw</b> DC 16 Fortitude; <b>Maximum Duration</b> 4 rounds; <b>Stage 1</b> [[/r 1d4 # poison damage]] poison damage (1 round); <b>Stage 2</b> [[/r 1d6 # poison damage]] poison damage and @Compendium[pf2e.conditionspf2e.Clumsy] 1 (1 round)"
+                    "value": "<b>Saving Throw</b> DC 16 Fortitude; <b>Maximum Duration</b> 4 rounds; <b>Stage 1</b> [[/r 1d4 # poison damage]] poison damage (1 round); <b>Stage 2</b> [[/r 1d6 # poison damage]] poison damage and @Compendium[pf2e.conditionitems.Clumsy]{Clumsy} 1 (1 round)"
                 },
                 "rarity": {
                     "value": "common"

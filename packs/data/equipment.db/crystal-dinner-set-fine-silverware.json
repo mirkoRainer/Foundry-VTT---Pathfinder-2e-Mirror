@@ -34,7 +34,7 @@
             "value": 0
         },
         "identified": {
-            "value": false
+            "value": true
         },
         "invested": {
             "value": false
@@ -75,9 +75,6 @@
                 "value": "common"
             },
             "value": []
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         },
         "value": {
             "value": 250

@@ -30,7 +30,7 @@
             "label": "Description",
             "type": "String",
             "unidentified": "",
-            "value": "<p><span class=\"fontstyle0\">A wooden chest can hold up to 8 Bulk of items.</span></p>"
+            "value": "<p>A wooden chest can hold up to 8 Bulk of items.</p>"
         },
         "equipped": {
             "value": false
@@ -45,7 +45,7 @@
             "value": 0
         },
         "identified": {
-            "value": false
+            "value": true
         },
         "invested": {
             "value": false

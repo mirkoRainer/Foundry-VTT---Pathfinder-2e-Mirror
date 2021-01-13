@@ -13,7 +13,7 @@
         "description": {
             "chat": "",
             "unidentified": "",
-            "value": "<p><strong>Prerequisites </strong>@Compendium[pf2e.feats-srd.7ycF0fgSw1ovUPit]{Basic Oracle Spellcasting}</p>\n<hr>\n<p>Increase the spell slots you gain from oracle archetype feats by 1 for each spell level other than your two highest spell slots.</p>"
+            "value": "<p>Your repertoire expands, and you can cast more divine spells each day. Increase the number of spells in your repertoire and the number of spell slots you gain from oracle archetype feats by 1 for each spell level other than your two highest oracle spell slots.</p>"
         },
         "featType": {
             "value": "archetype"
@@ -22,7 +22,9 @@
             "value": "8"
         },
         "prerequisites": {
-            "value": "Basic Oracle Spellcasting"
+            "value": [
+                "Basic Oracle Spellcasting"
+            ]
         },
         "rarity": {
             "value": "common"
@@ -38,9 +40,6 @@
             "value": [
                 "archetype"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

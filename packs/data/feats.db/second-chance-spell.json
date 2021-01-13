@@ -22,7 +22,9 @@
             "value": 18
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -40,9 +42,6 @@
                 "enchantment",
                 "wizard"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "effects": [],

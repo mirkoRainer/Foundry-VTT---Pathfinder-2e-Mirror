@@ -13,7 +13,7 @@
         "description": {
             "chat": "",
             "unidentified": "",
-            "value": "<p>Your physique is incredibly hardy. Your proficiency rank for Fortitude saves increases to expert.&nbsp;</p>"
+            "value": "<p>Your physique is incredibly hardy. Your proficiency rank for Fortitude saves increases to expert.</p>"
         },
         "featType": {
             "value": "classfeature"
@@ -35,9 +35,6 @@
             "value": [
                 "rogue"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

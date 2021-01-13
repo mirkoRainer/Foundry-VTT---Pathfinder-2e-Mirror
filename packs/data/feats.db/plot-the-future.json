@@ -22,7 +22,9 @@
             "value": "14"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -41,9 +43,6 @@
                 "investigator",
                 "prediction"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

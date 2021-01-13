@@ -145,7 +145,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "These lithe snakes like to frequent the shallow waters of tropical seas. Their 4-foot-long, blue-green bodies easily blend into the water where they lurk to ambush prey. Tales speak of massive sea snakes that swim in deeper waters and follow ships, waiting for sailors to fall overboard or climbing the side to snatch them from the deck.<br><br>",
+            "flavorText": "These lithe snakes like to frequent the shallow waters of tropical seas. Their 4-foot-long, blue-green bodies easily blend into the water where they lurk to ambush prey. Tales speak of massive sea snakes that swim in deeper waters and follow ships, waiting for sailors to fall overboard or climbing the side to snatch them from the deck.<br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -698,7 +698,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<b>Saving Throw</b> DC 16 Fortitude; <b>Maximum Duration</b> 4 rounds; <b>Stage 1</b> [[/r 1d6 # poison damage]] poison damage (1 round); <b>Stage 2</b> [[/r 1d6 # poison damage]] poison damage and @Compendium[pf2e.conditionspf2e.Enfeebled] 1 (1 round)"
+                    "value": "<b>Saving Throw</b> DC 16 Fortitude; <b>Maximum Duration</b> 4 rounds; <b>Stage 1</b> [[/r 1d6 # poison damage]] poison damage (1 round); <b>Stage 2</b> [[/r 1d6 # poison damage]] poison damage and @Compendium[pf2e.conditionitems.Enfeebled]{Enfeebled} 1 (1 round)"
                 },
                 "rarity": {
                     "value": "common"

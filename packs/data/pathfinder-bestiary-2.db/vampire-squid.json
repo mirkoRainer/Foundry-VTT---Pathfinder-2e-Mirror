@@ -140,7 +140,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "Vampire squid are neither undead nor blood drinkers. Their name is instead inspired by their red eyes and the dark, cloak-like webbing between their arms. Living in the lightless depths of the ocean, the vampire squid can eject a cloud of bioluminescent mucus that nauseates predators.<br><br>",
+            "flavorText": "Vampire squid are neither undead nor blood drinkers. Their name is instead inspired by their red eyes and the dark, cloak-like webbing between their arms. Living in the lightless depths of the ocean, the vampire squid can eject a cloud of bioluminescent mucus that nauseates predators.<br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -733,7 +733,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<b>Frequency</b> once per day; <b>Requirements</b> The vampire squid is in water; <b>Effect</b> The vampire squid ejects a cloud of bioluminescent mucus in a 15-foot cone. Non-squid creatures within the cloud must attempt a DC 16 Fortitude save or become @Compendium[pf2e.conditionspf2e.Sickened] 1. The glowing mucus remains in the area for 1 minute, and any creature that ends its turn in the area must succeed at a DC 13 Fortitude save or become sickened 1."
+                    "value": "<b>Frequency</b> once per day; <b>Requirements</b> The vampire squid is in water; <b>Effect</b> The vampire squid ejects a cloud of bioluminescent mucus in a 15-foot cone. Non-squid creatures within the cloud must attempt a DC 16 Fortitude save or become @Compendium[pf2e.conditionitems.Sickened]{Sickened} 1. The glowing mucus remains in the area for 1 minute, and any creature that ends its turn in the area must succeed at a DC 13 Fortitude save or become sickened 1."
                 },
                 "rarity": {
                     "value": "common"

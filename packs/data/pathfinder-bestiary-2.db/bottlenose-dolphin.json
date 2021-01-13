@@ -140,7 +140,7 @@
                 "image": "systems/pf2e/assets/sheet/deity.png",
                 "value": ""
             },
-            "flavorText": "The bottlenose dolphin is the most common and widespread species of dolphin. They are social predators who hunt shallow seas and rivers in large family groups called pods. Sailors are fond of bottlenose dolphins and frequently tell tales of how they save drowning fishers or kill sharks with blows from their powerful snouts. <br><br>",
+            "flavorText": "The bottlenose dolphin is the most common and widespread species of dolphin. They are social predators who hunt shallow seas and rivers in large family groups called pods. Sailors are fond of bottlenose dolphins and frequently tell tales of how they save drowning fishers or kill sharks with blows from their powerful snouts. <br /><br />",
             "flavourText": "",
             "heritage": {
                 "value": ""
@@ -819,7 +819,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "The bottlenose dolphin @Compendium[pf2e.actionspf2e.c8TGiZ48ygoSPofx]{Swims} twice and then makes a snout Strike. As long as it moved at least 20 feet, it gains a +1 circumstance bonus to its attack roll. A Large or smaller creature hit by this attack must succeed at a DC 16 Fortitude save or be @Compendium[pf2e.conditionspf2e.Slowed] 1 for 1 round."
+                    "value": "The bottlenose dolphin @Compendium[pf2e.actionspf2e.Swim]{Swims} twice and then makes a snout Strike. As long as it moved at least 20 feet, it gains a +1 circumstance bonus to its attack roll. A Large or smaller creature hit by this attack must succeed at a DC 16 Fortitude save or be @Compendium[pf2e.conditionitems.Slowed]{Slowed} 1 for 1 round."
                 },
                 "rarity": {
                     "value": "common"

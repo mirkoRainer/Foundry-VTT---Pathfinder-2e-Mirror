@@ -89,7 +89,7 @@
             "value": ""
         },
         "time": {
-            "value": "1 action"
+            "value": "1"
         },
         "traditions": {
             "value": []
@@ -105,9 +105,6 @@
                 "oracle",
                 "cursebound"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "effects": [],

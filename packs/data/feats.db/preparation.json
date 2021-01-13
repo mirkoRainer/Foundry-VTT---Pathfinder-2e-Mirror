@@ -22,7 +22,9 @@
             "value": "12"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -39,9 +41,6 @@
                 "flourish",
                 "rogue"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

@@ -733,6 +733,9 @@
       "martial",
       "spell",
       "spellcastingEntry",
+      "ancestry",
+      "background",
+      "class",
       "feat",
       "action",
       "backpack",
@@ -755,9 +758,6 @@
         },
         "rarity": {
           "value": "common"
-        },
-        "usage": {
-          "value": "held-in-one-hand"
         },
         "rules": []
       },
@@ -786,14 +786,11 @@
         "price": {
           "value": 0
         },
-        "invested": {
-          "value": false
-        },
         "equipped": {
           "value": false
         },
         "identified": {
-          "value": false
+          "value": true
         },
         "stackGroup": {
           "value": ""
@@ -815,7 +812,8 @@
         },
         "collapsed": {
           "value": false
-        }
+        },
+        "originalName": ""
       },
       "itemLevel": {
         "level": {
@@ -849,6 +847,9 @@
         }
       },
       "magicItem": {
+        "invested": {
+          "value": false
+        },
         "property1": {
           "value": "",
           "dice": 0,
@@ -921,6 +922,9 @@
         "ep": 0,
         "gp": 0,
         "pp": 0
+      },
+      "usage": {
+        "value": "wornbackpack"
       }
     },
     "treasure": {
@@ -996,6 +1000,9 @@
       },
       "propertyRune4": {
         "value": ""
+      },
+      "usage": {
+        "value": "held-in-one-hand"
       }
     },
     "armor": {
@@ -1043,6 +1050,9 @@
       },
       "propertyRune4": {
         "value": ""
+      },
+      "usage": {
+        "value": "wornarmor"
       }
     },
     "melee": {
@@ -1095,14 +1105,117 @@
       "autoDestroy": {
         "value": true,
         "_deprecated": true
+      },
+      "usage": {
+        "value": "held-in-one-hand"
       }
     },
     "equipment": {
       "templates": [
         "itemDescription",
         "physicalItem",
+        "magicItem",
         "itemLevel"
-      ]
+      ],
+      "usage": {
+        "value": ""
+      }
+    },
+    "ancestry": {
+      "templates": [
+        "itemDescription"
+      ],
+      "hp": 6,
+      "size": "med",
+      "speed": 25,
+      "boosts": {
+        "0": { "value": [] },
+        "1": { "value": [] },
+        "2": { "value": ["str", "dex", "con", "int", "wis", "cha"] }
+      },
+      "flaws": {
+        "0": { "value": [] }
+      },
+      "languages": {
+        "value": ["common"],
+        "custom": ""
+      },
+      "additionalLanguages": {
+        "count": 0,
+        "value": [],
+        "custom": ""
+      },
+      "items": {},
+      "traits": {
+        "rarity": {
+            "value": "common"
+        },
+        "value": []
+      },
+      "vision": "normal"
+    },
+    "background": {
+      "templates": [
+        "itemDescription"
+      ],
+      "boosts": {
+        "0": { "value": [] },
+        "1": { "value": [] }
+      },
+      "items": {},
+      "trainedLore": "",
+      "trainedSkills": {
+        "value": []
+      },
+      "traits": {
+        "rarity": {
+            "value": "common"
+        },
+        "value": []
+      }
+    },
+    "class": {
+      "templates": [
+        "itemDescription"
+      ],
+      "keyAbility": { "value": [] },
+      "items": {},
+      "traits": {
+        "rarity": {
+            "value": "common"
+        },
+        "value": []
+      },
+      "trainedSkills": {
+        "value": [],
+        "additional": 0
+      },
+      "perception": 0,
+      "savingThrows": {
+          "fortitude": 0,
+          "reflex": 0,
+          "will": 0
+      },
+      "attacks": {
+          "simple": 0,
+          "martial": 0,
+          "advanced": 0,
+          "unarmed": 0,
+          "other": { "name": "", "rank": 0 }
+      },
+      "defenses": {
+          "unarmored": 0,
+          "light": 0,
+          "medium": 0,
+          "heavy": 0
+      },
+      "classDC": 0,
+      "ancestryFeatLevels": { "value": [ 1, 5, 9, 13, 17 ] },
+      "classFeatLevels": { "value": [ 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ] },
+      "generalFeatLevels": { "value": [ 3, 7, 11, 15, 19 ] },
+      "skillFeatLevels": { "value": [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ] },
+      "skillIncreaseLevels": { "value": [ 3, 5, 7, 9, 11, 13, 15, 17, 19 ] },
+      "abilityBoostLevels": { "value": [ 5, 10, 15, 20 ] }
     },
     "feat": {
       "templates": [
@@ -1122,7 +1235,7 @@
         "value": ""
       },
       "prerequisites": {
-        "value": ""
+        "value": []
       }
     },
     "lore": {
@@ -1377,6 +1490,16 @@
       ],
       "level": {
         "value": 1
+      },
+      "duration": {
+        "value": 0,
+        "unit": "rounds",
+        "sustained": false,
+        "expiry": "turn-start"
+      },
+      "start": {
+        "value": 0,
+        "initiative": null
       }
     }
   }

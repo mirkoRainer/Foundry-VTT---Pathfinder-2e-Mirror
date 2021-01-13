@@ -67,7 +67,7 @@
             "value": 0
         },
         "identified": {
-            "value": false
+            "value": true
         },
         "invested": {
             "value": false
@@ -211,6 +211,7 @@
             "value": "L"
         }
     },
+    "effects": [],
     "flags": {},
     "img": "systems/pf2e/icons/equipment/alchemical-items/alchemical-bombs/thunderstone.jpg",
     "name": "Thunderstone (Greater)",

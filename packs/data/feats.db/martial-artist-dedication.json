@@ -22,7 +22,9 @@
             "value": "2"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -38,9 +40,6 @@
                 "archetype",
                 "dedication"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},

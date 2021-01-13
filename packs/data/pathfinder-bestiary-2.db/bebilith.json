@@ -467,7 +467,7 @@
                 "custom": "",
                 "selected": [],
                 "value": [
-                    "abyssal (can’t speak any language)",
+                    "abyssal (can't speak any language)",
                     "telepathy 100 feet"
                 ]
             },
@@ -1329,7 +1329,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "The drained condition from Abyssal rot is cumulative, to a maximum of drained 4; <br>\n<b>Saving Throw</b> DC 29 Fortitude; <br>\n<b>Maximum Duration</b> 6 rounds; <br>\n<b>Stage 1</b> [[/r 3d6 # negative damage]] negative damage (1 round); <br>\n<b>Stage 2</b> [[/r 3d6 # negative damage]] negative damage and drained 1 (1 round); <br>\n<b>Stage 3</b> [[/r 3d6 # negative damage]] negative damage and drained 2 (1 round)"
+                    "value": "The drained condition from Abyssal rot is cumulative, to a maximum of drained 4; <br />\n<b>Saving Throw</b> DC 29 Fortitude; <br />\n<b>Maximum Duration</b> 6 rounds; <br />\n<b>Stage 1</b> [[/r 3d6 # negative damage]] negative damage (1 round); <br />\n<b>Stage 2</b> [[/r 3d6 # negative damage]] negative damage and drained 1 (1 round); <br />\n<b>Stage 3</b> [[/r 3d6 # negative damage]] negative damage and drained 2 (1 round)"
                 },
                 "rarity": {
                     "value": "common"
@@ -1389,7 +1389,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "A creature hit by the bebilith’s web Strike is restrained and tethered to the bebilith, preventing it from moving further away from the bebilith. The restrained creature is also under the effects of a dimensional anchor spell (DC 29) with a duration that lasts as long as the creature remains tethered. The bebilith can have only one creature tethered at a time. The DC to Escape or Force Open the tether is 29. The tether can be severed with a Strike (AC 20, Hardness 2, HP 20); this ends the dimensional anchor effect but does not free the restrained creature."
+                    "value": "A creature hit by the bebilith's web Strike is restrained and tethered to the bebilith, preventing it from moving further away from the bebilith. The restrained creature is also under the effects of a dimensional anchor spell (DC 29) with a duration that lasts as long as the creature remains tethered. The bebilith can have only one creature tethered at a time. The DC to Escape or Force Open the tether is 29. The tether can be severed with a Strike (AC 20, Hardness 2, HP 20); this ends the dimensional anchor effect but does not free the restrained creature."
                 },
                 "rarity": {
                     "value": "common"
@@ -1446,7 +1446,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "Against demons, a bebilith’s Strikes count as cold iron and good."
+                    "value": "Against demons, a bebilith's Strikes count as cold iron and good."
                 },
                 "rarity": {
                     "value": "common"

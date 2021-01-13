@@ -738,7 +738,7 @@
                 "description": {
                     "chat": "",
                     "unidentified": "",
-                    "value": "<b>Frequency</b> once per day; <br>\n<b>Requirements</b> A direct superior is supervising the apprentice; <br>\n<b>Effect</b> The apprentice gains a +2 circumstance bonus to attack rolls, damage rolls, saving throws, and skill checks until the end of their next turn."
+                    "value": "<b>Frequency</b> once per day; <br />\n<b>Requirements</b> A direct superior is supervising the apprentice; <br />\n<b>Effect</b> The apprentice gains a +2 circumstance bonus to attack rolls, damage rolls, saving throws, and skill checks until the end of their next turn."
                 },
                 "rarity": {
                     "value": "common"
@@ -903,7 +903,7 @@
                     "label": "Description",
                     "type": "String",
                     "unidentified": "",
-                    "value": "<p>You need these tools to create items from raw materials with the Craft skill. Sterling artisan's tools give you a +1 item bonus to the check. Different sets are needed for different work, as determined by the GM; for example, blacksmith's tools differ from woodworker's tools. </p>"
+                    "value": "<p>You need these tools to create items from raw materials with the Craft skill. Sterling artisan's tools give you a +1 item bonus to the check. Different sets are needed for different work, as determined by the GM; for example, blacksmith's tools differ from woodworker's tools.</p>"
                 },
                 "equipped": {
                     "label": "Equipped",
@@ -1003,7 +1003,7 @@
                     "label": "Description",
                     "type": "String",
                     "unidentified": "",
-                    "value": "<p><span class=\"fontstyle0\">Maps are uncommon. Most maps you can find are simple and functional. A survey map details a single location in excellent detail. One of these maps gives you a +1 item bonus to Survival checks and any skill checks to Recall Knowledge, provided the checks are related to the location detailed on the map. Maps sometimes come in atlases, containing a number of maps of the same quality, often on similar topics. An atlas costs five times as much as a single map and requires both hands to use. The GM determines what maps are available in any location.</span> </p>"
+                    "value": "<p><span class=\"fontstyle0\">Maps are uncommon. Most maps you can find are simple and functional. A survey map details a single location in excellent detail. One of these maps gives you a +1 item bonus to Survival checks and any skill checks to Recall Knowledge, provided the checks are related to the location detailed on the map. Maps sometimes come in atlases, containing a number of maps of the same quality, often on similar topics. An atlas costs five times as much as a single map and requires both hands to use. The GM determines what maps are available in any location.</span></p>"
                 },
                 "equipped": {
                     "label": "Equipped",

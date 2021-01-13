@@ -22,7 +22,9 @@
             "value": "7"
         },
         "prerequisites": {
-            "value": "master in Diplomacy"
+            "value": [
+                "master in Diplomacy"
+            ]
         },
         "rarity": {
             "value": "common"
@@ -40,9 +42,6 @@
                 "general",
                 "skill"
             ]
-        },
-        "usage": {
-            "value": "held-in-one-hand"
         }
     },
     "flags": {},

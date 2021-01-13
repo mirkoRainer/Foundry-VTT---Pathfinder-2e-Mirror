@@ -22,7 +22,9 @@
             "value": "5"
         },
         "prerequisites": {
-            "value": ""
+            "value": [
+                ""
+            ]
         },
         "rarity": {
             "value": "common"
@@ -38,9 +40,6 @@
             "value": [
                 "orc"
             ]
-        },
-        "usage": {
-            "value": ""
         }
     },
     "flags": {},
