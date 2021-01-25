@@ -4,11 +4,11 @@ import { PF2ELoot } from '../module/actor/loot';
 import { PF2ENPC } from '../module/actor/npc';
 import { PF2EFamiliar } from '../module/actor/familiar';
 import { PF2EItem } from '../module/item/item';
+import { PF2EAncestry } from '../module/item/ancestry';
+import { PF2EBackground } from '../module/item/background';
 import {
     PF2EAction,
-    PF2EAncestry,
     PF2EArmor,
-    PF2EBackground,
     PF2EBackpack,
     PF2EClass,
     PF2ECondition,
@@ -25,6 +25,7 @@ import {
     PF2ETreasure,
     PF2EWeapon,
 } from '../module/item/others';
+import { PF2EEffect } from '../module/item/effect';
 import { PF2eCombatTracker } from '../module/system/PF2eCombatTracker';
 
 export const PF2ECONFIG = {
@@ -441,6 +442,7 @@ export const PF2ECONFIG = {
         primal: 'PF2E.TraitPrimal',
         focus: 'PF2E.TraitFocus',
         ritual: 'PF2E.TraitRitual',
+        halcyon: 'PF2E.TraitHalcyon',
     }, // Magic Traditon
 
     spellOtherTraits: {
@@ -813,6 +815,7 @@ export const PF2ECONFIG = {
         splash: 'PF2E.TraitSplash',
         talisman: 'PF2E.TraitTalisman',
         trap: 'PF2E.TraitTrap',
+        wand: 'PF2E.TraitWand',
         virulent: 'PF2E.TraitVirulent',
         visual: 'PF2E.TraitVisual',
     },
@@ -1086,6 +1089,7 @@ export const PF2ECONFIG = {
         healing: 'PF2E.TraitDescriptionHealing',
         incorporeal: 'PF2E.TraitDescriptionIncorporeal',
         infused: 'PF2E.TraitDescriptionInfused',
+        leshy: 'PF2E.TraitDescriptionLeshy',
         light: 'PF2E.TraitDescriptionLight',
         linguistic: 'PF2E.TraitDescriptionLinguistic',
         litany: 'PF2E.TraitDescriptionLitany',
@@ -1101,6 +1105,7 @@ export const PF2ECONFIG = {
         revelation: 'PF2E.TraitDescriptionRevelation',
         scrying: 'PF2E.TraitDescriptionScrying',
         shadow: 'PF2E.TraitDescriptionShadow',
+        shoony: 'PF2E.TraitDescriptionShoony',
         sleep: 'PF2E.TraitDescriptionSleep',
         splash: 'PF2E.TraitDescriptionSplash',
         summoned: 'PF2E.TraitDescriptionSummoned',
@@ -1183,6 +1188,7 @@ export const PF2ECONFIG = {
         cleric: 'PF2E.TraitDescriptionCleric',
         druid: 'PF2E.TraitDescriptionDruid',
         fighter: 'PF2E.TraitDescriptionFighter',
+        investigator: 'PF2E.TraitDescriptionInvestigator',
         monk: 'PF2E.TraitDescriptionMonk',
         oracle: 'PF2E.TraitDescriptionOracle',
         ranger: 'PF2E.TraitDescriptionRanger',
@@ -1295,6 +1301,7 @@ export const PF2ECONFIG = {
         other: 'PF2E.ConsumableTypeOther',
         poison: 'PF2E.ConsumableTypePoison',
         tool: 'PF2E.ConsumableTypeTool',
+        wand: 'PF2E.ConsumableTypeWand',
     }, // Preparation Type
 
     preparationType: {
@@ -1427,6 +1434,7 @@ export const PF2ECONFIG = {
 
     actionTypes: {
         action: 'PF2E.ActionTypeAction',
+        single: 'PF2E.ActionTypeSingle',
         reaction: 'PF2E.ActionTypeReaction',
         free: 'PF2E.ActionTypeFree',
         passive: 'PF2E.ActionTypePassive',
@@ -1489,6 +1497,7 @@ export const PF2ECONFIG = {
         lowLightVision: 'PF2E.SensesLowLightVision',
         scent: 'PF2E.SensesScent',
         Tremorsense: 'PF2E.SensesTremorsense',
+        lifesense: 'PF2E.SensesLifesense',
     }, // Creature Sizes
 
     bulkTypes: {
@@ -1782,6 +1791,23 @@ export const PF2ECONFIG = {
         Trip: 'PF2E.AttackEffectTrip',
     },
 
+    loot: {
+        subtitles: {
+            take: 'PF2E.loot.TakeSubtitle',
+            stow: 'PF2E.loot.StowSubtitle',
+            transfer: 'PF2E.loot.TransferSubtitle',
+            sell: 'PF2E.loot.SellSubtitle',
+            give: 'PF2E.loot.GiveSubtitle',
+        },
+        messages: {
+            take: 'PF2E.loot.TakeMessage',
+            stow: 'PF2E.loot.StowMessage',
+            transfer: 'PF2E.loot.TransferMessage',
+            sell: 'PF2E.loot.SellMessage',
+            give: 'PF2E.loot.GiveMessage',
+        },
+    },
+
     monsterAbilities: () => {
         return {
             'All-Around Vision': {
@@ -2054,6 +2080,7 @@ export const PF2ECONFIG = {
             melee: PF2EMelee,
             consumable: PF2EConsumable,
             equipment: PF2EEquipment,
+            effect: PF2EEffect,
             ancestry: PF2EAncestry,
             background: PF2EBackground,
             class: PF2EClass,

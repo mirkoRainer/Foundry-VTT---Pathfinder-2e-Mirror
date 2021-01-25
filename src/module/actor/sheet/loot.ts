@@ -2,7 +2,7 @@
 import { calculateWealth } from '../../item/treasure';
 import { ActorSheetPF2e } from './base';
 import { PF2ELoot } from '../loot';
-import { calculateBulk, itemsFromActorData, stacks, formatBulk, indexBulkItemsById } from '../../item/bulk';
+import { calculateBulk, formatBulk, indexBulkItemsById, itemsFromActorData } from '../../item/bulk';
 import { getContainerMap } from '../../item/container';
 import { DistributeCoinsPopup } from './DistributeCoinsPopup';
 import { PF2EItem } from '../../item/item';
@@ -13,7 +13,7 @@ import { LootNPCsPopup } from './loot/LootNPCsPopup';
 /**
  * @category Actor
  */
-export class ActorSheetPF2eLoot extends ActorSheetPF2e {
+export class ActorSheetPF2eLoot extends ActorSheetPF2e<PF2ELoot> {
     /** @override */
     constructor(actor: PF2ELoot, options: { editable: boolean }) {
         options.editable = true;
@@ -66,7 +66,7 @@ export class ActorSheetPF2eLoot extends ActorSheetPF2e {
         }
 
         // Precalculate some data to adapt sheet more easily
-        sheetData.isLoot = sheetData.data.lootSheetType === 'Loot';
+        sheetData.isLoot = this.actor.data.data.lootSheetType === 'Loot';
         sheetData.isShop = !sheetData.isLoot;
 
         this._prepareItems(sheetData.actor);
@@ -94,8 +94,12 @@ export class ActorSheetPF2eLoot extends ActorSheetPF2e {
         };
 
         const bulkItems = itemsFromActorData(actorData);
-        const indexedBulkItems = indexBulkItemsById(bulkItems);
-        const containers = getContainerMap(actorData.items, indexedBulkItems, stacks, bulkConfig);
+        const bulkItemsById = indexBulkItemsById(bulkItems);
+        const containers = getContainerMap({
+            items: actorData.items,
+            bulkItemsById,
+            bulkConfig,
+        });
 
         for (const i of actorData.items) {
             // item identification
@@ -117,7 +121,11 @@ export class ActorSheetPF2eLoot extends ActorSheetPF2e {
             if (Object.keys(inventory).includes(i.type)) {
                 i.data.quantity.value = i.data.quantity.value || 0;
                 i.data.weight.value = i.data.weight.value || 0;
-                const [approximatedBulk] = calculateBulk([indexedBulkItems.get(i._id)], stacks, false, bulkConfig);
+                const bulkItem = bulkItemsById.get(i._id);
+                const [approximatedBulk] = calculateBulk({
+                    items: bulkItem === undefined ? [] : [bulkItem],
+                    bulkConfig,
+                });
                 i.totalWeight = formatBulk(approximatedBulk);
                 i.hasCharges = i.type === 'consumable' && i.data.charges.max > 0;
                 i.isTwoHanded =

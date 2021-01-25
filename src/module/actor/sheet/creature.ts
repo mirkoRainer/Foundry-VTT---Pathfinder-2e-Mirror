@@ -2,13 +2,16 @@
 import { Coins, calculateWealth, calculateTotalWealth } from '../../item/treasure';
 import { ProficiencyModifier } from '../../modifiers';
 import { ActorSheetPF2e } from './base';
+import { PF2EActor } from '../actor';
+import { PF2EItem } from '../../item/item';
+import { PF2EPhysicalItem } from '../../item/physical';
 
 /**
  * Base class for NPC and character sheets
  * @category Actor
  */
-export abstract class ActorSheetPF2eCreature extends ActorSheetPF2e {
-    _renderItemSummary(li, item, chatData) {
+export abstract class ActorSheetPF2eCreature<ActorType extends PF2EActor> extends ActorSheetPF2e<ActorType> {
+    _renderItemSummary(li, item: PF2EItem, chatData) {
         super._renderItemSummary(li, item, chatData);
         const div = li.find('.item-summary');
 
@@ -84,7 +87,7 @@ export abstract class ActorSheetPF2eCreature extends ActorSheetPF2e {
                     );
                 break;
             case 'consumable':
-                if (chatData.hasCharges)
+                if (chatData.hasCharges && PF2EPhysicalItem.isIdentified(item.data))
                     buttons.append(
                         `<span class="tag"><button class="consume" data-action="consume">${game.i18n.localize(
                             'PF2E.ConsumableUseLabel',

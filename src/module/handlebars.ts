@@ -1,5 +1,8 @@
-/* global Handlebars */
 export function registerHandlebarsHelpers() {
+    Handlebars.registerHelper('pad', (value, length, character) => {
+        return `${value}`.padStart(length, character);
+    });
+
     Handlebars.registerHelper('add', (a, b) => {
         return a + b;
     });
@@ -13,7 +16,8 @@ export function registerHandlebarsHelpers() {
             fn = opts.inverse;
             break;
         }
-        return fn(this);
+
+        return fn();
     });
 
     Handlebars.registerHelper('any', (...args) => {

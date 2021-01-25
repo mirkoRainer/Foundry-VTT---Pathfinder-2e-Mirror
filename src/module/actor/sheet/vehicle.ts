@@ -1,14 +1,15 @@
 /* global game, CONFIG */
-import { calculateBulk, itemsFromActorData, stacks, formatBulk, indexBulkItemsById } from '../../item/bulk';
+
+import { calculateBulk, formatBulk, indexBulkItemsById, itemsFromActorData } from '../../item/bulk';
 import { getContainerMap } from '../../item/container';
 import { ActorSheetPF2e } from './base';
 import { calculateWealth } from '../../item/treasure';
-import { PF2EActor } from '../actor';
+import { PF2EVehicle } from '../actor';
 
 /**
  * @category Actor
  */
-export class ActorSheetPF2eVehicle extends ActorSheetPF2e {
+export class ActorSheetPF2eVehicle extends ActorSheetPF2e<PF2EVehicle> {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             classes: ['default', 'sheet', 'actor', 'vehicle'],
@@ -95,8 +96,13 @@ export class ActorSheetPF2eVehicle extends ActorSheetPF2e {
         };
 
         const bulkItems = itemsFromActorData(actorData);
-        const indexedBulkItems = indexBulkItemsById(bulkItems);
-        const containers = getContainerMap(actorData.items, indexedBulkItems, stacks, bulkConfig);
+        const bulkItemsById = indexBulkItemsById(bulkItems);
+        const containers = getContainerMap({
+            items: actorData.items,
+            bulkItemsById,
+            bulkConfig,
+            actorSize: actorData.data.traits.size.value,
+        });
 
         for (const i of actorData.items) {
             i.img = i.img || CONST.DEFAULT_TOKEN;
@@ -113,7 +119,12 @@ export class ActorSheetPF2eVehicle extends ActorSheetPF2e {
             if (Object.keys(inventory).includes(i.type)) {
                 i.data.quantity.value = i.data.quantity.value || 0;
                 i.data.weight.value = i.data.weight.value || 0;
-                const [approximatedBulk] = calculateBulk([indexedBulkItems.get(i._id)], stacks, false, bulkConfig);
+                const bulkItem = bulkItemsById.get(i._id);
+                const [approximatedBulk] = calculateBulk({
+                    items: bulkItem === undefined ? [] : [bulkItem],
+                    bulkConfig,
+                    actorSize: actorData.data.traits.size.value,
+                });
                 i.totalWeight = formatBulk(approximatedBulk);
                 i.hasCharges = i.type === 'consumable' && i.data.charges.max > 0;
                 i.isTwoHanded =
@@ -125,7 +136,7 @@ export class ActorSheetPF2eVehicle extends ActorSheetPF2e {
             // Actions
             if (i.type === 'action') {
                 const actionType = i.data.actionType.value || 'action';
-                i.img = PF2EActor.getActionGraphics(
+                i.img = PF2EVehicle.getActionGraphics(
                     actionType,
                     parseInt((i.data.actions || {}).value, 10) || 1,
                 ).imageUrl;
