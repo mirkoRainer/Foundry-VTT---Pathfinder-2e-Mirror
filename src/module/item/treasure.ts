@@ -1,4 +1,3 @@
-/* global game */
 import { PF2EActor } from '../actor/actor';
 import { groupBy, isBlank } from '../utils';
 import { PF2EPhysicalItem } from './physical';
@@ -211,15 +210,13 @@ export async function addCoins({
     const topLevelCoins = items.filter((item) => combineStacks && isTopLevelCoin(item, currencies));
     const coinsByDenomination = groupBy(topLevelCoins, (item) => item?.data?.denomination?.value);
 
-    for (const denomination of currencies) {
+    for await (const denomination of currencies) {
         const quantity = coins[denomination];
         if (quantity > 0) {
             if (coinsByDenomination.has(denomination)) {
-                // eslint-disable-next-line no-await-in-loop
                 await updateItemQuantity(coinsByDenomination.get(denomination)[0], quantity);
             } else {
                 const compendiumId = coinCompendiumIds[denomination];
-                // eslint-disable-next-line no-await-in-loop
                 await addFromCompendium(compendiumId, quantity);
             }
         }
@@ -277,11 +274,10 @@ export async function removeCoins({
     const currencies = new Set(Object.keys(coins));
     const topLevelCoins = items.filter((item) => isTopLevelCoin(item, currencies));
     const coinsByDenomination = groupBy(topLevelCoins, (item) => item?.data?.denomination?.value);
-    for (const denomination of currencies) {
+    for await (const denomination of currencies) {
         const quantity = coins[denomination];
         if (quantity > 0) {
             if (coinsByDenomination.has(denomination)) {
-                // eslint-disable-next-line no-await-in-loop
                 await updateItemQuantity(coinsByDenomination.get(denomination), quantity, owner);
             }
         }
@@ -318,7 +314,7 @@ export function removeCoinsSimple(
                 }
             }
             if (entitiesToDelete.length > 0) {
-                owner.deleteEmbeddedEntity('OwnedItem', entitiesToDelete);
+                await owner.deleteEmbeddedEntity('OwnedItem', entitiesToDelete);
             }
             if (quantityToRemove > 0) {
                 console.warn('Attempted to remove more coinage than exists');

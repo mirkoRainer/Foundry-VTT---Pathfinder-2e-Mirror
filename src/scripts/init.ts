@@ -1,6 +1,6 @@
-/* global game, canvas, BaseGrid, SquareGrid  */
-import { PF2EActor, SKILL_DICTIONARY } from '../module/actor/actor';
-import { PF2EItem } from '../module/item/item';
+import { PF2EActor, SKILL_DICTIONARY } from '@actor/actor';
+import { PF2EItem } from '@item/item';
+import { PF2EEffect } from '@item/effect';
 
 /**
  * Create a Macro from an Item drop.
@@ -29,7 +29,7 @@ async function createItemMacro(item: PF2EItem, slot: number): Promise<void> {
 /**
  * Create a Macro from an Item drop.
  * Get an existing item macro if one exists, otherwise create a new one.
- * @param itemName
+ * @param itemId
  */
 export function rollItemMacro(itemId: string): ReturnType<PF2EItem['roll']> | void {
     const speaker = ChatMessage.getSpeaker();
@@ -139,7 +139,7 @@ if (a) {
     game.user.assignHotbarMacro(macro, slot);
 }
 
-async function createToggleMacro(property: string, label: string, actorId: string, slot: number) {
+async function createTogglePropertyMacro(property: string, label: string, actorId: string, slot: number) {
     const command = `const a = game.actors.get('${actorId}');
 if (a) {
     const value = getProperty(a, 'data.${property}');
@@ -164,11 +164,42 @@ if (a) {
     game.user.assignHotbarMacro(macro, slot);
 }
 
+async function createToggleEffectMacro(pack: string, effect: PF2EEffect, slot: number) {
+    const command = `
+const ITEM_UUID = 'Compendium.${pack}.${effect.id}'; // ${effect.data.name}
+(async () => {
+  const effect = duplicate(await fromUuid(ITEM_UUID));
+  for await (const token of canvas.tokens.controlled) {
+    let existing = token.actor.items.find(i => i.type === 'effect' && i.data.flags.core?.sourceId === ITEM_UUID);
+    if (existing) {
+      token.actor.deleteOwnedItem(existing._id);
+    } else {
+      token.actor.createOwnedItem(effect);
+    }
+  }
+})();
+`;
+    let macro = game.macros.entities.find((m) => m.name === effect.data.name && m.data.command === command);
+    if (!macro) {
+        macro = (await Macro.create(
+            {
+                command,
+                name: effect.data.name,
+                type: 'script',
+                img: effect.data.img,
+            },
+            {},
+        )) as Macro;
+    }
+    game.user.assignHotbarMacro(macro, slot);
+}
+
 /**
  * Activate certain behaviors on FVTT ready hook
  */
 Hooks.once('init', () => {
     game.pf2e = {
+        actions: {},
         rollItemMacro,
         rollActionMacro,
     };
@@ -211,27 +242,39 @@ Hooks.on('canvasInit', async () => {
     };
 
     // Monkey-patch Token class to fix Foundry bug causing incorrect border colors based on token disposition
-    Token.prototype._getBorderColor = function (this: Token) {
-        const colors = CONFIG.Canvas.dispositionColors;
-        if (this._controlled) return colors.CONTROLLED;
-        else if (this._hover) {
-            const disposition =
-                typeof this.data.disposition === 'string' ? parseInt(this.data.disposition, 10) : this.data.disposition;
-            if (!game.user.isGM && this.owner) return colors.CONTROLLED;
-            else if (this.actor?.hasPlayerOwner) return colors.PARTY;
-            else if (disposition === CONST.TOKEN_DISPOSITIONS.FRIENDLY) return colors.FRIENDLY;
-            else if (disposition === CONST.TOKEN_DISPOSITIONS.NEUTRAL) return colors.NEUTRAL;
-            else return colors.HOSTILE;
-        } else return null;
-    };
+    if (game.data.version === '0.7.9' && Token.prototype._getBorderColor !== undefined) {
+        Token.prototype._getBorderColor = function (this: Token) {
+            const colors = CONFIG.Canvas.dispositionColors;
+            if (this._controlled) return colors.CONTROLLED;
+            else if (this._hover) {
+                const disposition =
+                    typeof this.data.disposition === 'string'
+                        ? parseInt(this.data.disposition, 10)
+                        : this.data.disposition;
+                if (!game.user.isGM && this.owner) return colors.CONTROLLED;
+                else if (this.actor?.hasPlayerOwner) return colors.PARTY;
+                else if (disposition === CONST.TOKEN_DISPOSITIONS.FRIENDLY) return colors.FRIENDLY;
+                else if (disposition === CONST.TOKEN_DISPOSITIONS.NEUTRAL) return colors.NEUTRAL;
+                else return colors.HOSTILE;
+            } else return null;
+        };
+    }
 });
 
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
 
-Hooks.on('hotbarDrop', (bar, data, slot) => {
-    if (data.type === 'Item') {
+Hooks.on('hotbarDrop', async (bar, data, slot) => {
+    // check for item link
+    let item: PF2EItem | undefined;
+    if (data.type === 'Item' && data.pack && data.id) {
+        item = (await fromUuid(`Compendium.${data.pack}.${data.id}`)) as PF2EItem;
+    }
+
+    if (item instanceof PF2EEffect) {
+        createToggleEffectMacro(data.pack, item, slot);
+    } else if (data.type === 'Item') {
         createItemMacro(data.data, slot);
         return false;
     } else if (data.type === 'Action') {
@@ -240,7 +283,7 @@ Hooks.on('hotbarDrop', (bar, data, slot) => {
     } else if (data.type === 'Skill') {
         createSkillMacro(data.skill, data.skillName, data.actorId, slot);
     } else if (data.type === 'Toggle') {
-        createToggleMacro(data.property, data.label, data.actorId, slot);
+        createTogglePropertyMacro(data.property, data.label, data.actorId, slot);
     }
 
     return true;

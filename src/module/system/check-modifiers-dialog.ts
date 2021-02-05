@@ -1,7 +1,7 @@
-/* global game, CONFIG */
 import { PF2Modifier, PF2StatisticModifier } from '../modifiers';
-import { PF2EActor } from '../actor/actor';
+import { PF2EActor } from '@actor/actor';
 import { PF2RollNote } from '../notes';
+import { getDegreeOfSuccess, DegreeOfSuccessText, PF2CheckDC } from './check-degree-of-success';
 
 export interface CheckModifiersContext {
     /** Any options which should be used in the roll. */
@@ -18,6 +18,10 @@ export interface CheckModifiersContext {
     actor?: PF2EActor;
     /** The type of this roll, like 'perception-check' or 'saving-throw'. */
     type?: string;
+    /** Any traits for the check. */
+    traits?: string[];
+    /** Optional DC data for the check */
+    dc?: PF2CheckDC;
 }
 
 /**
@@ -53,9 +57,8 @@ export class CheckModifiersDialog extends Application {
 
     /** Roll the given check, rendering the roll to the chat menu. */
     static async roll(check: PF2StatisticModifier, context?: CheckModifiersContext, callback?: (roll: Roll) => void) {
-        const options = [];
+        const options: string[] = [];
         const ctx = (context as any) ?? {};
-
         let dice = '1d20';
         if (ctx.fate === 'misfortune') {
             dice = '2d20kl';
@@ -65,9 +68,9 @@ export class CheckModifiersDialog extends Application {
             options.push('PF2E.TraitFortune');
         }
 
-        let speaker: PF2EActor;
+        const speaker: { actor?: PF2EActor } = {};
         if (ctx.actor) {
-            speaker = ctx.actor;
+            speaker.actor = ctx.actor;
             ctx.actor = ctx.actor._id;
         }
         if (ctx.token) {
@@ -87,7 +90,7 @@ export class CheckModifiersDialog extends Application {
             .filter((m) => m.enabled)
             .map((m) => {
                 const label = game.i18n.localize(m.label ?? m.name);
-                return `<span class="tag tag_secondary">${label} ${m.modifier < 0 ? '' : '+'}${m.modifier}</span>`;
+                return `<span class="tag tag_alt">${label} ${m.modifier < 0 ? '' : '+'}${m.modifier}</span>`;
             })
             .join('');
 
@@ -97,15 +100,47 @@ export class CheckModifiersDialog extends Application {
             .map((o) => `<span style="${optionStyle}">${game.i18n.localize(o)}</span>`)
             .join('');
 
-        const notes = (context.notes ?? []).map((note) => TextEditor.enrichHTML(note.text)).join('<br />');
+        const notes = (ctx.notes ?? []).map((note) => TextEditor.enrichHTML(note.text)).join('<br />');
 
         const totalModifierPart = check.totalModifier === 0 ? '' : `+${check.totalModifier}`;
         const roll = new Roll(`${dice}${totalModifierPart}`, check).roll();
 
+        let flavor = `<b>${check.name}</b>`;
+
+        // Add the degree of success if a DC was supplied
+        if (ctx.dc !== undefined) {
+            const degreeOfSuccess = getDegreeOfSuccess(roll, ctx.dc);
+
+            // Add degree of success to roll for the callback function
+            roll.data.degreeOfSuccess = degreeOfSuccess.value;
+
+            const dcLabel = game.i18n.localize('PF2E.DCLabel');
+            flavor += `<div><b>${dcLabel}: ${ctx.dc.value}</b></div>`;
+
+            const degreeOfSuccessText = DegreeOfSuccessText[degreeOfSuccess.value];
+            let adjustmentLabel = '';
+            if (degreeOfSuccess.degreeAdjustment !== undefined) {
+                adjustmentLabel = degreeOfSuccess.degreeAdjustment
+                    ? game.i18n.localize('PF2E.OneDegreeBetter')
+                    : game.i18n.localize('PF2E.OneDegreeWorse');
+                adjustmentLabel = ` (${adjustmentLabel})`;
+            }
+
+            const resultLabel = game.i18n.localize('PF2E.ResultLabel');
+            const degreeLabel = game.i18n.localize(`PF2E.CheckOutcome.${degreeOfSuccessText}`);
+            flavor += `<div class="degree-of-success"><b>${resultLabel}:<span class="${degreeOfSuccessText}"> ${degreeLabel}</span></b>${adjustmentLabel}</div>`;
+        }
+
+        if (ctx.traits) {
+            const traits = ctx.traits.map((trait) => `<span class="tag">${trait}</span>`).join('');
+            flavor += `<div class="tags">${traits}</div><hr>`;
+        }
+        flavor += `<div class="tags">${modifierBreakdown}${optionBreakdown}</div>${notes}`;
+
         await roll.toMessage(
             {
-                speaker: ChatMessage.getSpeaker({ actor: speaker }),
-                flavor: `<b>${check.name}</b><div class="tags">${modifierBreakdown}${optionBreakdown}</div>${notes}`,
+                speaker: ChatMessage.getSpeaker(speaker),
+                flavor,
                 flags: {
                     core: {
                         canPopout: true,
@@ -113,6 +148,7 @@ export class CheckModifiersDialog extends Application {
                     pf2e: {
                         canReroll: !ctx.fate,
                         context: ctx,
+                        unsafe: flavor,
                     },
                 },
             },
@@ -164,7 +200,7 @@ export class CheckModifiersDialog extends Application {
         const value = Number(parent.find('.add-modifier-value').val());
         const type = `${parent.find('.add-modifier-type').val()}`;
         let name = `${parent.find('.add-modifier-name').val()}`;
-        const errors = [];
+        const errors: string[] = [];
         if (Number.isNaN(value)) {
             errors.push('Modifier value must be a number.');
         } else if (value === 0) {

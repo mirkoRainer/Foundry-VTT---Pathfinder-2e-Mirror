@@ -1,4 +1,3 @@
-/* global game, CONFIG */
 import { ActorSheetPF2eCreature } from './creature';
 import { calculateBulk, itemsFromActorData, formatBulk, indexBulkItemsById } from '../../item/bulk';
 import { calculateEncumbrance } from '../../item/encumbrance';
@@ -7,9 +6,10 @@ import { ProficiencyModifier } from '../../modifiers';
 import { PF2eConditionManager } from '../../conditions';
 import { PF2ECharacter } from '../character';
 import { PF2EPhysicalItem } from '../../item/physical';
-import { isPhysicalItem, SpellData, ItemData } from '../../item/dataDefinitions';
+import { isPhysicalItem, SpellData, ItemData, SpellcastingEntryData } from '../../item/dataDefinitions';
 import { PF2EAncestry } from '../../item/ancestry';
 import { PF2EBackground } from '../../item/background';
+import { PF2EClass } from '../../item/class';
 
 /**
  * @category Other
@@ -38,11 +38,19 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
         const equippedShieldId: string = this.getEquippedShield(this.actor.data.items)?._id;
         if (equippedShieldId !== undefined) {
             const shieldEntity = this.actor.getOwnedItem(equippedShieldId);
-            await shieldEntity.update({
-                'data.hp.value': formData['data.attributes.shield.hp.value'],
-            });
+            if (shieldEntity) {
+                await shieldEntity.update({
+                    'data.hp.value': formData['data.attributes.shield.hp.value'],
+                });
+            }
         }
+        const previousLevel = this.actor.data.data.details.level.value;
         await super._updateObject(event, formData);
+
+        const updatedLevel = this.actor.data.data.details.level.value;
+        if (updatedLevel != previousLevel) {
+            await PF2EClass.ensureClassFeaturesForLevel(this.actor);
+        }
     }
 
     /**
@@ -61,6 +69,9 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
 
         const backgroundItem = this.actor.items.find((x) => x.type === 'background');
         sheetData.backgroundItemId = backgroundItem ? backgroundItem.id : '';
+
+        const classItem = this.actor.items.find((x) => x.type === 'class');
+        sheetData.classItemId = classItem ? classItem.id : '';
 
         // Update hero points label
         sheetData.data.attributes.heroPoints.icon = this._getHeroPointsIcon(sheetData.data.attributes.heroPoints.rank);
@@ -472,6 +483,7 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
         actorData.martialSkills = martialSkills;
 
         for (const entry of spellcastingEntries) {
+            // TODO: this if statement's codepath does not appear to ever be used. Consider removing after verifying more thoroughly
             if (entry.data.prepared.preparedSpells && spellbooks[entry._id]) {
                 this._preparedSpellSlots(entry, spellbooks[entry._id]);
             }
@@ -577,6 +589,16 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
             }
         });
 
+        // open ancestry, background, or class compendium
+        html.find('.open-compendium').on('click', (event) => {
+            if (event.currentTarget.dataset.compendium) {
+                const compendium = game.packs.get(event.currentTarget.dataset.compendium);
+                if (compendium) {
+                    compendium.render(true);
+                }
+            }
+        });
+
         // filter strikes
         html.find('.toggle-unready-strikes').on('click', (event) => {
             this.actor.setFlag(
@@ -623,6 +645,58 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
             theme: 'crb-hover',
             minWidth: 120,
         });
+
+        // Spontaneous Spell slot increment handler:
+        html.find('.spell-slots-increment-down').on('click', (event) => {
+            const target = $(event.currentTarget);
+            const itemId = target.data().itemId;
+            const itemLevel = target.data().level;
+            const actor = this.actor;
+            const item = actor.getOwnedItem(itemId);
+
+            if (item == null) {
+                return;
+            }
+            if (item.data.type !== 'spellcastingEntry') {
+                return;
+            }
+            let data: SpellcastingEntryData = duplicate(item.data);
+
+            if (data.data.slots == null) {
+                return;
+            }
+            data.data.slots['slot' + itemLevel].value -= 1;
+            if (data.data.slots['slot' + itemLevel].value < 0) {
+                data.data.slots['slot' + itemLevel].value = 0;
+            }
+
+            item.update(data);
+        });
+
+        // Spontaneous Spell slot reset handler:
+        html.find('.spell-slots-increment-reset').on('click', (event) => {
+            const target = $(event.currentTarget);
+            const itemId = target.data().itemId;
+            const itemLevel = target.data().level;
+            const actor = this.actor;
+            const item = actor.getOwnedItem(itemId);
+
+            if (item == null) {
+                return;
+            }
+            if (item.data.type !== 'spellcastingEntry') {
+                return;
+            }
+
+            let data: SpellcastingEntryData = duplicate(item.data);
+
+            if (data.data.slots == null) {
+                return;
+            }
+            data.data.slots['slot' + itemLevel].value = data.data.slots['slot' + itemLevel].max;
+
+            item.update(data);
+        });
     }
 
     /**
@@ -664,7 +738,7 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
         const modifier = Number(parent.find('.add-modifier-value input[type=number]').val());
         const name = `${parent.find('.add-modifier-name').val()}`;
         const type = `${parent.find('.add-modifier-type').val()}`;
-        const errors = [];
+        const errors: string[] = [];
         if (!stat || !stat.trim()) {
             errors.push('Statistic is required.');
         }
@@ -687,7 +761,7 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
     onRemoveCustomModifier(event) {
         const stat = $(event.currentTarget).attr('data-stat');
         const name = $(event.currentTarget).attr('data-name');
-        const errors = [];
+        const errors: string[] = [];
         if (!stat || !stat.trim()) {
             errors.push('Statistic is required.');
         }
@@ -708,6 +782,10 @@ export class CRBStyleCharacterActorSheetPF2E extends ActorSheetPF2eCreature<PF2E
 
         if (itemData.type === 'background') {
             return PF2EBackground.addToActor(this.actor, itemData);
+        }
+
+        if (itemData.type === 'class') {
+            return PF2EClass.addToActor(this.actor, itemData);
         }
 
         return super._onDropItemCreate(itemData);

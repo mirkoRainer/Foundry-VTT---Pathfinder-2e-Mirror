@@ -27,6 +27,10 @@ import { Migration593AddAncestryItem } from './593-make-ancestry-item';
 import { Migration594AddBackgroundItem } from './594-make-background-item';
 import { Migration595AddItemSize } from './595-item-sizes';
 import { Migration596SetSlugSourceIds } from './596-set-slugs-and-sourceIds';
+import { Migration597MakeTraitTraitsArrays } from './597-make-trait-traits-string-arrays';
+import { Migration598AddClassItem } from './598-make-class-item';
+import { Migration599AddTraditionTraits } from './599-add-tradition-traits-to-generated-scrolls-wands';
+import { Migration600Reach } from './600-reach';
 
 export class Migrations {
     private static list = [
@@ -58,6 +62,10 @@ export class Migrations {
         Migration594AddBackgroundItem,
         Migration595AddItemSize,
         Migration596SetSlugSourceIds,
+        Migration597MakeTraitTraitsArrays,
+        Migration598AddClassItem,
+        Migration599AddTraditionTraits,
+        Migration600Reach,
     ];
 
     static get latestVersion(): number {

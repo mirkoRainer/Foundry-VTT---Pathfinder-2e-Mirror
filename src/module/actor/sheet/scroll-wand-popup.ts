@@ -1,5 +1,3 @@
-/* global game */
-
 import { PF2EActor } from '../actor';
 import { SpellData } from 'src/module/item/dataDefinitions';
 
@@ -10,9 +8,14 @@ export class ScrollWandPopup extends FormApplication<PF2EActor> {
     onSubmitCallback: (a: number, b: string, spellData: SpellData) => void;
     spellData: SpellData;
 
-    constructor(object: PF2EActor, options: unknown, callback: (a: number, b: string, c: SpellData) => void) {
+    constructor(
+        object: PF2EActor,
+        options: FormApplicationOptions,
+        spellData: SpellData,
+        callback: (a: number, b: string, c: SpellData) => void,
+    ) {
         super(object, options);
-
+        this.spellData = spellData;
         this.onSubmitCallback = callback;
     }
 
@@ -36,11 +39,11 @@ export class ScrollWandPopup extends FormApplication<PF2EActor> {
         return sheetData;
     }
 
-    async _updateObject(_event: Event, formData: FormData & { itemType: string; level: number }) {
+    async _updateObject(_event: Event, formData: { itemType: string; level: number }) {
         if (formData.itemType === 'wand' && formData.level === 10) {
             ui.notifications.warn(game.i18n.localize('PF2E.ScrollWandPopup.10thLevelWand'));
         } else if (this.onSubmitCallback) {
-            this.onSubmitCallback(formData.level as number, formData.itemType as string, this.spellData);
+            this.onSubmitCallback(formData.level, formData.itemType, this.spellData);
         }
     }
 }

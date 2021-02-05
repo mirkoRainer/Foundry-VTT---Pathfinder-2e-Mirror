@@ -1,4 +1,3 @@
-/* global game, getProperty */
 import { ItemData } from '../../item/dataDefinitions';
 import { CharacterData, FamiliarData, NpcData } from '../../actor/actorDataDefinitions';
 import { PF2RuleElement } from '../rule-element';
@@ -7,15 +6,6 @@ import { PF2RuleElement } from '../rule-element';
  * @category RuleElement
  */
 export class PF2SetPropertyRuleElement extends PF2RuleElement {
-    ruleData: any;
-    item: ItemData;
-
-    constructor(ruleData: any, item: ItemData) {
-        super();
-        this.ruleData = ruleData;
-        this.item = item;
-    }
-
     onCreate(actorData: CharacterData | NpcData | FamiliarData, item: ItemData, actorUpdates: any, tokens: any[]) {
         if (
             this.ruleData.property &&

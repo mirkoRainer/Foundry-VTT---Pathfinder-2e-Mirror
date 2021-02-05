@@ -1,4 +1,3 @@
-/* global game, CONFIG */
 import { PF2EActor, SKILL_DICTIONARY, SKILL_EXPANDED } from './actor';
 import { PF2ECharacter } from './character';
 import { PF2ENPC } from './npc';
@@ -6,6 +5,7 @@ import { PF2CheckModifier, PF2Modifier, PF2ModifierType, PF2StatisticModifier } 
 import { PF2Check } from '../system/rolls';
 import { FamiliarData } from './actorDataDefinitions';
 import { PF2RuleElements } from '../rules/rules';
+import { adaptRoll } from '../system/rolls';
 
 export class PF2EFamiliar extends PF2EActor {
     /** @override */
@@ -43,10 +43,9 @@ export class PF2EFamiliar extends PF2EActor {
 
             // base size
             data.traits.size.value = 'tiny';
-            data.traits.size.label = CONFIG.PF2E.actorSizes[data.traits.size.value];
 
             // base senses
-            data.traits.senses = [{ type: 'lowLightVision', label: 'PF2E.SensesLowLightVision' }];
+            data.traits.senses = [{ type: 'lowLightVision', label: 'PF2E.SensesLowLightVision', value: '' }];
 
             const { statisticsModifiers } = this._prepareCustomModifiers(this.data, rules);
             const FILTER_MODIFIER = (modifier: PF2Modifier) =>
@@ -231,15 +230,15 @@ export class PF2EFamiliar extends PF2EActor {
                     .filter((m) => m.enabled)
                     .map((m) => `${game.i18n.localize(m.name)} ${m.modifier < 0 ? '' : '+'}${m.modifier}`)
                     .join(', ');
-                stat.roll = (event: JQuery.TriggeredEvent, options = [], callback?: (roll: Roll) => void) => {
+                stat.roll = adaptRoll((args) => {
                     const label = game.i18n.localize('PF2E.PerceptionCheck');
                     PF2Check.roll(
                         new PF2CheckModifier(label, stat),
-                        { actor: this, type: 'perception-check', options },
-                        event,
-                        callback,
+                        { actor: this, type: 'perception-check', options: args.options ?? [], dc: args.dc },
+                        args.event,
+                        args.callback,
                     );
-                };
+                });
                 data.attributes.perception = stat;
             }
 
@@ -272,17 +271,17 @@ export class PF2EFamiliar extends PF2EActor {
                     .filter((m) => m.enabled)
                     .map((m) => `${game.i18n.localize(m.name)} ${m.modifier < 0 ? '' : '+'}${m.modifier}`)
                     .join(', ');
-                stat.roll = (event: JQuery.TriggeredEvent, options = [], callback?: (roll: Roll) => void) => {
+                stat.roll = adaptRoll((args) => {
                     const label = game.i18n.format('PF2E.SkillCheckWithName', {
                         skillName: game.i18n.localize(CONFIG.PF2E.skills[shortform]),
                     });
                     PF2Check.roll(
                         new PF2CheckModifier(label, stat),
-                        { actor: this, type: 'skill-check', options },
-                        event,
-                        callback,
+                        { actor: this, type: 'skill-check', options: args.options ?? [], dc: args.dc },
+                        args.event,
+                        args.callback,
                     );
-                };
+                });
                 data.skills[shortform] = stat;
             }
         } else {

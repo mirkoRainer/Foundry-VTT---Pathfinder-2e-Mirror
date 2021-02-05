@@ -1,14 +1,20 @@
-/* global game, CONFIG, canvas, isObjectEmpty, getProperty */
 /**
  * Extend the base Actor class to implement additional logic specialized for PF2e.
  */
-import { PF2CheckModifier, PF2DamageDice, PF2Modifier, PF2ModifierPredicate, ProficiencyModifier } from '../modifiers';
+import {
+    ensureProficiencyOption,
+    PF2CheckModifier,
+    PF2DamageDice,
+    PF2Modifier,
+    PF2ModifierPredicate,
+    ProficiencyModifier,
+} from '../modifiers';
 import { PF2eConditionManager } from '../conditions';
-import { PF2Check } from '../system/rolls';
-import { isCycle } from '../item/container';
+import { adaptRoll, PF2Check } from '../system/rolls';
+import { isCycle } from '@item/container';
 import { TraitSelector5e } from '../system/trait-selector';
 import { DicePF2e } from '../../scripts/dice';
-import { PF2EItem } from '../item/item';
+import { PF2EItem } from '@item/item';
 import {
     ItemData,
     ConditionData,
@@ -16,7 +22,7 @@ import {
     PhysicalItemData,
     WeaponData,
     isPhysicalItem,
-} from '../item/dataDefinitions';
+} from '@item/dataDefinitions';
 import {
     CharacterData,
     NpcData,
@@ -35,7 +41,7 @@ import {
     PF2WeaponPotency,
 } from '../rules/rulesDataDefinitions';
 import { parseTraits } from '../traits';
-import { PF2EPhysicalItem } from '../item/physical';
+import { PF2EPhysicalItem } from '@item/physical';
 import { PF2RollNote } from '../notes';
 
 export const SKILL_DICTIONARY = Object.freeze({
@@ -110,11 +116,15 @@ export class PF2EActor extends Actor<PF2EItem> {
     }
 
     /** The default sheet, token, etc. image of a newly created world actor */
-    static get defaultImg() {
+    static get defaultImg(): string {
         const [typeName] = Object.entries(CONFIG.PF2E.Actor.entityClasses).find(
             ([_key, cls]) => cls.name === this.name,
         );
         return `systems/pf2e/icons/default-icons/${typeName}.svg`;
+    }
+
+    get defaultImg(): string {
+        return ((this.constructor as unknown) as { defaultImg: string }).defaultImg;
     }
 
     /**
@@ -150,7 +160,7 @@ export class PF2EActor extends Actor<PF2EItem> {
 
     _prepareTokenImg() {
         if (game.settings.get('pf2e', 'defaultTokenSettings')) {
-            if (this.data.token.img === 'icons/svg/mystery-man.svg' && this.data.token.img !== this.img) {
+            if (this.data.token.img === this.defaultImg && this.data.token.img !== this.img) {
                 this.data.token.img = this.img;
             }
         }
@@ -166,6 +176,7 @@ export class PF2EActor extends Actor<PF2EItem> {
         const { data } = actorData;
         const initSkill = data.attributes?.initiative?.ability || 'perception';
         const modifiers: PF2Modifier[] = [];
+        const notes = [] as PF2RollNote[];
 
         ['initiative'].forEach((key) => {
             const skillFullName = SKILL_DICTIONARY[initSkill] ?? initSkill;
@@ -180,36 +191,39 @@ export class PF2EActor extends Actor<PF2EItem> {
                     }
                     modifiers.push(m);
                 });
+            (rollNotes[key] ?? []).map((n) => duplicate(n)).forEach((n) => notes.push(n));
         });
-        const initValues = initSkill === 'perception' ? data.attributes.perception : data.skills[initSkill];
+        const initStat = initSkill === 'perception' ? data.attributes.perception : data.skills[initSkill];
         const skillName = game.i18n.localize(
             initSkill === 'perception' ? 'PF2E.PerceptionLabel' : CONFIG.PF2E.skills[initSkill],
         );
 
-        const stat = new PF2CheckModifier('initiative', initValues, modifiers) as InitiativeData;
+        const stat = new PF2CheckModifier('initiative', initStat, modifiers) as InitiativeData;
         stat.ability = initSkill;
         stat.label = game.i18n.format('PF2E.InitiativeWithSkill', { skillName });
-        stat.roll = (event, options = []) => {
+        stat.roll = adaptRoll((args) => {
             const skillFullName = SKILL_DICTIONARY[stat.ability] ?? 'perception';
+            const options = args.options ?? [];
             // push skill name to options if not already there
             if (!options.includes(skillFullName)) {
                 options.push(skillFullName);
             }
+            ensureProficiencyOption(options, initStat.rank ?? -1);
             PF2Check.roll(
                 new PF2CheckModifier(data.attributes.initiative.label, data.attributes.initiative),
-                { actor: this, type: 'initiative', options },
-                event,
+                { actor: this, type: 'initiative', options, notes, dc: args.dc },
+                args.event,
                 (roll) => {
                     this._applyInitiativeRollToCombatTracker(roll);
                 },
             );
-        };
+        });
 
         data.attributes.initiative = stat;
     }
 
     _applyInitiativeRollToCombatTracker(roll: Roll) {
-        if (roll) {
+        if (roll?.total) {
             // check that there is a combat active in this scene
             if (!game.combat) {
                 ui.notifications.error('No active encounters in the Combat Tracker.');
@@ -231,7 +245,7 @@ export class PF2EActor extends Actor<PF2EItem> {
     }
 
     /** Obtain the first equipped armor the character has. */
-    getFirstWornArmor(): ArmorData {
+    getFirstWornArmor(): ArmorData | undefined {
         return this.data.items
             .filter((item): item is ArmorData => item.type === 'armor')
             .filter((armor) => armor.data.armorType.value !== 'shield')
@@ -239,7 +253,7 @@ export class PF2EActor extends Actor<PF2EItem> {
     }
 
     /** Obtain the first equipped shield the character has. */
-    getFirstEquippedShield(): ArmorData {
+    getFirstEquippedShield(): ArmorData | undefined {
         return this.data.items
             .filter((item): item is ArmorData => item.type === 'armor')
             .filter((armor) => armor.data.armorType.value === 'shield')
@@ -722,14 +736,14 @@ export class PF2EActor extends Actor<PF2EItem> {
                 const save = $(ev.currentTarget).attr('data-save');
                 const itemTraits = item?.data?.data?.traits?.value;
 
-                if (actor.data.data.saves[save]?.roll) {
+                if (actor?.data.data.saves[save]?.roll) {
                     let opts = actor.getRollOptions(['all', 'saving-throw', save]);
                     if (itemTraits) {
                         opts = opts.concat(itemTraits);
                     }
                     actor.data.data.saves[save].roll(ev, opts);
                 } else {
-                    actor.rollSave(ev, save);
+                    actor?.rollSave(ev, save);
                 }
             }
         } else {
@@ -746,7 +760,7 @@ export class PF2EActor extends Actor<PF2EItem> {
     static async setCombatantInitiative(roll: JQuery) {
         const skillRolled = roll.find('.flavor-text').text();
         const valueRolled = parseFloat(roll.find('.dice-total').text());
-        const promises = [];
+        const promises: Promise<void>[] = [];
         for (const t of canvas.tokens.controlled) {
             if (!game.combat) {
                 ui.notifications.error('No active encounters in the Combat Tracker.');
@@ -944,10 +958,10 @@ export class PF2EActor extends Actor<PF2EItem> {
         targetActor: PF2EActor,
         item: PF2EItem,
         quantity: number,
-        containerId: string,
-    ): Promise<PF2EPhysicalItem> {
+        containerId?: string,
+    ): Promise<PF2EPhysicalItem | void> {
         if (!(item instanceof PF2EPhysicalItem)) {
-            throw Error('Only physical items (with quantities) can be transfered between actors');
+            return Promise.reject(new Error('Only physical items (with quantities) can be transfered between actors'));
         }
 
         // Loot transfers can be performed by non-owners when a GM is online */
@@ -961,23 +975,23 @@ export class PF2EActor extends Actor<PF2EItem> {
             const source = { tokenId: this.token?.id, actorId: this.id, itemId: item.id };
             const target = { tokenId: targetActor.token?.id, actorId: targetActor.id };
             const LootTransfer: {
-                new (sourceId: typeof source, targetId: typeof target, quantity: number, containerId: string): {
+                new (sourceId: typeof source, targetId: typeof target, quantity: number, containerId?: string): {
                     request(): Promise<void>;
                 };
             } = require('./loot').LootTransfer;
             const lootTransfer = new LootTransfer(source, target, quantity, containerId);
             await lootTransfer.request();
 
-            return null;
+            return;
         }
 
         if (!this.can(game.user, 'update')) {
             ui.notifications.error(game.i18n.localize('PF2E.ErrorMessage.CantMoveItemSource'));
-            return null;
+            return;
         }
         if (!targetActor.can(game.user, 'update')) {
             ui.notifications.error(game.i18n.localize('PF2E.ErrorMessage.CantMoveItemDestination'));
-            return null;
+            return;
         }
 
         // Limit the amount of items transfered to how many are actually available.
@@ -998,7 +1012,7 @@ export class PF2EActor extends Actor<PF2EItem> {
         const newItemData = duplicate(item.data);
         newItemData.data.quantity.value = quantity;
         newItemData.data.equipped.value = false;
-        if ('invested' in newItemData.data && typeof newItemData.data.invested.value === 'boolean') {
+        if ('invested' in newItemData.data && typeof newItemData.data.invested?.value === 'boolean') {
             newItemData.data.invested.value = false;
         }
 
@@ -1017,10 +1031,10 @@ export class PF2EActor extends Actor<PF2EItem> {
     static async stashOrUnstash<ItemType extends PF2EPhysicalItem = PF2EPhysicalItem>(
         actor: PF2EActor,
         getItem: () => Promise<ItemType>,
-        containerId: string,
+        containerId?: string,
     ): Promise<ItemType> {
         const item = await getItem();
-        if (!item) return null;
+        if (!item) return Promise.reject();
 
         if (containerId) {
             const physicalItemsData = actor.data.items.filter(isPhysicalItem) as PhysicalItemData[];
